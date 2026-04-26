@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NexaPay — حوّل أموالك في ثوانٍ",
+  title: "VeloPay — حوّل أموالك في ثوانٍ",
   description: "منصة تحويل الأموال من الخليج للشام عبر Solana. رسوم $0.01 فقط.",
   icons: {
     icon: "/favicon.ico",
