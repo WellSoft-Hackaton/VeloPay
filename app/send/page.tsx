@@ -126,10 +126,7 @@ export default function SendPage() {
       <div className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#13B601] text-white font-bold text-sm">
-              N
-            </div>
-            <span className="font-bold text-gray-900">NexaPay</span>
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[30px] w-[30px] rounded-xl" />
           </Link>
           <div className="text-sm text-gray-500">
             {step === 1 ? "التفاصيل" : step === 2 ? "طريقة الدفع" : "التأكيد"}
@@ -288,8 +285,9 @@ export default function SendPage() {
         {step === 2 && (
           <div className="space-y-6">
             <div>
-              <button onClick={() => setStep(1)} className="mb-4 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
-                ← رجوع
+              <button onClick={() => setStep(1)} className="mb-6 flex w-fit items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-900 active:scale-95">
+                <span className="text-lg leading-none">←</span>
+                رجوع
               </button>
               <h1 className="text-2xl font-black text-gray-900">طريقة الدفع</h1>
               <p className="mt-1 text-gray-500">اختر كيف تدفع</p>
@@ -356,8 +354,9 @@ export default function SendPage() {
         {step === 3 && (
           <div className="space-y-6">
             <div>
-              <button onClick={() => setStep(2)} className="mb-4 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
-                ← رجوع
+              <button onClick={() => setStep(2)} className="mb-6 flex w-fit items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-900 active:scale-95">
+                <span className="text-lg leading-none">←</span>
+                رجوع
               </button>
               <h1 className="text-2xl font-black text-gray-900">تأكيد التحويل</h1>
               <p className="mt-1 text-gray-500">راجع التفاصيل قبل الإرسال</p>

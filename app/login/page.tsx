@@ -16,10 +16,9 @@ export default function LoginPage() {
                 
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
-                        <div className="bg-white p-2 rounded-xl shadow-sm">
-                            <Image src="/logo.png" alt="NexaPay Logo" width={36} height={36} className="object-contain" />
+                        <div className="bg-white p-2 rounded-xl shadow-sm flex items-center justify-center">
+                            <Image src="/VeloPay.png" alt="VeloPay Logo" width={30} height={30} className="object-contain rounded-md" />
                         </div>
-                        <span className="text-3xl font-bold tracking-tight" dir="ltr">NexaPay</span>
                     </div>
                 </div>
 
@@ -54,7 +53,7 @@ export default function LoginPage() {
                 </div>
                 
                 <div className="relative z-10 mt-16 md:mt-0 text-sm font-medium text-white/80">
-                    © {new Date().getFullYear()} NexaPay Inc. جميع الحقوق محفوظة.
+                    © {new Date().getFullYear()} VeloPay Inc. جميع الحقوق محفوظة.
                 </div>
             </div>
 

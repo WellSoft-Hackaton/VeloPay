@@ -36,7 +36,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <CrossmintProvider apiKey={apiKey}>
         <CrossmintAuthProvider
-          authModalTitle="NexaPay — تسجيل الدخول"
+          authModalTitle="VeloPay — تسجيل الدخول"
           loginMethods={["email", "google"]}
           termsOfServiceText={
             <p>

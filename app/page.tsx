@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import PremiumModal from "@/components/PremiumModal";
+import { LiveRateTicker } from "@/components/LiveRateTicker";
+import { ExchangeRateAlert } from "@/components/ExchangeRateAlert";
 
 const RATES: Record<string, Record<string, number>> = {
   SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
@@ -66,8 +68,7 @@ export default function LandingPage() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-9 w-9 rounded-xl" />
-            <span className="text-xl font-bold tracking-tight">VeloPay</span>
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[30px] w-[30px] rounded-xl" />
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -299,46 +300,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ========== PREMIUM SECTION ========== */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-5xl">
-          <div className="rounded-3xl border border-[#13B601]/20 bg-gradient-to-br from-[#13B601]/10 to-[#0fa301]/5 p-10">
-            <div className="text-center mb-10">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#13B601]/20 px-4 py-1.5 text-sm font-medium text-[#13B601]">
-                ⭐ VeloPay Premium
-              </div>
-              <h2 className="mb-3 text-4xl font-black">افتح الإمكانيات الكاملة</h2>
-              <p className="text-gray-400 text-lg">
-                من $9.99 / شهر — وفّر أكثر مع كل تحويل
-              </p>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 mb-10">
-              {PREMIUM_FEATURES.map((f) => (
-                <div
-                  key={f.label}
-                  className="flex items-center gap-3 rounded-xl border border-[#13B601]/20 bg-white/5 px-4 py-3"
-                >
-                  <span className="text-xl">{f.icon}</span>
-                  <span className="text-sm font-medium text-gray-300">{f.label}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center">
-              <button
-                onClick={() => setShowPremium(true)}
-                className="inline-flex items-center gap-2 rounded-full bg-[#13B601] px-10 py-5 text-xl font-black text-white transition hover:bg-[#0fa301] active:scale-95 shadow-lg shadow-[#13B601]/30"
-              >
-                ⭐ اشترك في Premium
-              </button>
-              <p className="mt-3 text-sm text-gray-500">
-                لا بيانات بنكية حقيقية • محاكاة MVP
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ========== COMPARISON TABLE ========== */}
       <section className="px-6 py-24">
@@ -378,6 +340,25 @@ export default function LandingPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ========== LIVE RATES + EXCHANGE ALERT ========== */}
+      <section className="px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-16 text-center">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#13B601]/20 px-4 py-1.5 text-sm font-medium text-[#13B601]">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#13B601]" />
+              أسعار مباشرة
+            </div>
+            <h2 className="mb-4 text-4xl font-black">تابع أسعار الصرف لحظة بلحظة</h2>
+            <p className="text-gray-400">أسعار USDC والعملات المحلية — محدّثة كل دقيقة</p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-2">
+            <LiveRateTicker />
+            <ExchangeRateAlert />
           </div>
         </div>
       </section>
