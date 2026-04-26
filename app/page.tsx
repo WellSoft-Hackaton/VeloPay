@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import PremiumModal from "@/components/PremiumModal";
 
 const RATES: Record<string, Record<string, number>> = {
   SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
@@ -24,12 +25,22 @@ const TO_CURRENCIES = [
   { code: "SYP", flag: "🇸🇾", name: "ليرة سورية" },
 ];
 
+const PREMIUM_FEATURES = [
+  { icon: "∞", label: "تحويلات غير محدودة" },
+  { icon: "📈", label: "مبالغ أكبر" },
+  { icon: "🪙", label: "Yield على رصيدك" },
+  { icon: "⏰", label: "أتمتة مجدولة" },
+  { icon: "🔔", label: "تنبيهات الصرف" },
+  { icon: "📊", label: "AI Dashboard" },
+];
+
 export default function LandingPage() {
   const [amount, setAmount] = useState("500");
   const [fromCurrency, setFromCurrency] = useState("SAR");
   const [toCurrency, setToCurrency] = useState("JOD");
   const [converted, setConverted] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [showPremium, setShowPremium] = useState(false);
 
   useEffect(() => {
     const rate = RATES[fromCurrency]?.[toCurrency] ?? 0.1;
@@ -55,12 +66,16 @@ export default function LandingPage() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#13B601] text-white font-bold text-lg">
-              N
-            </div>
-            <span className="text-xl font-bold tracking-tight">NexaPay</span>
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-9 w-9 rounded-xl" />
+            <span className="text-xl font-bold tracking-tight">VeloPay</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowPremium(true)}
+              className="hidden sm:flex items-center gap-1.5 rounded-full border border-[#13B601]/40 px-4 py-2 text-sm font-medium text-[#13B601] transition hover:bg-[#13B601]/10"
+            >
+              ⭐ Premium
+            </button>
             <Link
               href="/dashboard"
               className="text-sm text-gray-400 transition hover:text-white"
@@ -79,7 +94,6 @@ export default function LandingPage() {
 
       {/* ========== HERO ========== */}
       <section className="relative overflow-hidden px-6 pb-24 pt-32">
-        {/* Background glow */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-[#13B601]/10 blur-[120px]" />
           <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#13B601]/5 blur-[80px]" />
@@ -153,13 +167,13 @@ export default function LandingPage() {
                       type="number"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
-                      className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-2xl font-bold text-white outline-none transition focus:border-[#13B601]/50 focus:bg-white/8"
+                      className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-2xl font-bold text-white outline-none transition focus:border-[#13B601]/50"
                       placeholder="500"
                     />
                     <select
                       value={fromCurrency}
                       onChange={(e) => setFromCurrency(e.target.value)}
-                      className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none transition focus:border-[#13B601]/50"
+                      className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none"
                     >
                       {FROM_CURRENCIES.map((c) => (
                         <option key={c.code} value={c.code}>
@@ -170,7 +184,6 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Arrow */}
                 <div className="my-4 flex items-center gap-4">
                   <div className="flex-1 border-t border-white/10" />
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#13B601]/30 bg-[#13B601]/10 text-[#13B601]">
@@ -191,7 +204,7 @@ export default function LandingPage() {
                     <select
                       value={toCurrency}
                       onChange={(e) => setToCurrency(e.target.value)}
-                      className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none transition focus:border-[#13B601]/50"
+                      className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none"
                     >
                       {TO_CURRENCIES.map((c) => (
                         <option key={c.code} value={c.code}>
@@ -205,7 +218,7 @@ export default function LandingPage() {
                 {/* Fees comparison */}
                 <div className="mb-6 space-y-2 rounded-xl border border-white/5 bg-white/3 p-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">رسوم NexaPay</span>
+                    <span className="text-gray-400">رسوم VeloPay</span>
                     <span className="font-bold text-[#13B601]">$0.01 فقط ⚡</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -218,9 +231,7 @@ export default function LandingPage() {
                   </div>
                   <div className="mt-2 border-t border-white/10 pt-2 text-center text-xs text-[#13B601]">
                     💰 توفر{" "}
-                    <strong>
-                      ${(parseFloat(bankFee) - 0.01).toFixed(2)}
-                    </strong>{" "}
+                    <strong>${(parseFloat(bankFee) - 0.01).toFixed(2)}</strong>{" "}
                     مقارنة بالتحويل البنكي
                   </div>
                 </div>
@@ -245,7 +256,7 @@ export default function LandingPage() {
       <section id="how" className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-4xl font-black">كيف يعمل NexaPay؟</h2>
+            <h2 className="mb-4 text-4xl font-black">كيف يعمل VeloPay؟</h2>
             <p className="text-gray-400">3 خطوات بسيطة — بدون تعقيد</p>
           </div>
 
@@ -288,11 +299,52 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ========== PREMIUM SECTION ========== */}
+      <section className="px-6 py-24">
+        <div className="mx-auto max-w-5xl">
+          <div className="rounded-3xl border border-[#13B601]/20 bg-gradient-to-br from-[#13B601]/10 to-[#0fa301]/5 p-10">
+            <div className="text-center mb-10">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#13B601]/20 px-4 py-1.5 text-sm font-medium text-[#13B601]">
+                ⭐ VeloPay Premium
+              </div>
+              <h2 className="mb-3 text-4xl font-black">افتح الإمكانيات الكاملة</h2>
+              <p className="text-gray-400 text-lg">
+                من $9.99 / شهر — وفّر أكثر مع كل تحويل
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 mb-10">
+              {PREMIUM_FEATURES.map((f) => (
+                <div
+                  key={f.label}
+                  className="flex items-center gap-3 rounded-xl border border-[#13B601]/20 bg-white/5 px-4 py-3"
+                >
+                  <span className="text-xl">{f.icon}</span>
+                  <span className="text-sm font-medium text-gray-300">{f.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={() => setShowPremium(true)}
+                className="inline-flex items-center gap-2 rounded-full bg-[#13B601] px-10 py-5 text-xl font-black text-white transition hover:bg-[#0fa301] active:scale-95 shadow-lg shadow-[#13B601]/30"
+              >
+                ⭐ اشترك في Premium
+              </button>
+              <p className="mt-3 text-sm text-gray-500">
+                لا بيانات بنكية حقيقية • محاكاة MVP
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ========== COMPARISON TABLE ========== */}
       <section className="px-6 py-24">
         <div className="mx-auto max-w-4xl">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-4xl font-black">لماذا NexaPay؟</h2>
+            <h2 className="mb-4 text-4xl font-black">لماذا VeloPay؟</h2>
             <p className="text-gray-400">المقارنة تتكلم عن نفسها</p>
           </div>
 
@@ -301,7 +353,7 @@ export default function LandingPage() {
               <thead>
                 <tr className="border-b border-white/10 bg-white/5">
                   <th className="py-4 pr-6 text-right text-sm text-gray-400"></th>
-                  <th className="py-4 text-center text-sm font-bold text-[#13B601]">NexaPay</th>
+                  <th className="py-4 text-center text-sm font-bold text-[#13B601]">VeloPay</th>
                   <th className="py-4 text-center text-sm text-gray-400">Western Union</th>
                   <th className="py-4 text-center text-sm text-gray-400">تحويل بنكي</th>
                 </tr>
@@ -313,6 +365,7 @@ export default function LandingPage() {
                   { label: "الشفافية", nexapay: "✅ Blockchain", wu: "❌ لا", bank: "❌ لا" },
                   { label: "تتبع فوري", nexapay: "✅ نعم", wu: "جزئي", bank: "❌ لا" },
                   { label: "رقم هاتف فقط", nexapay: "✅ نعم", wu: "❌ لا", bank: "❌ لا" },
+                  { label: "Yield على الرصيد", nexapay: "✅ Premium", wu: "❌ لا", bank: "❌ لا" },
                 ].map((row) => (
                   <tr key={row.label} className="border-b border-white/5 last:border-0">
                     <td className="py-4 pr-6 text-sm text-gray-400">{row.label}</td>
@@ -338,10 +391,7 @@ export default function LandingPage() {
               <p className="mb-4 text-sm text-gray-400">ترسل من</p>
               <div className="flex flex-wrap justify-center gap-4">
                 {["🇸🇦 السعودية", "🇦🇪 الإمارات", "🇶🇦 قطر", "🇰🇼 الكويت"].map((c) => (
-                  <span
-                    key={c}
-                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm"
-                  >
+                  <span key={c} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm">
                     {c}
                   </span>
                 ))}
@@ -351,10 +401,7 @@ export default function LandingPage() {
               <p className="mb-4 text-sm text-[#13B601]">يصل إلى</p>
               <div className="flex flex-wrap justify-center gap-4">
                 {["🇯🇴 الأردن", "🇵🇸 فلسطين", "🇮🇶 العراق", "🇸🇾 سوريا"].map((c) => (
-                  <span
-                    key={c}
-                    className="rounded-full border border-[#13B601]/20 bg-[#13B601]/10 px-4 py-2 text-sm text-[#13B601]"
-                  >
+                  <span key={c} className="rounded-full border border-[#13B601]/20 bg-[#13B601]/10 px-4 py-2 text-sm text-[#13B601]">
                     {c}
                   </span>
                 ))}
@@ -385,11 +432,18 @@ export default function LandingPage() {
 
       {/* ========== FOOTER ========== */}
       <footer className="border-t border-white/5 px-6 py-10 text-center text-sm text-gray-600">
-        <p>© 2026 NexaPay — مبني على Solana Blockchain</p>
+        <div className="flex items-center justify-center gap-2 mb-2">
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-6 w-6 rounded-lg" />
+          <span className="font-bold text-gray-400">VeloPay</span>
+        </div>
+        <p>© 2026 VeloPay — مبني على Solana Blockchain</p>
         <p className="mt-2 text-xs">
           هذا مشروع Hackathon MVP — التحويلات على Devnet (بيانات تجريبية)
         </p>
       </footer>
+
+      {/* Premium Modal */}
+      <PremiumModal open={showPremium} onClose={() => setShowPremium(false)} />
     </div>
   );
 }

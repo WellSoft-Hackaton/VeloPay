@@ -11,32 +11,62 @@ const QUICK_QUESTIONS = [
   "كم رسوم التحويل؟",
   "كم وقت يستغرق؟",
   "كم وفّرت اليوم؟",
-  "كيف يعمل NexaPay؟",
+  "كيف يعمل VeloPay؟",
 ];
+
+const BADGE_STORAGE_KEY = "velopay_chat_opened";
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "👋 أهلاً! أنا مساعد NexaPay الذكي. كيف يمكنني مساعدتك في تحويل أموالك اليوم؟",
+      content:
+        "👋 أهلاً! أنا مساعد VeloPay الذكي. كيف يمكنني مساعدتك في تحويل أموالك اليوم؟",
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Check localStorage on mount — if user opened before, no badge
+  useEffect(() => {
+    const opened = localStorage.getItem(BADGE_STORAGE_KEY);
+    if (opened === "true") {
+      setHasOpened(true);
+    }
+  }, []);
+
+  // Scroll to bottom on new messages
   useEffect(() => {
     if (open) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, open]);
 
+  const handleOpen = () => {
+    setOpen(true);
+    if (!hasOpened) {
+      setHasOpened(true);
+      localStorage.setItem(BADGE_STORAGE_KEY, "true");
+    }
+  };
+
+  const handleToggle = () => {
+    if (open) {
+      setOpen(false);
+    } else {
+      handleOpen();
+    }
+  };
+
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading) return;
 
     const userMessage: Message = { role: "user", content: text };
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
@@ -45,23 +75,37 @@ export function ChatWidget() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [...messages, userMessage],
+          messages: updatedMessages,
         }),
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error: ${res.status}`);
+      }
+
       const data = await res.json();
+      const reply = data.content || "عذراً، لم أتمكن من الرد. حاول مرة أخرى.";
+
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.content || "عذراً، حدث خطأ. حاول مرة أخرى." },
+        { role: "assistant", content: reply },
       ]);
-    } catch {
+    } catch (err) {
+      console.error("[ChatWidget] Error:", err);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى." },
+        {
+          role: "assistant",
+          content:
+            "عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى. 🔄",
+        },
       ]);
     } finally {
       setLoading(false);
     }
   };
+
+  const showBadge = !hasOpened;
 
   return (
     <div className="fixed bottom-6 left-6 z-50" dir="rtl">
@@ -71,18 +115,19 @@ export function ChatWidget() {
           {/* Header */}
           <div className="flex items-center gap-3 rounded-t-2xl bg-[#13B601] px-4 py-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white">
-              N
+              V
             </div>
             <div className="flex-1">
-              <div className="text-sm font-bold text-white">NexaPay AI</div>
+              <div className="text-sm font-bold text-white">VeloPay AI</div>
               <div className="flex items-center gap-1.5 text-xs text-green-100">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-200 animate-pulse" />
-                متصل
+                متصل الآن
               </div>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-white/70 hover:text-white text-lg"
+              className="text-white/70 hover:text-white text-lg leading-none"
+              aria-label="إغلاق"
             >
               ✕
             </button>
@@ -124,7 +169,7 @@ export function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick questions */}
+          {/* Quick questions — show when only the greeting is present */}
           {messages.length <= 1 && (
             <div className="border-t border-gray-100 px-3 py-2">
               <p className="mb-2 text-xs text-gray-400">أسئلة سريعة:</p>
@@ -149,19 +194,25 @@ export function ChatWidget() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage(input)}
                 placeholder="اكتب سؤالك..."
-                className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#13B601]"
+                className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#13B601] transition"
                 disabled={loading}
               />
               <button
                 onClick={() => sendMessage(input)}
                 disabled={!input.trim() || loading}
                 className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#13B601] text-white transition hover:bg-[#0fa301] disabled:opacity-40"
+                aria-label="إرسال"
               >
-                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 -scale-x-100">
-                  <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M22 2L15 22 11 13 2 9l20-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 rotate-180">
+                  <path
+                    d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
             </div>
@@ -171,16 +222,19 @@ export function ChatWidget() {
 
       {/* Toggle button */}
       <button
-        onClick={() => setOpen((o) => !o)}
-        className="group flex h-14 w-14 items-center justify-center rounded-full bg-[#13B601] shadow-lg shadow-[#13B601]/30 transition hover:bg-[#0fa301] active:scale-95"
+        onClick={handleToggle}
+        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#13B601] shadow-lg shadow-[#13B601]/30 transition hover:bg-[#0fa301] active:scale-95"
+        aria-label="فتح المساعد الذكي"
       >
         {open ? (
           <span className="text-xl text-white">✕</span>
         ) : (
           <span className="text-2xl">🤖</span>
         )}
-        {!open && (
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+
+        {/* Badge — only shows when user has never opened chat */}
+        {showBadge && !open && (
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white animate-pulse">
             1
           </span>
         )}
