@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
-//import { PrismaAdapter } from "@auth/prisma-adapter";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Google from "next-auth/providers/google";
+import { db } from "./lib/db";
+import { users, accounts, sessions, verificationTokens } from "./lib/schema";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
@@ -9,6 +11,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
     ],
-    //adapter: PrismaAdapter(prisma),
+    adapter: DrizzleAdapter(db, {
+        usersTable: users,
+        accountsTable: accounts,
+        sessionsTable: sessions,
+        verificationTokensTable: verificationTokens,
+    }),
     secret: process.env.AUTH_SECRET,
 });
