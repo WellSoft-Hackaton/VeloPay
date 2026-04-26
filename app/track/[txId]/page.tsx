@@ -86,7 +86,7 @@ export default function TrackPage() {
       <div className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[30px] w-[30px] rounded-xl" />
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
           </Link>
           <span className="text-sm text-gray-500">تتبع التحويل</span>
         </div>

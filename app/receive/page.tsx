@@ -7,7 +7,7 @@ export default function ReceivePage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [iban, setIban] = useState("");
   const [accountName, setAccountName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+962-");
   const [service, setService] = useState("zaincash");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -63,7 +63,7 @@ export default function ReceivePage() {
       <div className="border-b border-gray-200 bg-white px-6 py-4 shadow-sm">
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[30px] w-[30px] rounded-xl" />
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
           </Link>
           <span className="rounded-full bg-[#13B601]/10 px-3 py-1 text-xs font-medium text-[#13B601]">
             استلام الأموال
@@ -305,7 +305,7 @@ export default function ReceivePage() {
                 <button
                   type="button"
                   onClick={() => handleSubmit("zaincash")}
-                  disabled={submitting || !phone.trim()}
+                  disabled={submitting || phone.replace(/\D/g, "").length < 11}
                   className="w-full rounded-full border-2 border-orange-400 bg-orange-50 py-4 font-bold text-orange-700 transition hover:bg-orange-100 disabled:cursor-not-allowed disabled:opacity-50 active:scale-95"
                 >
                   {submitting ? (

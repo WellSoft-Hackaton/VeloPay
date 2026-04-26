@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { LiveRateTicker } from "@/components/LiveRateTicker";
 
 const RATES: Record<string, Record<string, number>> = {
-  SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
-  AED: { JOD: 0.1015, USD: 0.2723, SAR: 1.021, IQD: 356.8, SYP: 3534 },
-  KWD: { JOD: 2.31, USD: 3.26, SAR: 12.19, AED: 11.97, IQD: 8134, SYP: 80600 },
-  QAR: { JOD: 0.1948, USD: 0.2747, SAR: 1.030, AED: 1.007 },
+  SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462, EGP: 12.8, LBP: 24000 },
+  AED: { JOD: 0.1015, USD: 0.2723, SAR: 1.021, IQD: 356.8, SYP: 3534, EGP: 13.0, LBP: 24450 },
+  KWD: { JOD: 2.31, USD: 3.26, SAR: 12.19, AED: 11.97, IQD: 8134, SYP: 80600, EGP: 156.5, LBP: 293000 },
+  QAR: { JOD: 0.1948, USD: 0.2747, SAR: 1.030, AED: 1.007, EGP: 13.1, LBP: 24500 },
 };
 
 const FROM_CURRENCIES = [
@@ -23,6 +24,8 @@ const TO_CURRENCIES = [
   { code: "USD", flag: "🇵🇸", name: "دولار (فلسطين)", phone: "+970" },
   { code: "IQD", flag: "🇮🇶", name: "دينار عراقي", phone: "+964" },
   { code: "SYP", flag: "🇸🇾", name: "ليرة سورية", phone: "+963" },
+  { code: "EGP", flag: "🇪🇬", name: "جنيه مصري", phone: "+20" },
+  { code: "LBP", flag: "🇱🇧", name: "ليرة لبنانية", phone: "+961" },
 ];
 
 const COUNTRIES = [
@@ -30,6 +33,8 @@ const COUNTRIES = [
   { code: "PS", flag: "🇵🇸", name: "فلسطين", currency: "USD", phone: "+970" },
   { code: "IQ", flag: "🇮🇶", name: "العراق", currency: "IQD", phone: "+964" },
   { code: "SY", flag: "🇸🇾", name: "سوريا", currency: "SYP", phone: "+963" },
+  { code: "EG", flag: "🇪🇬", name: "مصر", currency: "EGP", phone: "+20" },
+  { code: "LB", flag: "🇱🇧", name: "لبنان", currency: "LBP", phone: "+961" },
 ];
 
 function generateTxHash() {
@@ -47,7 +52,7 @@ export default function SendPage() {
   const [amount, setAmount] = useState("500");
   const [fromCurrency, setFromCurrency] = useState("SAR");
   const [country, setCountry] = useState(COUNTRIES[0]);
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(COUNTRIES[0].phone + "-");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isLoading, setIsLoading] = useState(false);
   const [converted, setConverted] = useState(0);
@@ -126,7 +131,7 @@ export default function SendPage() {
       <div className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[30px] w-[30px] rounded-xl" />
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
           </Link>
           <div className="text-sm text-gray-500">
             {step === 1 ? "التفاصيل" : step === 2 ? "طريقة الدفع" : "التأكيد"}
@@ -271,9 +276,14 @@ export default function SendPage() {
               </div>
             </div>
 
+            {/* Live Rates */}
+            <div className="mt-4 mb-4">
+              <LiveRateTicker />
+            </div>
+
             <button
               onClick={() => setStep(2)}
-              disabled={!amount || !phone || parseFloat(amount) <= 0}
+              disabled={!amount || phone.replace(country.phone + "-", "").replace(country.phone, "").replace(/\D/g, "").length < 8 || parseFloat(amount) <= 0}
               className="w-full rounded-full bg-[#13B601] py-4 text-lg font-bold text-white transition hover:bg-[#0fa301] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 active:scale-95"
             >
               متابعة →

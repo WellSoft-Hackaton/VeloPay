@@ -7,10 +7,10 @@ import { LiveRateTicker } from "@/components/LiveRateTicker";
 import { ExchangeRateAlert } from "@/components/ExchangeRateAlert";
 
 const RATES: Record<string, Record<string, number>> = {
-  SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
-  AED: { JOD: 0.1015, USD: 0.2723, SAR: 1.021, IQD: 356.8, SYP: 3534 },
-  KWD: { JOD: 2.31, USD: 3.26, SAR: 12.19, AED: 11.97, IQD: 8134, SYP: 80600 },
-  QAR: { JOD: 0.1948, USD: 0.2747, SAR: 1.030, AED: 1.007 },
+  SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462, EGP: 12.8, LBP: 24000 },
+  AED: { JOD: 0.1015, USD: 0.2723, SAR: 1.021, IQD: 356.8, SYP: 3534, EGP: 13.0, LBP: 24450 },
+  KWD: { JOD: 2.31, USD: 3.26, SAR: 12.19, AED: 11.97, IQD: 8134, SYP: 80600, EGP: 156.5, LBP: 293000 },
+  QAR: { JOD: 0.1948, USD: 0.2747, SAR: 1.030, AED: 1.007, EGP: 13.1, LBP: 24500 },
 };
 
 const FROM_CURRENCIES = [
@@ -25,6 +25,8 @@ const TO_CURRENCIES = [
   { code: "USD", flag: "🇵🇸", name: "دولار (فلسطين)" },
   { code: "IQD", flag: "🇮🇶", name: "دينار عراقي" },
   { code: "SYP", flag: "🇸🇾", name: "ليرة سورية" },
+  { code: "EGP", flag: "🇪🇬", name: "جنيه مصري" },
+  { code: "LBP", flag: "🇱🇧", name: "ليرة لبنانية" },
 ];
 
 const PREMIUM_FEATURES = [
@@ -68,7 +70,7 @@ export default function LandingPage() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[30px] w-[30px] rounded-xl" />
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -381,7 +383,7 @@ export default function LandingPage() {
             <div className="rounded-2xl border border-[#13B601]/20 bg-[#13B601]/5 p-8">
               <p className="mb-4 text-sm text-[#13B601]">يصل إلى</p>
               <div className="flex flex-wrap justify-center gap-4">
-                {["🇯🇴 الأردن", "🇵🇸 فلسطين", "🇮🇶 العراق", "🇸🇾 سوريا"].map((c) => (
+                {["🇯🇴 الأردن", "🇵🇸 فلسطين", "🇮🇶 العراق", "🇸🇾 سوريا", "🇪🇬 مصر", "🇱🇧 لبنان"].map((c) => (
                   <span key={c} className="rounded-full border border-[#13B601]/20 bg-[#13B601]/10 px-4 py-2 text-sm text-[#13B601]">
                     {c}
                   </span>

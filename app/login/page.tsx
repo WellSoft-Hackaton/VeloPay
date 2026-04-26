@@ -16,8 +16,8 @@ export default function LoginPage() {
                 
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
-                        <div className="bg-white p-2 rounded-xl shadow-sm flex items-center justify-center">
-                            <Image src="/VeloPay.png" alt="VeloPay Logo" width={30} height={30} className="object-contain rounded-md" />
+                        <div className="bg-white p-2 rounded-2xl shadow-sm flex items-center justify-center">
+                            <Image src="/VeloPay.png" alt="VeloPay Logo" width={70} height={70} className="object-contain rounded-xl" />
                         </div>
                     </div>
                 </div>
