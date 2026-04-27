@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import notFoundErrorAnimation from "@/public/lottie-notFound-error.json";
+import notFoundErrorAnimation from "@/public/animations/lottie-notFound-error.json";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";

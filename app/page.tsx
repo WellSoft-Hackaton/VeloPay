@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PremiumModal } from "@/components/PremiumModal";
 import HowItWorksFlow from "@/components/HowItWorksFlow";
+import { PaymentMethodModal } from "@/components/PaymentMethodModal";
 
 const RATES: Record<string, Record<string, number>> = {
   SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
@@ -124,6 +125,7 @@ export default function LandingPage() {
   const [converted, setConverted] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
+  const [showPaymentMethod, setShowPaymentMethod] = useState(false);
 
   useEffect(() => {
     const rate = RATES[fromCurrency]?.[toCurrency] ?? 0.1;
@@ -189,12 +191,12 @@ export default function LandingPage() {
             </Link>
 
             {/* CTA */}
-            <Link
-              href="/send"
+            <button
+              onClick={() => setShowPaymentMethod(true)}
               className="rounded-full bg-[#13B601] px-5 py-2 text-sm font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] active:scale-95"
             >
               أرسل الآن
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
@@ -338,12 +340,12 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <Link
-                href="/send"
+              <button
+                onClick={() => setShowPaymentMethod(true)}
                 className="block w-full rounded-full bg-[#13B601] py-4 text-center text-lg font-bold text-white shadow-lg shadow-[#13B601]/30 transition hover:bg-[#0fa301] active:scale-95"
               >
                 أرسل {amount || "..."} {fromCurrency} الآن →
-              </Link>
+              </button>
               <p className="mt-3 text-center text-xs text-gray-600">
                 ⚡ يصل خلال ~5 ثوانٍ عبر Solana Devnet
               </p>
@@ -407,6 +409,7 @@ export default function LandingPage() {
       </footer>
 
       <PremiumModal open={showPremium} onClose={() => setShowPremium(false)} />
+      <PaymentMethodModal open={showPaymentMethod} onClose={() => setShowPaymentMethod(false)} />
     </div>
   );
 }

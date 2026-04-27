@@ -1,7 +1,6 @@
-
-
+"use client"
+import Lottie from "lottie-react";
+import loader from "@/public/animations/Money_loading.json";
 export default function LoadingPage() {
-    return <>
-        Loading...
-    </>;
+    return <Lottie animationData={loader} />
 }

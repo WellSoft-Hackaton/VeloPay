@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import serverErrorAnimation from "@/public/lottie-server-error.json";
+import serverErrorAnimation from "@/public/animations/lottie-server-error.json";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, RefreshCcw } from "lucide-react";
