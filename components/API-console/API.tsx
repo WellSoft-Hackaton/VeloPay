@@ -381,9 +381,9 @@ export default function DeveloperPage() {
             <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
               <h2 className="mb-5 text-lg font-bold text-white">API Reference</h2>
               <div className="space-y-2">
-                {ENDPOINTS.map((ep) => (
+                {ENDPOINTS.map((ep, index) => (
                   <div
-                    key={ep.path}
+                    key={`${ep.method}-${ep.path}-${index}`}
                     className="flex items-center gap-4 rounded-xl border border-white/5 bg-black/20 px-4 py-3 transition hover:border-white/15 hover:bg-black/30"
                   >
                     <span

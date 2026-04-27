@@ -93,13 +93,14 @@ function LiveTicker() {
       >
         {items.map((p, i) => {
           const rate = RATES[p.from]?.[p.to] ?? 0;
-          const isUp = Math.random() > 0.5; // demo: random direction
+          const isUp = i % 2 === 0; // deterministic direction for hydration
+          const change = ((i % 5) * 0.0001 + 0.0001).toFixed(4); // deterministic change
           return (
             <div key={i} className="flex items-center gap-2 text-xs">
               <span className="font-mono font-bold text-gray-300">{p.label}</span>
               <span className="font-mono font-black text-[#13B601]">{rate.toFixed(4)}</span>
               <span className={`text-[10px] ${isUp ? "text-green-400" : "text-red-400"}`}>
-                {isUp ? "▲" : "▼"} {(Math.random() * 0.0005).toFixed(4)}
+                {isUp ? "▲" : "▼"} {change}
               </span>
               <span className="text-gray-700">|</span>
             </div>
