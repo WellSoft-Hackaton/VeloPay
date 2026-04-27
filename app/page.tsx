@@ -2,43 +2,121 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import PremiumModal from "@/components/PremiumModal";
-import { LiveRateTicker } from "@/components/LiveRateTicker";
-import { ExchangeRateAlert } from "@/components/ExchangeRateAlert";
+import { PremiumModal } from "@/components/PremiumModal";
 import HowItWorksFlow from "@/components/HowItWorksFlow";
 
 const RATES: Record<string, Record<string, number>> = {
-  SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462, EGP: 12.8, LBP: 24000 },
-  AED: { JOD: 0.1015, USD: 0.2723, SAR: 1.021, IQD: 356.8, SYP: 3534, EGP: 13.0, LBP: 24450 },
-  KWD: { JOD: 2.31, USD: 3.26, SAR: 12.19, AED: 11.97, IQD: 8134, SYP: 80600, EGP: 156.5, LBP: 293000 },
-  QAR: { JOD: 0.1948, USD: 0.2747, SAR: 1.030, AED: 1.007, EGP: 13.1, LBP: 24500 },
+  SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
+  AED: { JOD: 0.1015, USD: 0.2723, SAR: 1.021, IQD: 356.8, SYP: 3534 },
+  KWD: { JOD: 2.31, USD: 3.26, SAR: 12.19, AED: 11.97, IQD: 8134, SYP: 80600 },
+  QAR: { JOD: 0.1948, USD: 0.2747, SAR: 1.030, AED: 1.007 },
 };
 
 const FROM_CURRENCIES = [
-  { code: "SAR", flag: "🇸🇦", name: "ريال سعودي" },
-  { code: "AED", flag: "🇦🇪", name: "درهم إماراتي" },
-  { code: "KWD", flag: "🇰🇼", name: "دينار كويتي" },
-  { code: "QAR", flag: "🇶🇦", name: "ريال قطري" },
+  { code: "SAR", flag: "🇸🇦" },
+  { code: "AED", flag: "🇦🇪" },
+  { code: "KWD", flag: "🇰🇼" },
+  { code: "QAR", flag: "🇶🇦" },
 ];
 
 const TO_CURRENCIES = [
-  { code: "JOD", flag: "🇯🇴", name: "دينار أردني" },
-  { code: "USD", flag: "🇵🇸", name: "دولار (فلسطين)" },
-  { code: "IQD", flag: "🇮🇶", name: "دينار عراقي" },
-  { code: "SYP", flag: "🇸🇾", name: "ليرة سورية" },
-  { code: "EGP", flag: "🇪🇬", name: "جنيه مصري" },
-  { code: "LBP", flag: "🇱🇧", name: "ليرة لبنانية" },
+  { code: "JOD", flag: "🇯🇴" },
+  { code: "USD", flag: "🇵🇸" },
+  { code: "IQD", flag: "🇮🇶" },
+  { code: "SYP", flag: "🇸🇾" },
 ];
 
-const PREMIUM_FEATURES = [
-  { icon: "∞", label: "تحويلات غير محدودة" },
-  { icon: "📈", label: "مبالغ أكبر" },
-  { icon: "🪙", label: "Yield على رصيدك" },
-  { icon: "⏰", label: "أتمتة مجدولة" },
-  { icon: "🔔", label: "تنبيهات الصرف" },
-  { icon: "📊", label: "AI Dashboard" },
+const TICKER_PAIRS = [
+  { from: "SAR", to: "JOD", label: "SAR/JOD" },
+  { from: "AED", to: "JOD", label: "AED/JOD" },
+  { from: "KWD", to: "JOD", label: "KWD/JOD" },
+  { from: "SAR", to: "USD", label: "SAR/USD" },
+  { from: "QAR", to: "JOD", label: "QAR/JOD" },
 ];
 
+// ─── Notification Bell ────────────────────────────────────────────────────────
+function NotificationBell() {
+  const [open, setOpen] = useState(false);
+  const NOTIFICATIONS: any[] = [];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="relative flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-gray-300 transition hover:border-white/40 hover:text-white"
+      >
+        🔔
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-11 z-40 w-72 rounded-2xl border border-white/10 bg-[#0d1a0d] p-1 shadow-2xl">
+            <div className="px-3 py-2 text-xs font-bold text-gray-400">الإشعارات</div>
+            {NOTIFICATIONS.length > 0 ? (
+              NOTIFICATIONS.map((n, i) => (
+                <div
+                  key={i}
+                  className="flex cursor-pointer items-start gap-3 rounded-xl px-3 py-3 transition hover:bg-white/5"
+                >
+                  <span className="text-xl">{n.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-200 leading-tight">{n.text}</p>
+                    <p className="mt-0.5 text-xs text-gray-500">{n.time}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="px-3 py-4 text-center text-sm text-gray-500">
+                لا توجد إشعارات حالياً
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── Live Rate Ticker (scrolling) ────────────────────────────────────────────
+function LiveTicker() {
+  const items = [...TICKER_PAIRS, ...TICKER_PAIRS]; // duplicate for seamless loop
+
+  return (
+    <div className="overflow-hidden border-b border-white/5 bg-[#0a110a] py-2">
+      <div
+        className="flex gap-8 whitespace-nowrap"
+        style={{
+          animation: "ticker 30s linear infinite",
+          width: "max-content",
+        }}
+      >
+        {items.map((p, i) => {
+          const rate = RATES[p.from]?.[p.to] ?? 0;
+          const isUp = Math.random() > 0.5; // demo: random direction
+          return (
+            <div key={i} className="flex items-center gap-2 text-xs">
+              <span className="font-mono font-bold text-gray-300">{p.label}</span>
+              <span className="font-mono font-black text-[#13B601]">{rate.toFixed(4)}</span>
+              <span className={`text-[10px] ${isUp ? "text-green-400" : "text-red-400"}`}>
+                {isUp ? "▲" : "▼"} {(Math.random() * 0.0005).toFixed(4)}
+              </span>
+              <span className="text-gray-700">|</span>
+            </div>
+          );
+        })}
+      </div>
+      <style>{`
+        @keyframes ticker {
+          0% { transform: translateX(0) }
+          100% { transform: translateX(-50%) }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ─── Main Landing Page ────────────────────────────────────────────────────────
 export default function LandingPage() {
   const [amount, setAmount] = useState("500");
   const [fromCurrency, setFromCurrency] = useState("SAR");
@@ -63,32 +141,57 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#050a05] text-white" dir="rtl">
-      {/* ========== NAV ========== */}
+      {/* ══ Live ticker ══ */}
+      <LiveTicker />
+
+      {/* ══ Navbar ══ */}
       <nav
-        className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-          scrolled ? "bg-[#050a05]/95 backdrop-blur-md shadow-lg shadow-black/20" : "bg-transparent"
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled
+            ? "bg-[#050a05]/95 backdrop-blur-md shadow-lg shadow-black/30"
+            : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
-          </div>
-          <div className="flex items-center gap-3">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 -my-8 object-contain" />
+          </Link>
+
+          {/* Right actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Notification bell */}
+            <NotificationBell />
+
+            {/* Developer link */}
+            <Link
+              href="/developer"
+              className="hidden items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-xs font-medium text-gray-300 transition hover:border-white/30 hover:text-white sm:flex"
+            >
+              <span className="text-[10px]">{"</>"}</span>
+              Developer
+            </Link>
+
+            {/* Premium */}
             <button
               onClick={() => setShowPremium(true)}
-              className="hidden sm:flex items-center gap-1.5 rounded-full border border-[#13B601]/40 px-4 py-2 text-sm font-medium text-[#13B601] transition hover:bg-[#13B601]/10"
+              className="hidden items-center gap-1.5 rounded-full border border-[#13B601]/40 px-4 py-2 text-xs font-semibold text-[#13B601] transition hover:bg-[#13B601]/10 sm:flex"
             >
               ⭐ Premium
             </button>
+
+            {/* Dashboard */}
             <Link
               href="/dashboard"
-              className="text-sm text-gray-400 transition hover:text-white"
+              className="hidden text-sm text-gray-400 transition hover:text-white sm:block"
             >
               الحساب
             </Link>
+
+            {/* CTA */}
             <Link
               href="/send"
-              className="rounded-full bg-[#13B601] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#0fa301] active:scale-95"
+              className="rounded-full bg-[#13B601] px-5 py-2 text-sm font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] active:scale-95"
             >
               أرسل الآن
             </Link>
@@ -96,20 +199,20 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ========== HERO ========== */}
-      <section className="relative overflow-hidden px-6 pb-24 pt-32">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* ══ Hero ══ */}
+      <section className="relative overflow-hidden px-6 pb-24 pt-16">
+        <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-[#13B601]/10 blur-[120px]" />
           <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#13B601]/5 blur-[80px]" />
         </div>
 
         <div className="relative mx-auto max-w-6xl">
           <div className="grid items-center gap-12 lg:grid-cols-2">
-            {/* Left: Text */}
+            {/* Text */}
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#13B601]/30 bg-[#13B601]/10 px-4 py-1.5 text-sm text-[#13B601]">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-[#13B601]" />
-                يعمل على شبكة Solana • رسوم أقل من $0.01
+                Solana • رسوم أقل من $0.01
               </div>
 
               <h1 className="mb-6 text-5xl font-black leading-tight lg:text-6xl">
@@ -120,7 +223,7 @@ export default function LandingPage() {
               </h1>
 
               <p className="mb-8 text-xl leading-relaxed text-gray-400">
-                بدون رسوم مصرفية مرتفعة. بدون انتظار أيام.
+                بدون رسوم مصرفية مرتفعة. بدون انتظار.
                 <br />
                 فقط رقم الهاتف — وخلال ثوانٍ يصل المال.
               </p>
@@ -128,7 +231,7 @@ export default function LandingPage() {
               <div className="flex flex-wrap gap-4">
                 <Link
                   href="/send"
-                  className="group flex items-center gap-2 rounded-full bg-[#13B601] px-8 py-4 text-lg font-bold text-white transition hover:bg-[#0fa301] active:scale-95"
+                  className="group flex items-center gap-2 rounded-full bg-[#13B601] px-8 py-4 text-lg font-bold text-white shadow-xl shadow-[#13B601]/30 transition hover:bg-[#0fa301] active:scale-95"
                 >
                   ابدأ التحويل الآن
                   <span className="transition-transform group-hover:-translate-x-1">←</span>
@@ -141,181 +244,168 @@ export default function LandingPage() {
                 </a>
               </div>
 
-              {/* Stats */}
               <div className="mt-12 flex gap-8">
                 {[
                   { value: "$0.01", label: "رسوم التحويل" },
                   { value: "~5 ثوانٍ", label: "وقت الوصول" },
                   { value: "100%", label: "شفافية Blockchain" },
-                ].map((stat) => (
-                  <div key={stat.label}>
-                    <div className="text-2xl font-black text-[#13B601]">{stat.value}</div>
-                    <div className="text-sm text-gray-500">{stat.label}</div>
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="text-2xl font-black text-[#13B601]">{s.value}</div>
+                    <div className="text-sm text-gray-500">{s.label}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Right: Calculator */}
-            <div className="relative">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-                <div className="mb-6 text-center text-sm font-medium text-gray-400">
-                  احسب تحويلك الآن
-                </div>
-
-                {/* From */}
-                <div className="mb-4">
-                  <label className="mb-2 block text-xs text-gray-500">أرسل</label>
-                  <div className="flex gap-3">
-                    <input
-                      type="number"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-2xl font-bold text-white outline-none transition focus:border-[#13B601]/50"
-                      placeholder="500"
-                    />
-                    <select
-                      value={fromCurrency}
-                      onChange={(e) => setFromCurrency(e.target.value)}
-                      className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none"
-                    >
-                      {FROM_CURRENCIES.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.flag} {c.code}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="my-4 flex items-center gap-4">
-                  <div className="flex-1 border-t border-white/10" />
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#13B601]/30 bg-[#13B601]/10 text-[#13B601]">
-                    ↓
-                  </div>
-                  <div className="flex-1 border-t border-white/10" />
-                </div>
-
-                {/* To */}
-                <div className="mb-6">
-                  <label className="mb-2 block text-xs text-gray-500">يستلم</label>
-                  <div className="flex gap-3">
-                    <div className="flex-1 rounded-xl border border-[#13B601]/30 bg-[#13B601]/10 px-4 py-3">
-                      <span className="text-2xl font-black text-[#13B601]">
-                        {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}
-                      </span>
-                    </div>
-                    <select
-                      value={toCurrency}
-                      onChange={(e) => setToCurrency(e.target.value)}
-                      className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none"
-                    >
-                      {TO_CURRENCIES.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.flag} {c.code}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Fees comparison */}
-                <div className="mb-6 space-y-2 rounded-xl border border-white/5 bg-white/3 p-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">رسوم VeloPay</span>
-                    <span className="font-bold text-[#13B601]">$0.01 فقط ⚡</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Western Union</span>
-                    <span className="text-red-400 line-through">${wuFee}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">تحويل بنكي</span>
-                    <span className="text-red-400 line-through">${bankFee}</span>
-                  </div>
-                  <div className="mt-2 border-t border-white/10 pt-2 text-center text-xs text-[#13B601]">
-                    💰 توفر{" "}
-                    <strong>${(parseFloat(bankFee) - 0.01).toFixed(2)}</strong>{" "}
-                    مقارنة بالتحويل البنكي
-                  </div>
-                </div>
-
-                <Link
-                  href="/send"
-                  className="block w-full rounded-full bg-[#13B601] py-4 text-center text-lg font-bold text-white transition hover:bg-[#0fa301] active:scale-95"
-                >
-                  أرسل {amount || "..."} {fromCurrency} الآن →
-                </Link>
-
-                <p className="mt-3 text-center text-xs text-gray-600">
-                  ⚡ يصل خلال ~5 ثوانٍ عبر Solana Devnet
-                </p>
+            {/* Calculator */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm shadow-2xl">
+              <div className="mb-6 text-center text-sm font-medium text-gray-400">
+                احسب تحويلك الآن
               </div>
+
+              <div className="mb-4">
+                <label className="mb-2 block text-xs text-gray-500">أرسل</label>
+                <div className="flex gap-3">
+                  <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-2xl font-bold text-white outline-none transition focus:border-[#13B601]/50"
+                  />
+                  <select
+                    value={fromCurrency}
+                    onChange={(e) => setFromCurrency(e.target.value)}
+                    className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none"
+                  >
+                    {FROM_CURRENCIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="my-4 flex items-center gap-4">
+                <div className="flex-1 border-t border-white/10" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#13B601]/30 bg-[#13B601]/10 text-[#13B601]">
+                  ↓
+                </div>
+                <div className="flex-1 border-t border-white/10" />
+              </div>
+
+              <div className="mb-6">
+                <label className="mb-2 block text-xs text-gray-500">يستلم</label>
+                <div className="flex gap-3">
+                  <div className="flex-1 rounded-xl border border-[#13B601]/30 bg-[#13B601]/10 px-4 py-3">
+                    <span className="text-2xl font-black text-[#13B601]">
+                      {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                  <select
+                    value={toCurrency}
+                    onChange={(e) => setToCurrency(e.target.value)}
+                    className="rounded-xl border border-white/10 bg-[#0d1a0d] px-3 py-3 text-sm font-medium text-white outline-none"
+                  >
+                    {TO_CURRENCIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Fee comparison */}
+              <div className="mb-6 space-y-2 rounded-xl border border-white/5 bg-white/3 p-4">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-400">رسوم VeloPay</span>
+                  <span className="font-bold text-[#13B601]">$0.01 فقط ⚡</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-400">Western Union</span>
+                  <span className="text-red-400 line-through">${wuFee}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-400">تحويل بنكي</span>
+                  <span className="text-red-400 line-through">${bankFee}</span>
+                </div>
+                <div className="mt-2 border-t border-white/10 pt-2 text-center text-xs text-[#13B601]">
+                  💰 توفر{" "}
+                  <strong>${(parseFloat(bankFee) - 0.01).toFixed(2)}</strong> مقارنة
+                  بالبنك
+                </div>
+              </div>
+
+              <Link
+                href="/send"
+                className="block w-full rounded-full bg-[#13B601] py-4 text-center text-lg font-bold text-white shadow-lg shadow-[#13B601]/30 transition hover:bg-[#0fa301] active:scale-95"
+              >
+                أرسل {amount || "..."} {fromCurrency} الآن →
+              </Link>
+              <p className="mt-3 text-center text-xs text-gray-600">
+                ⚡ يصل خلال ~5 ثوانٍ عبر Solana Devnet
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ========== HOW IT WORKS ========== */}
+      {/* ══ How it works ══ */}
+      <HowItWorksFlow />
 
 
 
-      {/* ========== COMPARISON TABLE ========== */}
-<HowItWorksFlow />
-
-
-      {/* ========== LIVE RATES + EXCHANGE ALERT ========== */}
+      {/* ══ Comparison table ══ */}
       <section className="px-6 py-24">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-4xl">
           <div className="mb-16 text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#13B601]/20 px-4 py-1.5 text-sm font-medium text-[#13B601]">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-[#13B601]" />
-              أسعار مباشرة
-            </div>
-            <h2 className="mb-4 text-4xl font-black">تابع أسعار الصرف لحظة بلحظة</h2>
-            <p className="text-gray-400">أسعار USDC والعملات المحلية — محدّثة كل دقيقة</p>
+            <h2 className="mb-4 text-4xl font-black">لماذا VeloPay؟</h2>
+            <p className="text-gray-400">المقارنة تتكلم عن نفسها</p>
           </div>
-
-          <div className="grid gap-8 lg:grid-cols-2">
-            <LiveRateTicker />
-            <ExchangeRateAlert />
+          <div className="overflow-hidden rounded-2xl border border-white/10">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10 bg-white/5">
+                  <th className="py-4 pr-6 text-right text-sm text-gray-400" />
+                  <th className="py-4 text-center text-sm font-bold text-[#13B601]">VeloPay</th>
+                  <th className="py-4 text-center text-sm text-gray-400">Western Union</th>
+                  <th className="py-4 text-center text-sm text-gray-400">بنكي</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { label: "الرسوم", a: "$0.01", b: "$15-20", c: "$25-35" },
+                  { label: "الوقت", a: "< 5 ثوانٍ", b: "ساعات", c: "أيام" },
+                  { label: "الشفافية", a: "✅ Blockchain", b: "❌", c: "❌" },
+                  { label: "رقم هاتف فقط", a: "✅", b: "❌", c: "❌" },
+                  { label: "Yield", a: "✅ Premium", b: "❌", c: "❌" },
+                ].map((row) => (
+                  <tr key={row.label} className="border-b border-white/5 last:border-0">
+                    <td className="py-4 pr-6 text-sm text-gray-400">{row.label}</td>
+                    <td className="py-4 text-center text-sm font-bold text-[#13B601]">{row.a}</td>
+                    <td className="py-4 text-center text-sm text-gray-500">{row.b}</td>
+                    <td className="py-4 text-center text-sm text-gray-500">{row.c}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-     
-      {/* ========== CTA ========== */}
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-2xl rounded-3xl border border-[#13B601]/20 bg-[#13B601]/10 p-16 text-center">
-          <h2 className="mb-4 text-4xl font-black">جاهز للتحويل؟</h2>
-          <p className="mb-8 text-gray-400">
-            انضم لآلاف المستخدمين الذين يوفرون المال مع كل تحويل
-          </p>
-          <Link
-            href="/send"
-            className="inline-flex items-center gap-2 rounded-full bg-[#13B601] px-10 py-5 text-xl font-bold text-white transition hover:bg-[#0fa301] active:scale-95"
-          >
-            ابدأ التحويل المجاني ←
-          </Link>
-          <p className="mt-4 text-sm text-gray-600">
-            لا رسوم إضافية • لا بطاقة ائتمانية مطلوبة للتجربة
-          </p>
-        </div>
-      </section>
 
-      {/* ========== FOOTER ========== */}
+
+      {/* ══ Footer ══ */}
       <footer className="border-t border-white/5 px-6 py-10 text-center text-sm text-gray-600">
-        <div className="flex items-center justify-center gap-2 mb-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-6 w-6 rounded-lg" />
-          <span className="font-bold text-gray-400">VeloPay</span>
+        <div className="mb-2 flex items-center justify-center gap-2">
+          <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 object-contain -my-6" />
         </div>
         <p>© 2026 VeloPay — مبني على Solana Blockchain</p>
-        <p className="mt-2 text-xs">
-          هذا مشروع Hackathon MVP — التحويلات على Devnet (بيانات تجريبية)
-        </p>
+        <p className="mt-1 text-xs">Hackathon MVP — بيانات تجريبية على Devnet</p>
       </footer>
 
-      {/* Premium Modal */}
       <PremiumModal open={showPremium} onClose={() => setShowPremium(false)} />
     </div>
   );
