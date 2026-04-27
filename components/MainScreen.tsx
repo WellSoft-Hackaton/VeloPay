@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
-import { useCrossmintAuth } from "@crossmint/client-sdk-react-ui";
+
 import { DepositModal } from "@/components/deposit";
 import { SendFundsModal } from "@/components/send-funds";
 import { EarnYieldModal } from "@/components/earn-yield";
@@ -16,7 +16,6 @@ export function MainScreen({ walletAddress }: MainScreenProps) {
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showEarnYieldModal, setShowEarnYieldModal] = useState(false);
-  const { logout } = useCrossmintAuth();
 
   return (
     <div className="flex h-full w-full justify-center gap-2 px-4 py-6">
@@ -34,7 +33,7 @@ export function MainScreen({ walletAddress }: MainScreenProps) {
             />
             <div className="text-xl font-semibold text-gray-900">Dashboard</div>
           </div>
-          <button onClick={logout} className="text-muted-foreground text-sm hover:text-gray-700">
+          <button className="text-muted-foreground text-sm hover:text-gray-700">
             Log out
           </button>
         </div>
