@@ -65,7 +65,7 @@ export default function TrackPage() {
           messages: [
             {
               role: "user",
-              content: `المستخدم أرسل ${tx.amount} ${tx.fromCurrency} عبر NexaPay. الرسوم: $0.01. رسوم Western Union المكافئة: $${(parseFloat(tx.amount) * 0.035 + 5).toFixed(2)}. وقت الوصول: ~5 ثوانٍ. اكتب رسالة تحفيزية قصيرة جداً (جملة واحدة) بالعربية.`,
+              content: `المستخدم أرسل ${tx.amount} ${tx.fromCurrency} عبر VeloPay. الرسوم: $0.01. رسوم Western Union المكافئة: $${(parseFloat(tx.amount) * 0.035 + 5).toFixed(2)}. وقت الوصول: ~5 ثوانٍ. اكتب رسالة تحفيزية قصيرة جداً (جملة واحدة) بالعربية.`,
             },
           ],
         }),
@@ -86,10 +86,7 @@ export default function TrackPage() {
       <div className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#13B601] text-white font-bold text-sm">
-              N
-            </div>
-            <span className="font-bold text-gray-900">NexaPay</span>
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
           </Link>
           <span className="text-sm text-gray-500">تتبع التحويل</span>
         </div>
@@ -226,7 +223,7 @@ export default function TrackPage() {
             {loadingAi ? (
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#13B601] border-t-transparent" />
-                يحلل NexaPay AI تحويلك...
+                يحلل VeloPay AI تحويلك...
               </div>
             ) : (
               <p className="text-gray-700">{aiMessage}</p>

@@ -89,3 +89,81 @@
     cursor: pointer;
   }
 }
+
+/* Custom animations */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
+}
+
+
+/* ========== إضافة إلى globals.css ========== */
+
+/* تأثير وميض للعقد النشطة */
+@keyframes node-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px 2px rgba(19, 182, 1, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px 8px rgba(19, 182, 1, 0.6);
+  }
+}
+
+.animate-node-glow {
+  animation: node-glow 2s ease-in-out infinite;
+}
+
+/* تأثير مرور البيانات على الخط */
+@keyframes data-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-data-flow {
+  background-size: 200% 100%;
+  animation: data-flow 2s linear infinite;
+}
+
+/* تأثير دخول سلس للقسم */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* تأثير نبض لشبكة Solana */
+@keyframes solana-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(19, 182, 1, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(19, 182, 1, 0);
+  }
+}
+
+.animate-solana-pulse {
+  animation: solana-pulse 2s ease-in-out infinite;
+}

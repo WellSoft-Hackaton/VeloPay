@@ -59,3 +59,20 @@ export const verificationTokens = pgTable(
     },
     (vt) => [primaryKey({ columns: [vt.identifier, vt.token] })]
 );
+
+// ✅ Transfers table — tracks user transfers for monthly limit enforcement
+export const transfers = pgTable("transfer", {
+    id: text("id")
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    amount: text("amount").notNull(),
+    fromCurrency: text("fromCurrency").notNull(),
+    toCurrency: text("toCurrency").notNull(),
+    recipientPhone: text("recipientPhone"),
+    txHash: text("txHash"),
+    status: text("status").notNull().default("pending"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
