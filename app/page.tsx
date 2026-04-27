@@ -46,9 +46,6 @@ function NotificationBell() {
         className="relative flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-gray-300 transition hover:border-white/40 hover:text-white"
       >
         🔔
-        <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
-          {NOTIFICATIONS.length}
-        </span>
       </button>
 
       {open && (
@@ -155,10 +152,10 @@ export default function LandingPage() {
             : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-9" />
+            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 -my-8 object-contain" />
           </Link>
 
           {/* Right actions */}
@@ -403,7 +400,7 @@ export default function LandingPage() {
       {/* ══ Footer ══ */}
       <footer className="border-t border-white/5 px-6 py-10 text-center text-sm text-gray-600">
         <div className="mb-2 flex items-center justify-center gap-2">
-          <img src="/VeloPay.png" alt="VeloPay Logo" className="h-6" />
+          <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 object-contain -my-6" />
         </div>
         <p>© 2026 VeloPay — مبني على Solana Blockchain</p>
         <p className="mt-1 text-xs">Hackathon MVP — بيانات تجريبية على Devnet</p>

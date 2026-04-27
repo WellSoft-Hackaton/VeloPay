@@ -60,10 +60,10 @@ export default function ReceivePage() {
   return (
     <div className="min-h-screen bg-[#f5f5f5]" dir="rtl">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 py-4 shadow-sm">
-        <div className="mx-auto flex max-w-2xl items-center justify-between">
+      <div className="border-b border-gray-200 bg-white px-6 shadow-sm flex items-center h-16">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay logo" className="h-[70px] w-[70px] rounded-2xl object-contain" />
+            <img src="/VeloPay.png" alt="VeloPay logo" className="h-22 -my-8 object-contain" />
           </Link>
           <span className="rounded-full bg-[#13B601]/10 px-3 py-1 text-xs font-medium text-[#13B601]">
             استلام الأموال

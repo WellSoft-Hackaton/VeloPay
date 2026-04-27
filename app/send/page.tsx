@@ -342,10 +342,10 @@ export default function SendPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f5]" dir="rtl">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 py-4 shadow-sm">
-        <div className="mx-auto flex max-w-2xl items-center justify-between">
+      <div className="border-b border-gray-200 bg-white px-6 shadow-sm flex items-center h-16">
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-8" />
+            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 -my-8 object-contain" />
           </Link>
           <span className="text-sm text-gray-400">
             {step === 1 ? "التفاصيل" : step === 2 ? "طريقة الدفع" : "التأكيد"}
@@ -474,21 +474,6 @@ export default function SendPage() {
                   <div className="space-y-3">
                     <div className="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
                       🏗️ يتطلب شراكة مع Liquidity Provider — المعمارية جاهزة
-                    </div>
-                    <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-gray-600">
-                        رقم الهاتف (Zain Cash / CliQ)
-                      </label>
-                      <input
-                        type="tel"
-                        value={receivePhone}
-                        onChange={(e) => setReceivePhone(e.target.value)}
-                        placeholder="+962-7X-XXXXXXX"
-                        className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
-                        dir="ltr"
-                        autoComplete="off"
-                        onClick={(e) => e.stopPropagation()}
-                      />
                     </div>
                   </div>
                 </MethodCard>

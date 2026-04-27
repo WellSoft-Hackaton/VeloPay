@@ -69,7 +69,7 @@ export default function VeloPayFlow() {
   }, []);
 
   return (
-    <section dir="rtl" className="relative overflow-hidden bg-[#050A05] px-6 py-24 text-white">
+    <section id="how" dir="rtl" className="relative overflow-hidden bg-[#050A05] px-6 py-24 text-white">
       {/* تأثيرات خلفية خافتة */}
       <div className="absolute top-0 right-0 h-[300px] w-[300px] bg-[#13B601]/5 blur-[100px]" />
       
