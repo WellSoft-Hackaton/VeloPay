@@ -22,7 +22,7 @@ const phoneRegistry = new Map<string, string>();
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { amount, fromCurrency, toCurrency, recipientPhone, toCountry } = body;
+    const { amount, fromCurrency, toCurrency, recipientPhone, toCountry, isEscrow, escrowCondition } = body;
 
     if (!amount || !fromCurrency || !toCurrency || !recipientPhone) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -51,7 +51,9 @@ export async function POST(request: Request) {
       toCountry,
       fee: 0.01,
       network: "solana-devnet",
-      status: "pending",
+      status: isEscrow ? "locked" : "pending",
+      isEscrow,
+      escrowCondition,
       explorerUrl: `https://explorer.solana.com/tx/${txHash}?cluster=devnet`,
       createdAt: new Date().toISOString(),
       estimatedDelivery: new Date(Date.now() + 5000).toISOString(),

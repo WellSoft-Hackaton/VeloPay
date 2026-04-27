@@ -18,7 +18,7 @@ export function PaymentMethodModal({ open, onClose }: PaymentMethodModalProps) {
 
   const handleConditionalPay = () => {
     onClose();
-    router.push("/conditional-pay");
+    router.push("/escrow");
   };
 
   return (

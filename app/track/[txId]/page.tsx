@@ -21,6 +21,8 @@ interface TxData {
   countryFlag: string;
   status: string;
   createdAt: string;
+  isEscrow?: boolean;
+  escrowCondition?: string;
 }
 
 export default function TrackPage() {
@@ -43,16 +45,37 @@ export default function TrackPage() {
 
   // Simulate progress
   useEffect(() => {
+    if (!tx) return;
+
     const timer = setInterval(() => {
       setElapsed((e) => e + 1);
       setCurrentStep((s) => {
+        // If it's escrow and not delivered, stop at the penultimate step ("confirmed")
+        if (tx.isEscrow && tx.status === "locked") {
+          if (s < STEPS.length - 2) return s + 1;
+          clearInterval(timer);
+          return s; // stays at step 2 (0-indexed, so 3rd step)
+        }
+
         if (s < STEPS.length - 1) return s + 1;
         clearInterval(timer);
         return s;
       });
     }, 1500);
     return () => clearInterval(timer);
-  }, []);
+  }, [tx]);
+
+  const handleReleaseFunds = () => {
+    if (!tx) return;
+    try {
+      const txs: TxData[] = JSON.parse(localStorage.getItem("nexapay_txs") || "[]");
+      const updatedTxs = txs.map(t => t.txHash === tx.txHash ? { ...t, status: "delivered" } : t);
+      localStorage.setItem("nexapay_txs", JSON.stringify(updatedTxs));
+      
+      setTx({ ...tx, status: "delivered" });
+      setCurrentStep(STEPS.length - 1); // jump to delivered
+    } catch {}
+  };
 
   // Fetch AI analysis after completion
   useEffect(() => {
@@ -103,7 +126,11 @@ export default function TrackPage() {
             )}
           </div>
           <h1 className="text-xl font-black text-gray-900">
-            {currentStep < STEPS.length - 1 ? "جاري التحويل..." : "تم التحويل بنجاح!"}
+            {tx?.isEscrow && tx.status === "locked" && currentStep === STEPS.length - 2
+              ? "محجوز في العقد الذكي"
+              : currentStep < STEPS.length - 1
+              ? "جاري التحويل..."
+              : "تم التحويل بنجاح!"}
           </h1>
           {tx && (
             <p className="mt-1 text-gray-500">
@@ -154,10 +181,16 @@ export default function TrackPage() {
                 {/* Status */}
                 <div className="pt-1">
                   {i < currentStep && <span className="text-xs font-medium text-[#13B601]">✓ مكتمل</span>}
-                  {i === currentStep && i < STEPS.length - 1 && (
+                  {i === currentStep && i < STEPS.length - 1 && (!tx?.isEscrow || tx.status !== "locked" || i !== STEPS.length - 2) && (
                     <span className="inline-flex items-center gap-1 text-xs text-amber-600">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" />
                       جارٍ...
+                    </span>
+                  )}
+                  {i === currentStep && tx?.isEscrow && tx.status === "locked" && i === STEPS.length - 2 && (
+                    <span className="inline-flex items-center gap-1 text-xs text-blue-600">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+                      بانتظار التحرير
                     </span>
                   )}
                   {i === currentStep && i === STEPS.length - 1 && (
@@ -211,6 +244,36 @@ export default function TrackPage() {
             >
               عرض على Solana Explorer ↗
             </a>
+          </div>
+        )}
+
+        {/* Escrow Details & Action */}
+        {tx?.isEscrow && (
+          <div className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-6">
+            <h3 className="mb-2 flex items-center gap-2 font-semibold text-blue-900">
+              <span className="text-xl">🤝</span> تفاصيل العقد الذكي (Escrow)
+            </h3>
+            <p className="mb-4 text-sm text-blue-800 bg-white p-3 rounded-lg border border-blue-100">
+              <span className="block font-bold mb-1 text-xs text-blue-600">شرط التحرير:</span>
+              {tx.escrowCondition || "لا يوجد شرط مكتوب"}
+            </p>
+            {tx.status === "locked" ? (
+              <div>
+                <p className="mb-4 text-xs text-blue-700">
+                  المبلغ محتجز حالياً في العقد الذكي بأمان. إذا تم تنفيذ الشرط أعلاه، يمكنك تحرير المبلغ ليصل فوراً للمستلم.
+                </p>
+                <button
+                  onClick={handleReleaseFunds}
+                  className="w-full rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-700 active:scale-95"
+                >
+                  تحرير الأموال الآن (Release Funds)
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-sm font-bold text-[#13B601]">
+                <span className="text-lg">✅</span> تم تحرير الأموال بنجاح
+              </div>
+            )}
           </div>
         )}
 
