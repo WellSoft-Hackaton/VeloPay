@@ -76,3 +76,62 @@ export const transfers = pgTable("transfer", {
     status: text("status").notNull().default("pending"),
     createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
+
+// Optional/simple tables for user-visible data (kept minimal and string-based)
+export const wallets = pgTable("wallet", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    address: text("address").notNull(),
+    chain: text("chain"),
+    label: text("label"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const paymentMethods = pgTable("payment_method", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(), // card | bank | wallet | other
+    provider: text("provider"),
+    details: text("details"), // JSON string with provider-specific fields (masked)
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const deposits = pgTable("deposit", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    amount: text("amount").notNull(),
+    currency: text("currency").notNull(),
+    method: text("method"), // e.g., card, bank, onramp
+    status: text("status").notNull().default("pending"),
+    txHash: text("txHash"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const yieldPositions = pgTable("yield_position", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    amount: text("amount").notNull(),
+    currency: text("currency").notNull().default("USDC"),
+    status: text("status").notNull().default("active"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+    exitedAt: timestamp("exitedAt", { mode: "date" }),
+});
+
+export const activityEvents = pgTable("activity_event", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    amount: text("amount"),
+    metadata: text("metadata"), // JSON string for extra event data
+    timestamp: timestamp("timestamp", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const exchangeRateAlerts = pgTable("exchange_rate_alert", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    currency: text("currency").notNull(),
+    targetRate: text("targetRate").notNull(), // stored as string for simplicity
+    direction: text("direction").notNull().default("below"),
+    active: boolean("active").notNull().default(false),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});

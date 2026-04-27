@@ -3,12 +3,19 @@ import { signIn } from 'next-auth/react'
 import Image from 'next/image'
 import { ArrowLeft, ShieldCheck, Zap, Globe } from 'lucide-react'
 
+import { ThemeToggle } from '@/components/ThemeToggle'
+
 export default function LoginPage() {
     return (
-        <div className="min-h-screen flex flex-col md:flex-row bg-background selection:bg-primary/20" dir="rtl">
+        <div className="min-h-screen flex flex-col md:flex-row bg-background selection:bg-primary/20 relative" dir="rtl">
+            {/* Theme Toggle in a floating position */}
+            <div className="absolute top-6 left-6 z-50">
+                <ThemeToggle />
+            </div>
+
             {/* Right side in RTL: Branding & Hero */}
             <div className="flex-1 flex flex-col justify-between p-8 md:p-12 lg:p-24 bg-[#0B7A00] text-white relative overflow-hidden">
-                {/* Decorative background elements */}
+                {/* ... (rest of hero side) ... */}
                 <div className="absolute top-0 right-0 w-full h-full overflow-hidden z-0 pointer-events-none">
                     <div className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-white/10 blur-3xl transition-transform duration-1000 hover:scale-105" />
                     <div className="absolute bottom-[10%] -left-[20%] w-[60%] h-[60%] rounded-full bg-black/20 blur-3xl transition-transform duration-1000 hover:scale-105" />
@@ -68,8 +75,9 @@ export default function LoginPage() {
                     <div className="mt-10 bg-card p-8 rounded-3xl shadow-sm border border-border/60 hover:shadow-md transition-shadow duration-300">
                         <button
                             onClick={() => signIn("google", { callbackUrl: "/" })}
-                            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 py-4 px-4 rounded-2xl font-semibold text-lg transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary group"
+                            className="w-full flex items-center justify-center gap-3 bg-background hover:bg-accent text-foreground border border-border py-4 px-4 rounded-2xl font-semibold text-lg transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary group"
                         >
+
                             <svg className="w-6 h-6" viewBox="0 0 24 24">
                                 <path
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

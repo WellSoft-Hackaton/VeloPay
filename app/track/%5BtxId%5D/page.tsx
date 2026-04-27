@@ -4,12 +4,24 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Header } from "@/components/Header";
+import { 
+  Rocket, 
+  CreditCard, 
+  Link2, 
+  CheckCircle2, 
+  Hourglass, 
+  PartyPopper, 
+  Check, 
+  Handshake, 
+  Bot, 
+  ExternalLink 
+} from "lucide-react";
 
 const STEPS = [
-  { id: "initiated", label: "تم الإرسال", icon: "🚀", desc: "تم استلام طلب التحويل" },
-  { id: "processing", label: "معالجة الدفع", icon: "💳", desc: "يتم تحويل Fiat إلى USDC" },
-  { id: "confirmed", label: "تأكيد Blockchain", icon: "⛓️", desc: "تم التسجيل على Solana" },
-  { id: "delivered", label: "تم التسليم", icon: "✅", desc: "وصل للمستلم بنجاح" },
+  { id: "initiated", label: "تم الإرسال", icon: <Rocket size={20} aria-hidden="true" />, desc: "تم استلام طلب التحويل" },
+  { id: "processing", label: "معالجة الدفع", icon: <CreditCard size={20} aria-hidden="true" />, desc: "يتم تحويل Fiat إلى USDC" },
+  { id: "confirmed", label: "تأكيد Blockchain", icon: <Link2 size={20} aria-hidden="true" />, desc: "تم التسجيل على Solana" },
+  { id: "delivered", label: "تم التسليم", icon: <CheckCircle2 size={20} aria-hidden="true" />, desc: "وصل للمستلم بنجاح" },
 ];
 
 interface TxData {
@@ -111,11 +123,11 @@ export default function TrackPage() {
       <div className="mx-auto max-w-2xl px-6 py-8 space-y-6">
         {/* Status header */}
         <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-sm">
-          <div className="mb-2 text-5xl">
+          <div className="mb-2 flex justify-center text-5xl">
             {currentStep < STEPS.length - 1 ? (
-              <span className="animate-bounce inline-block">⏳</span>
+              <Hourglass size={48} className="animate-pulse text-muted-foreground" aria-hidden="true" />
             ) : (
-              <span>🎉</span>
+              <PartyPopper size={48} className="text-primary" aria-hidden="true" />
             )}
           </div>
           <h1 className="text-xl font-black text-foreground">
@@ -137,18 +149,18 @@ export default function TrackPage() {
           <h3 className="mb-6 font-semibold text-foreground">حالة المعاملة</h3>
           <div className="space-y-4">
             {STEPS.map((s, i) => (
-              <div key={s.id} className="flex items-start gap-4">
+              <div key={i} className="flex items-start gap-4">
                 {/* Icon */}
                 <div
-                  className={`relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-lg transition-all duration-500 ${
+                  className={`relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all duration-500 ${
                     i < currentStep
                       ? "bg-primary text-primary-foreground"
                       : i === currentStep
-                      ? "border-2 border-primary bg-primary/10"
-                      : "border-2 border-border bg-muted"
+                      ? "border-2 border-primary bg-primary/10 text-primary"
+                      : "border-2 border-border bg-muted text-muted-foreground"
                   }`}
                 >
-                  {i < currentStep ? "✓" : s.icon}
+                  {i < currentStep ? <Check size={18} aria-hidden="true" /> : s.icon}
                   {i === currentStep && i < STEPS.length - 1 && (
                     <span className="absolute inset-0 animate-ping rounded-full bg-primary/20" />
                   )}
@@ -235,7 +247,7 @@ export default function TrackPage() {
               rel="noopener noreferrer"
               className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
             >
-              عرض على Solana Explorer ↗
+              عرض على Solana Explorer <ExternalLink size={14} aria-hidden="true" />
             </a>
           </div>
         )}
@@ -244,7 +256,7 @@ export default function TrackPage() {
         {tx?.isEscrow && (
           <div className="rounded-2xl border-2 border-blue-500/20 bg-blue-500/5 p-6 shadow-sm">
             <h3 className="mb-2 flex items-center gap-2 font-semibold text-blue-600">
-              <span className="text-xl">🤝</span> تفاصيل العقد الذكي (Escrow)
+              <Handshake size={20} aria-hidden="true" /> تفاصيل العقد الذكي (Escrow)
             </h3>
             <p className="mb-4 text-sm text-blue-700 bg-card p-3 rounded-lg border border-blue-500/10">
               <span className="block font-bold mb-1 text-xs text-blue-600">شرط التحرير:</span>
@@ -264,7 +276,7 @@ export default function TrackPage() {
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm font-bold text-primary">
-                <span className="text-lg">✅</span> تم تحرير الأموال بنجاح
+                <CheckCircle2 size={18} aria-hidden="true" /> تم تحرير الأموال بنجاح
               </div>
             )}
           </div>
@@ -274,7 +286,7 @@ export default function TrackPage() {
         {currentStep === STEPS.length - 1 && (
           <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 shadow-sm">
             <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-primary">
-              🤖 تحليل AI
+              <Bot size={18} aria-hidden="true" /> تحليل AI
             </div>
             {loadingAi ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">

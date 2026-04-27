@@ -6,11 +6,11 @@ interface DetailsProps {
 
 export function Details({ values }: DetailsProps) {
   return (
-    <div className="flex w-full flex-col gap-4 rounded-xl border border-gray-200 p-4">
+    <div className="flex w-full flex-col gap-4 rounded-xl border border-border p-4">
       {values.map((value) => (
         <div key={value.label} className="flex items-center justify-between text-sm">
-          <div className="text-gray-900">{value.label}</div>
-          <div className="font-medium text-gray-900">{value.value}</div>
+          <div className="text-muted-foreground">{value.label}</div>
+          <div className="font-medium text-foreground">{value.value}</div>
         </div>
       ))}
     </div>

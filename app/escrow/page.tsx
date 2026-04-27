@@ -3,6 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Header } from "@/components/Header";
+import { 
+  Info, 
+  ArrowDown, 
+  Handshake, 
+  ArrowRight, 
+  ArrowLeft, 
+  CreditCard, 
+  Coins, 
+  Check,
+  Zap
+} from "lucide-react";
+
 
 const RATES: Record<string, Record<string, number>> = {
   SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
@@ -123,30 +136,20 @@ export default function EscrowPage() {
   const canProceedStep1 = amount && parseFloat(amount) > 0 && phone.length > 5 && escrowCondition.trim().length > 3;
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]" dir="rtl">
-      {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 shadow-sm flex items-center h-16">
-        <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 -my-8 object-contain" />
-          </Link>
-          <span className="text-sm font-semibold text-[#13B601]">
-            الضمان (Escrow)
-          </span>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300" dir="rtl">
+      <Header />
 
       {/* Progress bar */}
-      <div className="bg-white px-6 pb-4 pt-2">
+      <div className="bg-card px-6 pb-4 pt-4 border-b border-border">
         <div className="mx-auto max-w-2xl">
           <div className="flex gap-2">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-200"
+                className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"
               >
                 <div
-                  className="h-full rounded-full bg-[#13B601] transition-all duration-500"
+                  className="h-full rounded-full bg-primary transition-all duration-500"
                   style={{ width: s <= step ? "100%" : "0%" }}
                 />
               </div>
@@ -160,21 +163,21 @@ export default function EscrowPage() {
         {step === 1 && (
           <div className="space-y-5">
             <div>
-              <h1 className="text-2xl font-black text-gray-900">إعداد الدفع المشروط</h1>
-              <p className="mt-1 text-gray-500 text-sm">أدخل تفاصيل التحويل والشرط</p>
+              <h1 className="text-2xl font-black text-foreground">إعداد الدفع المشروط</h1>
+              <p className="mt-1 text-muted-foreground text-sm">أدخل تفاصيل التحويل والشرط</p>
             </div>
 
             {/* Info Notice */}
-            <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 flex gap-3 text-sm text-blue-800">
-              <span className="text-xl">ℹ️</span>
+            <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 flex gap-3 text-sm text-blue-600">
+              <Info size={18} className="flex-shrink-0" aria-hidden="true" />
               <p>
                 سيتم احتجاز المبلغ في عقد ذكي، ولن يتم إرساله للمستلم حتى تؤكد تحقق الشرط الذي تضعه أدناه.
               </p>
             </div>
 
             {/* Amount card */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <label className="mb-2 block text-sm font-semibold text-gray-600">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <label className="mb-2 block text-sm font-semibold text-muted-foreground">
                 المبلغ المُرسَل
               </label>
               <div className="flex gap-3">
@@ -182,13 +185,13 @@ export default function EscrowPage() {
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-2xl font-bold text-gray-900 outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20"
+                  className="flex-1 rounded-xl border border-border bg-background px-4 py-3 text-2xl font-bold text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="500"
                 />
                 <select
                   value={fromCurrency}
                   onChange={(e) => setFromCurrency(e.target.value)}
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 font-medium text-gray-900 outline-none"
+                  className="rounded-xl border border-border bg-muted px-3 py-3 font-medium text-foreground outline-none"
                 >
                   {FROM_CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -198,39 +201,39 @@ export default function EscrowPage() {
                 </select>
               </div>
 
-              <div className="my-4 flex items-center gap-3">
-                <div className="flex-1 border-t border-dashed border-gray-200" />
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#13B601]/30 bg-[#13B601]/10 text-[#13B601]">
-                  ↓
+              <div className="my-4 flex items-center justify-center gap-3">
+                <div className="flex-1 border-t border-dashed border-border" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary">
+                  <ArrowDown size={18} aria-hidden="true" />
                 </div>
-                <div className="flex-1 border-t border-dashed border-gray-200" />
+                <div className="flex-1 border-t border-dashed border-border" />
               </div>
 
-              <label className="mb-2 block text-sm font-semibold text-gray-600">
+              <label className="mb-2 block text-sm font-semibold text-muted-foreground">
                 يستلم (عند تحقق الشرط)
               </label>
               <div className="flex gap-3">
-                <div className="flex-1 rounded-xl border border-[#13B601]/30 bg-[#13B601]/5 px-4 py-3">
-                  <span className="text-2xl font-black text-[#13B601]">
+                <div className="flex-1 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
+                  <span className="text-2xl font-black text-primary">
                     {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}
                   </span>
-                  <span className="mr-2 text-sm text-[#13B601]">{country.currency}</span>
+                  <span className="mr-2 text-sm text-primary">{country.currency}</span>
                 </div>
-                <div className="flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700">
+                <div className="flex items-center rounded-xl border border-border bg-muted px-4 py-3 text-sm font-medium text-foreground">
                   {country.flag} {country.currency}
                 </div>
               </div>
             </div>
 
             {/* Recipient */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h3 className="mb-4 font-semibold text-gray-900">بيانات المُرسَل إليه</h3>
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <h3 className="mb-4 font-semibold text-foreground">بيانات المُرسَل إليه</h3>
               <div className="mb-4">
-                <label className="mb-1.5 block text-sm font-medium text-gray-600">الدولة</label>
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">الدولة</label>
                 <select
                   value={country.code}
                   onChange={(e) => handleCountryChange(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-medium text-gray-900 outline-none transition focus:border-[#13B601]"
+                  className="w-full rounded-xl border border-border bg-muted px-4 py-3 font-medium text-foreground outline-none transition focus:border-primary"
                 >
                   {COUNTRIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -240,40 +243,40 @@ export default function EscrowPage() {
                 </select>
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-600">رقم هاتف المُرسَل إليه</label>
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">رقم هاتف المُرسَل إليه</label>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={`${country.phone}-7XXXXXXXX`}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   dir="ltr"
                 />
               </div>
             </div>
 
             {/* Escrow Condition */}
-            <div className="rounded-2xl border-2 border-[#13B601]/30 bg-[#13B601]/5 p-5 shadow-sm">
-              <h3 className="mb-2 flex items-center gap-2 font-semibold text-[#13B601]">
-                <span className="text-xl">🤝</span> شرط التحرير
+            <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 shadow-sm">
+              <h3 className="mb-2 flex items-center gap-2 font-semibold text-primary">
+                <Handshake size={20} aria-hidden="true" /> شرط التحرير
               </h3>
-              <p className="mb-4 text-xs text-gray-600">
+              <p className="mb-4 text-xs text-muted-foreground">
                 اكتب بوضوح متى يجب تسليم المبلغ. (مثال: "عند استلام السيارة والتأكد من سلامتها" أو "بعد تسليم التصميم النهائي").
               </p>
               <textarea
                 value={escrowCondition}
                 onChange={(e) => setEscrowCondition(e.target.value)}
                 placeholder="اكتب الشرط هنا..."
-                className="w-full rounded-xl border border-gray-500 px-4 py-3 text-gray-900 outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20 min-h-[100px] resize-none"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[100px] resize-none"
               />
             </div>
 
             <button
               onClick={() => setStep(2)}
               disabled={!canProceedStep1}
-              className="w-full rounded-full bg-[#13B601] py-4 text-lg font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none active:scale-95"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none active:scale-95"
             >
-              متابعة →
+              متابعة <ArrowLeft size={18} aria-hidden="true" />
             </button>
           </div>
         )}
@@ -284,25 +287,25 @@ export default function EscrowPage() {
             <div>
               <button
                 onClick={() => setStep(1)}
-                className="mb-3 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900"
+                className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
-                ← رجوع
+                <ArrowRight size={16} aria-hidden="true" /> رجوع
               </button>
-              <h1 className="text-2xl font-black text-gray-900">طريقة الدفع</h1>
-              <p className="mt-1 text-gray-500 text-sm">اختر كيف تدفع لتمويل العقد الذكي</p>
+              <h1 className="text-2xl font-black text-foreground">طريقة الدفع</h1>
+              <p className="mt-1 text-muted-foreground text-sm">اختر كيف تدفع لتمويل العقد الذكي</p>
             </div>
 
             <div className="space-y-3">
               {[
                 {
                   id: "card",
-                  icon: "💳",
+                  icon: <CreditCard size={24} aria-hidden="true" />,
                   title: "بطاقة ائتمانية",
                   desc: "Visa / Mastercard",
                 },
                 {
                   id: "usdc",
-                  icon: "🪙",
+                  icon: <Coins size={24} aria-hidden="true" />,
                   title: "USDC من محفظتي",
                   desc: "استخدام رصيد العملات الرقمية",
                 },
@@ -311,20 +314,21 @@ export default function EscrowPage() {
                   key={m.id}
                   onClick={() => setPaymentMethod(m.id)}
                   className={`w-full rounded-2xl border-2 p-5 text-right transition ${paymentMethod === m.id
-                    ? "border-[#13B601] bg-[#13B601]/5"
-                    : "border-gray-200 bg-white hover:border-gray-300"
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-card hover:border-primary/50"
                     }`}
                 >
                   <div className="flex items-center gap-4">
-                    <span className="text-3xl">{m.icon}</span>
+                    <span className="text-primary">{m.icon}</span>
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 font-semibold text-gray-900">
+                      <div className="flex items-center gap-2 font-semibold text-foreground">
                         {m.title}
                         {paymentMethod === m.id && (
-                          <span className="mr-auto text-[#13B601]">✓</span>
+                          <span className="mr-auto text-primary"><Check size={16} aria-hidden="true" /></span>
                         )}
+
                       </div>
-                      <p className="mt-0.5 text-sm text-gray-400">{m.desc}</p>
+                      <p className="mt-0.5 text-sm text-muted-foreground">{m.desc}</p>
                     </div>
                   </div>
                 </button>
@@ -333,9 +337,9 @@ export default function EscrowPage() {
 
             <button
               onClick={() => setStep(3)}
-              className="w-full rounded-full bg-[#13B601] py-4 text-lg font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] active:scale-95"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95"
             >
-              تأكيد طريقة الدفع →
+              تأكيد طريقة الدفع <ArrowLeft size={18} aria-hidden="true" />
             </button>
           </div>
         )}
@@ -346,40 +350,41 @@ export default function EscrowPage() {
             <div>
               <button
                 onClick={() => setStep(2)}
-                className="mb-3 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900"
+                className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
-                ← رجوع
+                <ArrowRight size={16} aria-hidden="true" /> رجوع
               </button>
-              <h1 className="text-2xl font-black text-gray-900">تأكيد الضمان</h1>
-              <p className="mt-1 text-gray-500 text-sm">راجع التفاصيل قبل الاحتفاظ بالمبلغ</p>
+              <h1 className="text-2xl font-black text-foreground">تأكيد الضمان</h1>
+              <p className="mt-1 text-muted-foreground text-sm">راجع التفاصيل قبل الاحتفاظ بالمبلغ</p>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-3 text-sm">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 text-sm">
               {[
                 { label: "يتم حجزه", value: `${amount} ${fromCurrency}` },
                 {
                   label: "يستلمه الطرف الآخر",
                   value: `${converted.toLocaleString("ar", { maximumFractionDigits: 2 })} ${country.currency}`,
-                  valueClass: "text-[#13B601] font-bold",
+                  valueClass: "text-primary font-bold",
                 },
                 { label: "إلى الهاتف", value: `${country.flag} ${phone}` },
-                { label: "رسوم العقد الذكي", value: "$0.01", valueClass: "text-[#13B601] font-bold" },
+                { label: "رسوم العقد الذكي", value: "$0.01", valueClass: "text-primary font-bold" },
                 {
                   label: "طريقة الدفع",
-                  value: paymentMethod === "card" ? "💳 بطاقة ائتمانية" : "🪙 USDC",
+                  value: paymentMethod === "card" ? "بطاقة ائتمانية" : "USDC",
+
                 },
-              ].map(({ label, value, valueClass }) => (
-                <div key={label} className="flex justify-between">
-                  <span className="text-gray-500">{label}</span>
-                  <span className={`font-medium text-gray-900 text-right ${valueClass ?? ""}`}>
+              ].map(({ label, value, valueClass }, i) => (
+                <div key={i} className="flex justify-between">
+                  <span className="text-muted-foreground">{label}</span>
+                  <span className={`font-medium text-foreground text-right ${valueClass ?? ""}`}>
                     {value}
                   </span>
                 </div>
               ))}
 
-              <div className="border-t border-gray-100 pt-3 mt-3">
-                <span className="block text-gray-500 mb-1">شرط التحرير:</span>
-                <p className="font-medium text-gray-900 text-right bg-gray-50 p-3 rounded-lg border border-gray-100">
+              <div className="border-t border-border pt-3 mt-3">
+                <span className="block text-muted-foreground mb-1">شرط التحرير:</span>
+                <p className="font-medium text-foreground text-right bg-muted p-3 rounded-lg border border-border">
                   {escrowCondition}
                 </p>
               </div>
@@ -388,14 +393,17 @@ export default function EscrowPage() {
             <button
               onClick={handleSend}
               disabled={isLoading}
-              className="w-full flex items-center justify-center rounded-full bg-[#13B601] py-4 text-lg font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center rounded-full bg-primary py-4 text-lg font-bold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
-                <span className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <span className="h-6 w-6 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
               ) : (
-                "دفع وحجز المبلغ (Escrow) →"
+                <span className="flex items-center gap-2">
+                  دفع وحجز المبلغ (Escrow) <ArrowLeft size={18} aria-hidden="true" />
+                </span>
               )}
             </button>
+
           </div>
         )}
       </div>

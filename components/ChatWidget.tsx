@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { MessageCircle, X, RefreshCcw, Bot, Send } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -97,7 +98,7 @@ export function ChatWidget() {
         {
           role: "assistant",
           content:
-            "عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى. 🔄",
+            "عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.",
         },
       ]);
     } finally {
@@ -126,10 +127,10 @@ export function ChatWidget() {
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-white/70 hover:text-white text-lg leading-none"
+              className="text-white/70 hover:text-white transition"
               aria-label="إغلاق"
             >
-              ✕
+              <X size={18} aria-hidden="true" />
             </button>
           </div>
 
@@ -205,15 +206,7 @@ export function ChatWidget() {
                 className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#13B601] text-white transition hover:bg-[#0fa301] disabled:opacity-40"
                 aria-label="إرسال"
               >
-                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 rotate-180">
-                  <path
-                    d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Send size={16} className="rotate-180" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -227,9 +220,9 @@ export function ChatWidget() {
         aria-label="فتح المساعد الذكي"
       >
         {open ? (
-          <span className="text-xl text-white">✕</span>
+          <X size={24} className="text-white" aria-hidden="true" />
         ) : (
-          <span className="text-2xl">🤖</span>
+          <Bot size={28} className="text-white" aria-hidden="true" />
         )}
 
         {/* Badge — only shows when user has never opened chat */}

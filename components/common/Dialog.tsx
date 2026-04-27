@@ -23,12 +23,12 @@ function DialogClose({ className, ...props }: React.ComponentProps<typeof Dialog
     <DialogPrimitive.Close
       data-slot="dialog-close"
       className={cn(
-        "absolute right-6 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200",
+        "absolute right-6 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-muted hover:bg-accent",
         className
       )}
       {...props}
     >
-      <X className="h-4 w-4 text-gray-600" />
+      <X className="h-4 w-4 text-muted-foreground" />
       <span className="sr-only">Close</span>
     </DialogPrimitive.Close>
   );

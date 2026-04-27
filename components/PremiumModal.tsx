@@ -1,6 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { 
+  Infinity, 
+  TrendingUp, 
+  Coins, 
+  Clock, 
+  Bell, 
+  BarChart3, 
+  X, 
+  Star, 
+  CheckCircle2, 
+  Check, 
+  PartyPopper, 
+  ArrowRight, 
+  Lock 
+} from "lucide-react";
 
 interface PremiumModalProps {
   open: boolean;
@@ -11,7 +26,7 @@ const PREMIUM_KEY = "velopay_premium_status";
 
 const FEATURES = [
   {
-    icon: "∞",
+    icon: <Infinity size={20} aria-hidden="true" />,
     iconBg: "bg-violet-100",
     iconColor: "text-violet-600",
     title: "تحويلات غير محدودة",
@@ -21,7 +36,7 @@ const FEATURES = [
     badgeColor: "bg-violet-100 text-violet-600",
   },
   {
-    icon: "📈",
+    icon: <TrendingUp size={20} aria-hidden="true" />,
     iconBg: "bg-blue-100",
     iconColor: "text-blue-600",
     title: "مبالغ غير محدودة",
@@ -31,7 +46,7 @@ const FEATURES = [
     badgeColor: "",
   },
   {
-    icon: "🪙",
+    icon: <Coins size={20} aria-hidden="true" />,
     iconBg: "bg-yellow-100",
     iconColor: "text-yellow-600",
     title: "عائد الرصيد (Yield API)",
@@ -41,7 +56,7 @@ const FEATURES = [
     badgeColor: "bg-yellow-100 text-yellow-600",
   },
   {
-    icon: "⏰",
+    icon: <Clock size={20} aria-hidden="true" />,
     iconBg: "bg-green-100",
     iconColor: "text-green-600",
     title: "أتمتة مدفوعة",
@@ -51,7 +66,7 @@ const FEATURES = [
     badgeColor: "",
   },
   {
-    icon: "🔔",
+    icon: <Bell size={20} aria-hidden="true" />,
     iconBg: "bg-orange-100",
     iconColor: "text-orange-600",
     title: "تنبيه سعر الصرف",
@@ -61,7 +76,7 @@ const FEATURES = [
     badgeColor: "",
   },
   {
-    icon: "📊",
+    icon: <BarChart3 size={20} aria-hidden="true" />,
     iconBg: "bg-pink-100",
     iconColor: "text-pink-600",
     title: "AI Dashboard Analysis",
@@ -121,11 +136,11 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
             onClick={onClose}
             className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition"
           >
-            ✕
+            <X size={18} aria-hidden="true" />
           </button>
           <div className="flex items-center gap-3 mb-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-lg">
-              ⭐
+              <Star size={20} fill="currentColor" aria-hidden="true" />
             </div>
             <div>
               <h2 className="text-xl font-black">VeloPay Premium</h2>
@@ -134,8 +149,8 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
           </div>
 
           {subscribed ? (
-            <div className="rounded-xl bg-white/20 p-3 text-center text-sm font-semibold">
-              ✅ أنت مشترك في Premium! استمتع بجميع الميزات.
+            <div className="flex items-center justify-center gap-2 rounded-xl bg-white/20 p-3 text-center text-sm font-semibold">
+              <CheckCircle2 size={16} aria-hidden="true" /> أنت مشترك في Premium! استمتع بجميع الميزات.
             </div>
           ) : (
             /* Pricing toggle */
@@ -183,13 +198,13 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
               ما تحصل عليه
             </h3>
-            {FEATURES.map((f) => (
+            {FEATURES.map((f, i) => (
               <div
-                key={f.title}
+                key={i}
                 className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/50 p-4 transition hover:border-[#13B601]/20 hover:bg-[#13B601]/5"
               >
                 <div
-                  className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${f.iconBg} text-lg`}
+                  className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${f.iconBg} ${f.iconColor}`}
                 >
                   {f.icon}
                 </div>
@@ -208,7 +223,7 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
                   </div>
                   <div className="flex items-center gap-2 text-xs">
                     <span className="text-red-400 line-through">{f.free}</span>
-                    <span className="text-gray-300">→</span>
+                    <ArrowRight size={12} className="text-gray-300" aria-hidden="true" />
                     <span className="text-[#13B601] font-medium">{f.premium}</span>
                   </div>
                 </div>
@@ -219,7 +234,7 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
                       : "bg-gray-200 text-gray-400"
                   }`}
                 >
-                  {subscribed ? "✓" : "★"}
+                  {subscribed ? <Check size={12} aria-hidden="true" /> : <Star size={12} aria-hidden="true" />}
                 </div>
               </div>
             ))}
@@ -228,7 +243,9 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
           {/* Subscribe / Success */}
           {subscribed ? (
             <div className="rounded-2xl border border-[#13B601]/20 bg-[#13B601]/5 p-5 text-center">
-              <div className="text-3xl mb-2">🎉</div>
+              <div className="flex justify-center mb-2">
+                <PartyPopper size={32} className="text-primary" aria-hidden="true" />
+              </div>
               <p className="font-bold text-[#13B601] text-lg">
                 مرحباً بك في Premium!
               </p>
@@ -237,9 +254,9 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
               </p>
               <button
                 onClick={onClose}
-                className="mt-4 rounded-full bg-[#13B601] px-8 py-3 font-bold text-white transition hover:bg-[#0fa301]"
+                className="mt-4 flex items-center justify-center gap-2 mx-auto rounded-full bg-[#13B601] px-8 py-3 font-bold text-white transition hover:bg-[#0fa301]"
               >
-                ابدأ الاستخدام →
+                ابدأ الاستخدام <ArrowRight size={18} aria-hidden="true" />
               </button>
             </div>
           ) : (
@@ -260,8 +277,8 @@ export function PremiumModal({ open, onClose }: PremiumModalProps) {
                   }`
                 )}
               </button>
-              <p className="text-center text-xs text-gray-400">
-                🔒 محاكاة آمنة — لا بيانات بنكية حقيقية مطلوبة في هذا الـ MVP
+              <p className="flex items-center justify-center gap-1 text-center text-xs text-gray-400">
+                <Lock size={12} aria-hidden="true" /> محاكاة آمنة — لا بيانات بنكية حقيقية مطلوبة في هذا الـ MVP
               </p>
               <p className="text-center text-xs text-gray-400">
                 يمكن إلغاء الاشتراك في أي وقت • بدون التزامات

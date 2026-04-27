@@ -1,6 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { 
+  Bell, 
+  CheckCircle2, 
+  X, 
+  RotateCw, 
+  ArrowDown, 
+  ArrowUp, 
+  Check, 
+  Pencil 
+} from "lucide-react";
 
 interface RateAlertConfig {
   currency: string;
@@ -149,7 +159,7 @@ export function ExchangeRateAlert() {
               onClick={() => setToast(null)}
               className="text-gray-400 hover:text-white transition"
             >
-              ✕
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -160,7 +170,7 @@ export function ExchangeRateAlert() {
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#13B601]/20 text-lg">
-              🔔
+              <Bell size={20} className="text-[#13B601]" aria-hidden="true" />
             </div>
             <div>
               <h3 className="font-bold text-white">تنبيه سعر الصرف</h3>
@@ -200,9 +210,9 @@ export function ExchangeRateAlert() {
               <p className="text-xs text-gray-400">{lastUpdated || "—"}</p>
               <button
                 onClick={() => fetchRate()}
-                className="mt-1 text-xs text-[#13B601] hover:underline"
+                className="mt-1 flex items-center justify-end gap-1 text-xs text-[#13B601] hover:underline"
               >
-                تحديث ↻
+                تحديث <RotateCw size={12} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -246,24 +256,24 @@ export function ExchangeRateAlert() {
                 <button
                   type="button"
                   onClick={() => saveConfig({ ...config, direction: "below" })}
-                  className={`rounded-lg border p-2 text-xs transition ${
+                  className={`flex items-center justify-center gap-1.5 rounded-lg border p-2 text-xs transition ${
                     config.direction === "below"
                       ? "border-[#13B601] bg-[#13B601]/10 text-[#13B601]"
                       : "border-white/10 text-gray-400"
                   }`}
                 >
-                  ⬇ أقل من أو يساوي
+                  <ArrowDown size={14} aria-hidden="true" /> أقل من أو يساوي
                 </button>
                 <button
                   type="button"
                   onClick={() => saveConfig({ ...config, direction: "above" })}
-                  className={`rounded-lg border p-2 text-xs transition ${
+                  className={`flex items-center justify-center gap-1.5 rounded-lg border p-2 text-xs transition ${
                     config.direction === "above"
                       ? "border-[#13B601] bg-[#13B601]/10 text-[#13B601]"
                       : "border-white/10 text-gray-400"
                   }`}
                 >
-                  ⬆ أكبر من أو يساوي
+                  <ArrowUp size={14} aria-hidden="true" /> أكبر من أو يساوي
                 </button>
               </div>
             </div>
@@ -287,9 +297,9 @@ export function ExchangeRateAlert() {
             <button
               type="button"
               onClick={() => setEditing(false)}
-              className="w-full rounded-full bg-[#13B601] py-3 text-sm font-bold text-white transition hover:bg-[#0fa301]"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#13B601] py-3 text-sm font-bold text-white transition hover:bg-[#0fa301]"
             >
-              حفظ الإعدادات ✓
+              حفظ الإعدادات <Check size={16} aria-hidden="true" />
             </button>
           </div>
         ) : (
@@ -306,9 +316,9 @@ export function ExchangeRateAlert() {
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="w-full rounded-full border border-white/10 py-2.5 text-xs font-medium text-gray-400 transition hover:border-[#13B601]/30 hover:text-[#13B601]"
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-white/10 py-2.5 text-xs font-medium text-gray-400 transition hover:border-[#13B601]/30 hover:text-[#13B601]"
             >
-              ✏️ تعديل إعدادات التنبيه
+              <Pencil size={14} aria-hidden="true" /> تعديل إعدادات التنبيه
             </button>
           </div>
         )}

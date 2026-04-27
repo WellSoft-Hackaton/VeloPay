@@ -2,6 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Header } from "@/components/Header";
+import { 
+  Radio, 
+  CheckCircle2, 
+  Zap, 
+  Bell, 
+  Eye, 
+  EyeOff, 
+  Check, 
+  Copy, 
+  AlertTriangle, 
+  Key, 
+  TestTube2, 
+  Library, 
+  Lock, 
+  ArrowRight,
+  ShieldCheck,
+  FastForward,
+  Settings
+} from "lucide-react";
 
 // ─── Fake API keys ─────────────────────────────────────────────────────────────
 const SANDBOX_KEYS = {
@@ -105,10 +125,10 @@ const ENDPOINTS = [
 ];
 
 const STATS = [
-  { label: "API Calls (30d)", value: "0", unit: "calls", icon: "📡" },
-  { label: "Success Rate", value: "—", unit: "%", icon: "✅" },
-  { label: "Avg Latency", value: "~120", unit: "ms", icon: "⚡" },
-  { label: "Webhooks Sent", value: "0", unit: "events", icon: "🔔" },
+  { label: "API Calls (30d)", value: "0", unit: "calls", icon: <Radio size={18} aria-hidden="true" /> },
+  { label: "Success Rate", value: "—", unit: "%", icon: <CheckCircle2 size={18} aria-hidden="true" /> },
+  { label: "Avg Latency", value: "~120", unit: "ms", icon: <Zap size={18} aria-hidden="true" /> },
+  { label: "Webhooks Sent", value: "0", unit: "events", icon: <Bell size={18} aria-hidden="true" /> },
 ];
 
 // ─── Code block with syntax highlight (simple) ───────────────────────────────
@@ -122,7 +142,6 @@ function CodeBlock({ code, lang }: { code: string; lang: string }) {
     });
   };
 
-  // Very simple tokenizer for display
   const highlighted = code
     .replace(
       /("(?:[^"\\]|\\.)*")/g,
@@ -158,11 +177,11 @@ function CodeBlock({ code, lang }: { code: string; lang: string }) {
         >
           {copied ? (
             <>
-              <span>✓</span> Copied!
+              <Check size={14} aria-hidden="true" /> Copied!
             </>
           ) : (
             <>
-              <span>⎘</span> Copy
+              <Copy size={14} aria-hidden="true" /> Copy
             </>
           )}
         </button>
@@ -198,25 +217,25 @@ function SecretKeyRow({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card/50 px-4 py-3">
       <div className="min-w-0 flex-1">
-        <p className="mb-1 text-xs text-gray-400">{label}</p>
-        <p className="truncate font-mono text-sm text-gray-200">
+        <p className="mb-1 text-xs text-muted-foreground">{label}</p>
+        <p className="truncate font-mono text-sm text-foreground">
           {revealed ? valueFull : value}
         </p>
       </div>
       <div className="flex flex-shrink-0 items-center gap-2">
         <button
           onClick={() => setRevealed(!revealed)}
-          className="rounded-lg px-2 py-1 text-xs text-gray-400 transition hover:bg-white/10 hover:text-white"
+          className="rounded-lg px-2 py-1 text-xs text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
-          {revealed ? "🙈" : "👁"}
+          {revealed ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
         </button>
         <button
           onClick={handleCopy}
-          className="rounded-lg px-2.5 py-1 text-xs font-medium text-gray-300 transition hover:bg-white/10 hover:text-white"
+          className="rounded-lg px-2.5 py-1 text-xs font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground"
         >
-          {copied ? "✓" : "Copy"}
+          {copied ? <Check size={14} aria-hidden="true" /> : "Copy"}
         </button>
       </div>
     </div>
@@ -230,24 +249,15 @@ export default function DeveloperPage() {
   const keys = env === "sandbox" ? SANDBOX_KEYS : PROD_KEYS;
 
   return (
-    <div className="min-h-screen bg-[#0a0e0a]" dir="ltr">
-      {/* ── Top Nav ── */}
-      <nav className="sticky top-0 z-40 border-b border-white/10 bg-[#0a0e0a]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#13B601] font-bold text-white text-sm">
-                V
-              </div>
-              <span className="font-bold text-white">VeloPay</span>
-            </Link>
-            <span className="text-gray-600">/</span>
-            <span className="text-sm font-medium text-gray-300">API Console</span>
-          </div>
-
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300" dir="ltr">
+      <Header />
+      
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        {/* Environment switch */}
+        <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Environment switch */}
-            <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 p-1">
+             <span className="text-sm font-medium text-muted-foreground">API Environment:</span>
+             <div className="flex items-center gap-1 rounded-xl border border-border bg-card p-1">
               {(["sandbox", "production"] as const).map((e) => (
                 <button
                   key={e}
@@ -256,42 +266,33 @@ export default function DeveloperPage() {
                     env === e
                       ? e === "sandbox"
                         ? "bg-amber-500 text-black"
-                        : "bg-[#13B601] text-white"
-                      : "text-gray-400 hover:text-white"
+                        : "bg-primary text-white"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {e === "sandbox" ? "Sandbox" : "Production"}
                 </button>
               ))}
             </div>
-
-            <Link
-              href="/"
-              className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-gray-400 transition hover:text-white"
-            >
-              ← Back to App
-            </Link>
           </div>
         </div>
-      </nav>
 
-      <div className="mx-auto max-w-7xl px-6 py-10">
         {/* ── Hero ── */}
         <div className="mb-10">
           <div className="mb-2 flex items-center gap-3">
             <div
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
                 env === "sandbox"
-                  ? "border border-amber-500/40 bg-amber-500/10 text-amber-400"
-                  : "border border-[#13B601]/40 bg-[#13B601]/10 text-[#13B601]"
+                  ? "border border-amber-500/40 bg-amber-500/10 text-amber-600"
+                  : "border border-primary/40 bg-primary/10 text-primary"
               }`}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-current" />
               {env === "sandbox" ? "SANDBOX MODE" : "PRODUCTION"}
             </div>
           </div>
-          <h1 className="text-4xl font-black text-white">VeloPay API Console</h1>
-          <p className="mt-2 text-gray-400 max-w-xl">
+          <h1 className="text-4xl font-black text-foreground">VeloPay API Console</h1>
+          <p className="mt-2 text-muted-foreground max-w-xl">
             Integrate cross-border money transfers into your application in minutes.
             Move money from Gulf to Levant programmatically with our REST API.
           </p>
@@ -299,17 +300,17 @@ export default function DeveloperPage() {
 
         {/* ── Stats row ── */}
         <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {STATS.map((s) => (
+          {STATS.map((s, i) => (
             <div
-              key={s.label}
-              className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm"
+              key={i}
+              className="rounded-2xl border border-border bg-card p-4 backdrop-blur-sm shadow-sm"
             >
-              <div className="mb-2 text-2xl">{s.icon}</div>
-              <div className="text-2xl font-black text-white">
+              <div className="mb-2 text-foreground">{s.icon}</div>
+              <div className="text-2xl font-black text-foreground">
                 {s.value}
-                <span className="ml-1 text-sm font-normal text-gray-400">{s.unit}</span>
+                <span className="ml-1 text-sm font-normal text-muted-foreground">{s.unit}</span>
               </div>
-              <div className="mt-1 text-xs text-gray-500">{s.label}</div>
+              <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
             </div>
           ))}
         </div>
@@ -318,14 +319,14 @@ export default function DeveloperPage() {
           {/* ── Left column ── */}
           <div className="space-y-8">
             {/* API Keys */}
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+            <section className="rounded-2xl border border-border bg-card p-6 backdrop-blur-sm shadow-sm">
               <div className="mb-5 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-white">API Keys</h2>
+                <h2 className="text-lg font-bold text-foreground">API Keys</h2>
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-bold ${
                     env === "sandbox"
-                      ? "bg-amber-500/20 text-amber-400"
-                      : "bg-red-500/20 text-red-400"
+                      ? "bg-amber-500/20 text-amber-600"
+                      : "bg-red-500/20 text-red-600"
                   }`}
                 >
                   {env === "sandbox" ? "Test Keys" : "Live Keys — Keep Secret"}
@@ -344,29 +345,29 @@ export default function DeveloperPage() {
                 />
               </div>
               {env === "production" && (
-                <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400">
-                  ⚠️ Never expose your secret key in client-side code. Use server-side only.
+                <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-600">
+                  <AlertTriangle size={14} aria-hidden="true" /> Never expose your secret key in client-side code. Use server-side only.
                 </div>
               )}
             </section>
 
             {/* Quick Start */}
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-              <h2 className="mb-2 text-lg font-bold text-white">Quick Start</h2>
-              <p className="mb-5 text-sm text-gray-400">
+            <section className="rounded-2xl border border-border bg-card p-6 backdrop-blur-sm shadow-sm">
+              <h2 className="mb-2 text-lg font-bold text-foreground">Quick Start</h2>
+              <p className="mb-5 text-sm text-muted-foreground">
                 Create a transfer in 3 lines of code.
               </p>
 
               {/* Language tabs */}
-              <div className="mb-4 flex gap-1 rounded-xl border border-white/10 bg-black/30 p-1">
+              <div className="mb-4 flex gap-1 rounded-xl border border-border bg-muted p-1">
                 {(["javascript", "curl", "python"] as const).map((lang) => (
                   <button
                     key={lang}
                     onClick={() => setActiveLang(lang)}
                     className={`flex-1 rounded-lg py-2 text-xs font-semibold transition ${
                       activeLang === lang
-                        ? "bg-[#13B601] text-white shadow"
-                        : "text-gray-400 hover:text-white"
+                        ? "bg-primary text-primary-foreground shadow"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {lang === "javascript" ? "JavaScript" : lang === "curl" ? "cURL" : "Python"}
@@ -378,22 +379,22 @@ export default function DeveloperPage() {
             </section>
 
             {/* Endpoints */}
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-              <h2 className="mb-5 text-lg font-bold text-white">API Reference</h2>
+            <section className="rounded-2xl border border-border bg-card p-6 backdrop-blur-sm shadow-sm">
+              <h2 className="mb-5 text-lg font-bold text-foreground">API Reference</h2>
               <div className="space-y-2">
                 {ENDPOINTS.map((ep, index) => (
                   <div
                     key={`${ep.method}-${ep.path}-${index}`}
-                    className="flex items-center gap-4 rounded-xl border border-white/5 bg-black/20 px-4 py-3 transition hover:border-white/15 hover:bg-black/30"
+                    className="flex items-center gap-4 rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:border-primary/30 hover:bg-muted/50"
                   >
                     <span
                       className={`flex-shrink-0 rounded-md px-2.5 py-1 text-[10px] font-bold text-white ${ep.methodColor}`}
                     >
                       {ep.method}
                     </span>
-                    <code className="flex-1 font-mono text-sm text-gray-300">{ep.path}</code>
-                    <span className="text-xs text-gray-500">{ep.desc}</span>
-                    <span className="text-gray-600">→</span>
+                    <code className="flex-1 font-mono text-sm text-foreground">{ep.path}</code>
+                    <span className="text-xs text-muted-foreground">{ep.desc}</span>
+                    <ArrowRight size={14} className="text-muted-foreground" aria-hidden="true" />
                   </div>
                 ))}
               </div>
@@ -403,8 +404,8 @@ export default function DeveloperPage() {
           {/* ── Right column ── */}
           <div className="space-y-6">
             {/* Response preview */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-              <h3 className="mb-3 text-sm font-bold text-gray-300">Sample Response</h3>
+            <div className="rounded-2xl border border-border bg-card p-5 backdrop-blur-sm shadow-sm">
+              <h3 className="mb-3 text-sm font-bold text-muted-foreground">Sample Response</h3>
               <CodeBlock
                 lang="json"
                 code={`{
@@ -424,22 +425,22 @@ export default function DeveloperPage() {
             </div>
 
             {/* Features */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-              <h3 className="mb-4 text-sm font-bold text-gray-300">Platform Features</h3>
+            <div className="rounded-2xl border border-border bg-card p-5 backdrop-blur-sm shadow-sm">
+              <h3 className="mb-4 text-sm font-bold text-muted-foreground">Platform Features</h3>
               <div className="space-y-3">
                 {[
-                  { icon: "🔑", title: "REST API", desc: "Standard HTTP/JSON" },
-                  { icon: "🔔", title: "Webhooks", desc: "Real-time status updates" },
-                  { icon: "🧪", title: "Sandbox", desc: "Test without real money" },
-                  { icon: "📚", title: "SDKs", desc: "JS / Python / PHP coming soon" },
-                  { icon: "⚡", title: "Fast Settlement", desc: "~5 seconds via Solana" },
-                  { icon: "🔒", title: "Secure", desc: "API key + webhook signing" },
+                  { icon: <Key size={18} aria-hidden="true" />, title: "REST API", desc: "Standard HTTP/JSON" },
+                  { icon: <Bell size={18} aria-hidden="true" />, title: "Webhooks", desc: "Real-time status updates" },
+                  { icon: <TestTube2 size={18} aria-hidden="true" />, title: "Sandbox", desc: "Test without real money" },
+                  { icon: <Library size={18} aria-hidden="true" />, title: "SDKs", desc: "JS / Python / PHP coming soon" },
+                  { icon: <Zap size={18} aria-hidden="true" />, title: "Fast Settlement", desc: "~5 seconds via Solana" },
+                  { icon: <ShieldCheck size={18} aria-hidden="true" />, title: "Secure", desc: "API key + webhook signing" },
                 ].map((f) => (
                   <div key={f.title} className="flex items-start gap-3">
-                    <span className="text-lg">{f.icon}</span>
+                    <span className="text-foreground">{f.icon}</span>
                     <div>
-                      <p className="text-sm font-semibold text-gray-200">{f.title}</p>
-                      <p className="text-xs text-gray-500">{f.desc}</p>
+                      <p className="text-sm font-semibold text-foreground">{f.title}</p>
+                      <p className="text-xs text-muted-foreground">{f.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -447,18 +448,18 @@ export default function DeveloperPage() {
             </div>
 
             {/* CTA */}
-            <div className="rounded-2xl border border-[#13B601]/30 bg-[#13B601]/10 p-5">
-              <h3 className="mb-1 font-bold text-white">Ready to integrate?</h3>
-              <p className="mb-4 text-xs text-gray-400">
+            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 shadow-sm">
+              <h3 className="mb-1 font-bold text-foreground">Ready to integrate?</h3>
+              <p className="mb-4 text-xs text-muted-foreground">
                 Get your production API keys and go live.
               </p>
               <a
                 href="mailto:api@velopay.io"
-                className="block w-full rounded-xl bg-[#13B601] py-3 text-center text-sm font-bold text-white transition hover:bg-[#0fa301] active:scale-95"
+                className="block w-full rounded-xl bg-primary py-3 text-center text-sm font-bold text-primary-foreground transition hover:bg-primary/90 active:scale-95 shadow-lg shadow-primary/20"
               >
-                Contact Sales →
+                Contact Sales <ArrowRight size={18} style={{ display: 'inline', marginLeft: 6 }} aria-hidden="true" />
               </a>
-              <p className="mt-2 text-center text-xs text-gray-500">
+              <p className="mt-2 text-center text-xs text-muted-foreground">
                 Sandbox is free forever
               </p>
             </div>

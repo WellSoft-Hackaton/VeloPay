@@ -11,7 +11,7 @@ export function Container({
 }) {
   return (
     <div
-      className={cn("rounded-2xl border border-gray-100 bg-white p-5", className)}
+      className={cn("rounded-2xl border border-border bg-card p-5", className)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}

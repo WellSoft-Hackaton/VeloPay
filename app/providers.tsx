@@ -22,41 +22,48 @@ if (!apiKey && typeof window !== "undefined") {
 const queryClient = new QueryClient();
 const chain = chainId as any;
 
+import { ThemeProvider } from "@/providers/ThemeProvider";
+
 export function Providers({ children }: { children: React.ReactNode }) {
   if (!apiKey) {
     // Render without Crossmint if no API key (for landing page preview)
     return (
       <QueryClientProvider client={queryClient}>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </QueryClientProvider>
     );
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CrossmintProvider apiKey={apiKey}>
-        <CrossmintAuthProvider
-          authModalTitle="VeloPay — تسجيل الدخول"
-          loginMethods={["email", "google"]}
-          termsOfServiceText={
-            <p>
-              بالمتابعة، أنت توافق على{" "}
-              <a href="https://www.crossmint.com/legal/terms-of-service" target="_blank">
-                شروط الاستخدام
-              </a>
-            </p>
-          }
-        >
-          <CrossmintWalletProvider
-            createOnLogin={{
-              chain,
-              recovery: { type: "email" },
-            }}
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <CrossmintProvider apiKey={apiKey}>
+          <CrossmintAuthProvider
+            authModalTitle="VeloPay — تسجيل الدخول"
+            loginMethods={["email", "google"]}
+            termsOfServiceText={
+              <p>
+                بالمتابعة، أنت توافق على{" "}
+                <a href="https://www.crossmint.com/legal/terms-of-service" target="_blank">
+                  شروط الاستخدام
+                </a>
+              </p>
+            }
           >
-            {children}
-          </CrossmintWalletProvider>
-        </CrossmintAuthProvider>
-      </CrossmintProvider>
+            <CrossmintWalletProvider
+              createOnLogin={{
+                chain,
+                recovery: { type: "email" },
+              }}
+            >
+              {children}
+            </CrossmintWalletProvider>
+          </CrossmintAuthProvider>
+        </CrossmintProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
+

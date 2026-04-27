@@ -39,7 +39,7 @@ const NewProduct = ({ title, description, image, onClick, isActive }: NewProduct
           />
         </div>
         <div className="flex flex-col">
-          <div className="text-md flex items-center gap-2 font-semibold text-gray-900">
+          <div className="text-md flex items-center gap-2 font-semibold text-foreground">
             {title}
             {!isActive && (
               <span className="text-muted-foreground text-xs font-normal">Coming soon</span>

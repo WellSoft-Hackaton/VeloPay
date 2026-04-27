@@ -88,12 +88,12 @@ export function ActivityFeed() {
 
   return (
     <Container className="mt-3 flex h-[420px] w-full max-w-5xl flex-col overflow-hidden">
-      <div className="mb-4 text-base font-semibold text-gray-900">Last activity</div>
+      <div className="mb-4 text-base font-semibold text-foreground">Last activity</div>
       <ScrollArea className="h-0 flex-1">
         {!isLoading && !events.length && (
           <div className="mt-6 flex flex-col items-center">
             <Image src="/activity-graphic.png" alt="No transactions" width={80} height={80} />
-            <div className="mb-2 text-center font-semibold text-gray-900">No transactions yet</div>
+            <div className="mb-2 text-center font-semibold text-foreground">No transactions yet</div>
             <div className="text-muted-foreground max-w-xs text-center text-xs">
               Your transactions will show here once you've made your first deposit
             </div>
@@ -126,13 +126,13 @@ export function ActivityFeed() {
                   <div
                     className={cn(
                       "flex h-12 w-12 items-center justify-center rounded-full",
-                      isCanceledOrFailed ? "bg-gray-100" : "bg-green-50"
+                      isCanceledOrFailed ? "bg-muted" : "bg-primary/10"
                     )}
                   >
                     {getActivityIcon(event.type, showAsOutgoing)}
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">
+                    <div className="text-sm font-semibold text-foreground">
                       {getActivityTitle(event.type, showAsOutgoing)}
                     </div>
                     <div className="text-muted-foreground text-sm">
@@ -144,11 +144,11 @@ export function ActivityFeed() {
                       className={cn(
                         "text-sm font-semibold",
                         isCanceledOrFailed
-                          ? "text-gray-500"
+                          ? "text-muted-foreground"
                           : isYield
                             ? "text-primary"
                             : showAsOutgoing
-                              ? "text-gray-900"
+                              ? "text-foreground"
                               : "text-primary"
                       )}
                     >

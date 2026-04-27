@@ -3,6 +3,26 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Header } from "@/components/Header";
+import { 
+  RefreshCcw, 
+  Check, 
+  ArrowDown, 
+  Smartphone, 
+  Wallet, 
+  Sparkles, 
+  Landmark, 
+  Info, 
+  CheckCircle2, 
+  ArrowRight, 
+  ArrowLeft, 
+  CreditCard, 
+  Coins, 
+  TestTube2, 
+  Zap 
+} from "lucide-react";
+import { FaApple } from "react-icons/fa";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type ReceiveMethod = "bank" | "zaincash" | "wallet" | null;
@@ -68,8 +88,8 @@ function RecurringDialog({
         style={{ animation: "scaleIn 0.25s cubic-bezier(0.34,1.56,0.64,1)" }}
       >
         {/* Icon */}
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#13B601]/10 text-3xl">
-          🔄
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#13B601]/10 text-[#13B601]">
+          <RefreshCcw size={32} aria-hidden="true" />
         </div>
         <h3 className="mb-2 text-xl font-black text-gray-900">تأكيد الإرسال الدوري</h3>
         <p className="mb-6 leading-relaxed text-gray-500 text-sm">
@@ -91,7 +111,8 @@ function RecurringDialog({
             onClick={onConfirm}
             className="flex-1 rounded-2xl bg-[#13B601] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] active:scale-95"
           >
-            تأكيد ✓
+            تأكيد <Check size={16} style={{ display: 'inline', marginRight: 4 }} aria-hidden="true" />
+
           </button>
         </div>
       </div>
@@ -145,7 +166,7 @@ function MethodCard({
   children,
 }: {
   id: ReceiveMethod;
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
   badge?: string;
@@ -156,10 +177,10 @@ function MethodCard({
   const isActive = selected === id;
   return (
     <div
-      className={`rounded-2xl border-2 bg-white shadow-sm transition-all duration-300 ${
+      className={`rounded-2xl border-2 bg-card shadow-sm transition-all duration-300 ${
         isActive
-          ? "border-[#13B601] shadow-[#13B601]/10 shadow-lg"
-          : "border-gray-100 hover:border-gray-200 hover:shadow-md"
+          ? "border-primary shadow-primary/10 shadow-lg"
+          : "border-border hover:border-primary/50 hover:shadow-md"
       }`}
     >
       {/* Header — clicking toggles */}
@@ -170,28 +191,29 @@ function MethodCard({
       >
         <div
           className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-xl transition-colors ${
-            isActive ? "bg-[#13B601]/15" : "bg-gray-100"
+            isActive ? "bg-primary/15" : "bg-muted"
           }`}
         >
           {icon}
         </div>
         <div className="flex-1 text-right">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-bold text-gray-900">{title}</span>
+            <span className="font-bold text-foreground">{title}</span>
             {badge && (
-              <span className="rounded-full bg-[#13B601]/10 px-2 py-0.5 text-[10px] font-bold text-[#13B601]">
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
                 {badge}
               </span>
             )}
           </div>
-          <p className="mt-0.5 text-xs text-gray-400">{description}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
         </div>
         <div
           className={`mt-1 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-            isActive ? "border-[#13B601] bg-[#13B601]" : "border-gray-300"
+            isActive ? "border-primary bg-primary" : "border-border"
           }`}
         >
-          {isActive && <span className="text-[9px] font-bold text-white">✓</span>}
+          {isActive && <Check size={12} className="text-primary-foreground" aria-hidden="true" />}
+
         </div>
       </button>
 
@@ -201,7 +223,7 @@ function MethodCard({
           className="px-5 pb-5"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="border-t border-gray-100 pt-4">{children}</div>
+          <div className="border-t border-border pt-4">{children}</div>
         </div>
       </Accordion>
     </div>
@@ -340,30 +362,19 @@ export default function SendPage() {
   const canProceed = amount && parseFloat(amount) > 0 && phone.length > 5;
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]" dir="rtl">
-      {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 shadow-sm flex items-center h-16">
-        <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/VeloPay.png" alt="VeloPay Logo" className="h-22 -my-8 object-contain" />
-          </Link>
-          <span className="text-sm text-gray-400">
-            {step === 1 ? "التفاصيل" : step === 2 ? "طريقة الدفع" : "التأكيد"}
-          </span>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300" dir="rtl">
+      <Header />
       {/* Progress bar */}
-      <div className="bg-white px-6 pb-4 pt-2">
+      <div className="bg-card px-6 pb-4 pt-4 border-b border-border">
         <div className="mx-auto max-w-2xl">
           <div className="flex gap-2">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-200"
+                className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted"
               >
                 <div
-                  className="h-full rounded-full bg-[#13B601] transition-all duration-500"
+                  className="h-full rounded-full bg-primary transition-all duration-500"
                   style={{ width: s <= step ? "100%" : "0%" }}
                 />
               </div>
@@ -377,13 +388,13 @@ export default function SendPage() {
         {step === 1 && (
           <div className="space-y-5">
             <div>
-              <h1 className="text-2xl font-black text-gray-900">أرسل الأموال</h1>
-              <p className="mt-1 text-gray-500 text-sm">أدخل تفاصيل التحويل</p>
+              <h1 className="text-2xl font-black text-foreground">أرسل الأموال</h1>
+              <p className="mt-1 text-muted-foreground text-sm">أدخل تفاصيل التحويل</p>
             </div>
 
             {/* Amount card */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <label className="mb-2 block text-sm font-semibold text-gray-600">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <label className="mb-2 block text-sm font-semibold text-muted-foreground">
                 المبلغ المُرسَل
               </label>
               <div className="flex gap-3">
@@ -391,13 +402,13 @@ export default function SendPage() {
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-2xl font-bold text-gray-900 outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20"
+                  className="flex-1 rounded-xl border border-border bg-background px-4 py-3 text-2xl font-bold text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="500"
                 />
                 <select
                   value={fromCurrency}
                   onChange={(e) => setFromCurrency(e.target.value)}
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 font-medium text-gray-900 outline-none"
+                  className="rounded-xl border border-border bg-muted px-3 py-3 font-medium text-foreground outline-none"
                 >
                   {FROM_CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -408,38 +419,38 @@ export default function SendPage() {
               </div>
 
               <div className="my-4 flex items-center gap-3">
-                <div className="flex-1 border-t border-dashed border-gray-200" />
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#13B601]/30 bg-[#13B601]/10 text-[#13B601]">
-                  ↓
+                <div className="flex-1 border-t border-dashed border-border" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary">
+                  <ArrowDown size={18} aria-hidden="true" />
                 </div>
-                <div className="flex-1 border-t border-dashed border-gray-200" />
+                <div className="flex-1 border-t border-dashed border-border" />
               </div>
 
-              <label className="mb-2 block text-sm font-semibold text-gray-600">
+              <label className="mb-2 block text-sm font-semibold text-muted-foreground">
                 يستلم
               </label>
               <div className="flex gap-3">
-                <div className="flex-1 rounded-xl border border-[#13B601]/30 bg-[#13B601]/5 px-4 py-3">
-                  <span className="text-2xl font-black text-[#13B601]">
+                <div className="flex-1 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
+                  <span className="text-2xl font-black text-primary">
                     {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}
                   </span>
-                  <span className="mr-2 text-sm text-[#13B601]">{country.currency}</span>
+                  <span className="mr-2 text-sm text-primary">{country.currency}</span>
                 </div>
-                <div className="flex items-center rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700">
+                <div className="flex items-center rounded-xl border border-border bg-muted px-4 py-3 text-sm font-medium text-foreground">
                   {country.flag} {country.currency}
                 </div>
               </div>
             </div>
 
             {/* Recipient */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h3 className="mb-4 font-semibold text-gray-900">بيانات المُرسَل إليه</h3>
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <h3 className="mb-4 font-semibold text-foreground">بيانات المُرسَل إليه</h3>
               <div className="mb-4">
-                <label className="mb-1.5 block text-sm font-medium text-gray-600">الدولة</label>
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">الدولة</label>
                 <select
                   value={country.code}
                   onChange={(e) => handleCountryChange(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-medium text-gray-900 outline-none transition focus:border-[#13B601]"
+                  className="w-full rounded-xl border border-border bg-muted px-4 py-3 font-medium text-foreground outline-none transition focus:border-primary"
                 >
                   {COUNTRIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -449,13 +460,13 @@ export default function SendPage() {
                 </select>
               </div>
               <div className="mb-4">
-                <label className="mb-1.5 block text-sm font-medium text-gray-600">رقم هاتف المُرسَل إليه</label>
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">رقم هاتف المُرسَل إليه</label>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={`${country.phone}-7XXXXXXXX`}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   dir="ltr"
                 />
               </div>
@@ -464,15 +475,16 @@ export default function SendPage() {
                 {/* Zain Cash */}
                 <MethodCard
                   id="zaincash"
-                  icon="📱"
+                  icon={<Smartphone size={20} aria-hidden="true" />}
                   title="Zain Cash / CliQ"
                   description="استلام مباشر في المحفظة المحلية برقم الهاتف"
                   badge="Blueprint"
+
                   selected={receiveMethod}
                   onSelect={setReceiveMethod}
                 >
                   <div className="space-y-3">
-                    <div className="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
+                    <div className="rounded-lg bg-amber-500/10 p-3 text-xs text-amber-600">
                       🏗️ يتطلب شراكة مع Liquidity Provider — المعمارية جاهزة
                     </div>
                   </div>
@@ -481,20 +493,22 @@ export default function SendPage() {
                 {/* Digital Wallet */}
                 <MethodCard
                   id="wallet"
-                  icon="👛"
+                  icon={<Wallet size={20} aria-hidden="true" />}
                   title="محفظة رقمية"
                   description="إرسال USDC مباشرة لمحفظة Solana"
                   selected={receiveMethod}
                   onSelect={setReceiveMethod}
+
                 >
-                  <div className="rounded-xl border border-[#13B601]/20 bg-[#13B601]/5 p-4">
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                     <div className="flex items-start gap-3">
-                      <span className="text-2xl">✨</span>
+                      <Sparkles size={24} className="text-primary" aria-hidden="true" />
+
                       <div>
-                        <p className="font-semibold text-[#13B601] text-sm">
+                        <p className="font-semibold text-primary text-sm">
                           لا تحتاج إلى محفظة مسبقاً!
                         </p>
-                        <p className="mt-1 text-xs text-gray-500 leading-relaxed">
+                        <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                           إن لم يكن لديه محفظة، فسوف نُنشئ له محفظة{" "}
                           <strong>VeloPay</strong> تلقائياً! يستلم رصيده ويختار لاحقاً
                           كيفية الصرف.
@@ -504,24 +518,26 @@ export default function SendPage() {
                   </div>
                 </MethodCard>
 
-                <div className="text-center text-sm font-medium text-gray-500 my-4">او عن طريق :</div>
+                <div className="text-center text-sm font-medium text-muted-foreground my-4">او عن طريق :</div>
 
                 {/* Bank */}
                 <MethodCard
                   id="bank"
-                  icon="🏦"
+                  icon={<Landmark size={20} aria-hidden="true" />}
                   title="إيداع بنكي"
                   description="يُحوَّل المبلغ مباشرةً إلى الحساب البنكي عبر Transak Off-Ramp"
                   badge="Sandbox"
                   selected={receiveMethod}
                   onSelect={setReceiveMethod}
+
                 >
                   <div className="space-y-3">
-                    <div className="rounded-lg bg-blue-50 p-3 text-xs text-blue-600">
-                      ℹ️ بيئة تجريبية — Transak API جاهز للتكامل الكامل
+                    <div className="rounded-lg bg-blue-500/10 p-3 text-xs text-blue-600">
+                      <Info size={14} style={{ display: 'inline', marginLeft: 4 }} aria-hidden="true" /> بيئة تجريبية — Transak API جاهز للتكامل الكامل
+
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-gray-600">
+                      <label className="mb-1.5 block text-xs font-semibold text-muted-foreground">
                         رقم IBAN
                       </label>
                       <input
@@ -529,7 +545,7 @@ export default function SendPage() {
                         value={iban}
                         onChange={(e) => setIban(e.target.value)}
                         placeholder="JO94 CBJO 0010 0000 0000 0131 0003 02"
-                        className="w-full rounded-xl border border-gray-200 px-4 py-3 font-mono text-sm outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20"
+                        className="w-full rounded-xl border border-border bg-background px-4 py-3 font-mono text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         dir="ltr"
                         autoComplete="off"
                         onClick={(e) => e.stopPropagation()}
@@ -540,21 +556,21 @@ export default function SendPage() {
               </div>
 
               <div className="mt-6">
-                <label className="mb-1.5 block text-sm font-medium text-gray-600">الاسم الكامل</label>
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">الاسم الكامل</label>
                 <input
                   type="text"
                   placeholder="الاسم الكامل"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none transition focus:border-[#13B601] focus:ring-2 focus:ring-[#13B601]/20"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
               </div>
             </div>
 
             {/* ═══ RECURRING TRANSFER ═══ */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-gray-900">إرسال دوري</p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="font-semibold text-foreground">إرسال دوري</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     جدوِل هذا التحويل تلقائياً كل شهر
                   </p>
                 </div>
@@ -563,7 +579,7 @@ export default function SendPage() {
                   type="button"
                   onClick={handleToggleRecurring}
                   className={`relative h-7 w-12 flex-shrink-0 rounded-full transition-colors duration-300 ${
-                    recurringEnabled ? "bg-[#13B601]" : "bg-gray-200"
+                    recurringEnabled ? "bg-primary" : "bg-muted"
                   }`}
                 >
                   <span
@@ -580,14 +596,14 @@ export default function SendPage() {
                   className="mt-4 space-y-3"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3">
-                    <span className="text-sm text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-3 rounded-xl bg-muted px-4 py-3">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
                       إرسال هذا المبلغ تلقائياً كل شهر في يوم
                     </span>
                     <select
                       value={recurringDay}
                       onChange={(e) => handleRecurringDayChange(e.target.value)}
-                      className="w-20 rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-center text-sm font-bold text-gray-900 outline-none focus:border-[#13B601]"
+                      className="w-20 rounded-lg border border-border bg-background px-2 py-1.5 text-center text-sm font-bold text-foreground outline-none focus:border-primary"
                     >
                       <option value="">--</option>
                       {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
@@ -596,12 +612,13 @@ export default function SendPage() {
                         </option>
                       ))}
                     </select>
-                    <span className="text-sm text-gray-600">من كل شهر</span>
+                    <span className="text-sm text-muted-foreground">من كل شهر</span>
                   </div>
 
                   {recurringConfirmed && recurringDay && (
-                    <div className="flex items-center gap-2 rounded-xl bg-[#13B601]/10 px-4 py-3 text-sm text-[#13B601]">
-                      <span className="text-base">✅</span>
+                    <div className="flex items-center gap-2 rounded-xl bg-primary/10 px-4 py-3 text-sm text-primary">
+                      <CheckCircle2 size={16} aria-hidden="true" />
+
                       <span>
                         سيُرسَل{" "}
                         <strong>
@@ -616,14 +633,14 @@ export default function SendPage() {
             </div>
 
             {/* Fee summary */}
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <div className="space-y-2.5 text-sm">
                 {[
                   { label: "المبلغ", value: `${amount} ${fromCurrency}` },
                   {
                     label: "رسوم المعاملة",
                     value: "$0.01",
-                    valueClass: "font-bold text-[#13B601]",
+                    valueClass: "font-bold text-primary",
                   },
                   {
                     label: "سعر الصرف",
@@ -631,31 +648,33 @@ export default function SendPage() {
                   },
                 ].map(({ label, value, valueClass }) => (
                   <div key={label} className="flex justify-between">
-                    <span className="text-gray-500">{label}</span>
-                    <span className={`font-medium text-gray-900 ${valueClass ?? ""}`}>
+                    <span className="text-muted-foreground">{label}</span>
+                    <span className={`font-medium text-foreground ${valueClass ?? ""}`}>
                       {value}
                     </span>
                   </div>
                 ))}
-                <div className="border-t border-gray-100 pt-2.5">
+                <div className="border-t border-border pt-2.5">
                   <div className="flex justify-between font-bold">
-                    <span className="text-gray-900">يستلم</span>
-                    <span className="text-[#13B601]">
+                    <span className="text-foreground">يستلم</span>
+                    <span className="text-primary">
                       {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}{" "}
                       {country.currency}
                     </span>
                   </div>
                 </div>
-                <p className="text-center text-xs text-gray-400">⚡ يصل خلال ~5 ثوانٍ</p>
+                <p className="flex items-center justify-center gap-1 text-center text-xs text-muted-foreground"><Zap size={12} aria-hidden="true" /> يصل خلال ~5 ثوانٍ</p>
+
               </div>
             </div>
 
             <button
               onClick={() => setStep(2)}
               disabled={!canProceed}
-              className="w-full rounded-full bg-[#13B601] py-4 text-lg font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none active:scale-95"
+              className="w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none active:scale-95"
             >
-              متابعة →
+              متابعة <ArrowLeft size={18} style={{ display: 'inline', marginRight: 6 }} aria-hidden="true" />
+
             </button>
           </div>
         )}
@@ -666,62 +685,66 @@ export default function SendPage() {
             <div>
               <button
                 onClick={() => setStep(1)}
-                className="mb-3 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900"
+                className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
-                ← رجوع
+                <ArrowRight size={16} style={{ display: 'inline', marginLeft: 6 }} aria-hidden="true" /> رجوع
+
               </button>
-              <h1 className="text-2xl font-black text-gray-900">طريقة الدفع</h1>
-              <p className="mt-1 text-gray-500 text-sm">اختر كيف تدفع</p>
+              <h1 className="text-2xl font-black text-foreground">طريقة الدفع</h1>
+              <p className="mt-1 text-muted-foreground text-sm">اختر كيف تدفع</p>
             </div>
 
             <div className="space-y-3">
               {[
                 {
                   id: "card",
-                  icon: "💳",
+                  icon: <CreditCard size={24} aria-hidden="true" />,
                   title: "بطاقة ائتمانية",
                   desc: "Visa / Mastercard — عبر Transak Sandbox",
                 },
                 {
                   id: "apple",
-                  icon: "🍎",
+                  icon: <FaApple size={24} aria-hidden="true" />,
                   title: "Apple Pay",
                   desc: "قريباً",
                   disabled: true,
                 },
                 {
                   id: "usdc",
-                  icon: "🪙",
+                  icon: <Coins size={24} aria-hidden="true" />,
                   title: "USDC من محفظتي",
                   desc: "إذا كان لديك رصيد USDC",
                 },
+
               ].map((m) => (
                 <button
                   key={m.id}
                   onClick={() => !m.disabled && setPaymentMethod(m.id)}
                   className={`w-full rounded-2xl border-2 p-5 text-right transition ${
                     paymentMethod === m.id
-                      ? "border-[#13B601] bg-[#13B601]/5"
+                      ? "border-primary bg-primary/5"
                       : m.disabled
-                      ? "cursor-not-allowed border-gray-100 bg-gray-50 opacity-50"
-                      : "border-gray-200 bg-white hover:border-gray-300"
+                      ? "cursor-not-allowed border-border bg-muted/50 opacity-50"
+                      : "border-border bg-card hover:border-primary/50"
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <span className="text-3xl">{m.icon}</span>
+                    <span className="text-primary">{m.icon}</span>
+
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 font-semibold text-gray-900">
+                      <div className="flex items-center gap-2 font-semibold text-foreground">
                         {m.title}
                         {m.disabled && (
-                          <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-500">
+                          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                             قريباً
                           </span>
                         )}
                         {paymentMethod === m.id && (
-                          <span className="mr-auto text-[#13B601]">✓</span>
+                          <span className="mr-auto text-primary"><Check size={16} aria-hidden="true" /></span>
+
                         )}
                       </div>
-                      <p className="mt-0.5 text-sm text-gray-400">{m.desc}</p>
+                      <p className="mt-0.5 text-sm text-muted-foreground">{m.desc}</p>
                     </div>
                   </div>
                 </button>
@@ -729,9 +752,10 @@ export default function SendPage() {
             </div>
 
             {paymentMethod === "card" && (
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
-                <p className="mb-1 text-sm font-medium text-blue-700">🧪 بيانات البطاقة التجريبية:</p>
-                <p className="font-mono text-sm text-blue-600 ltr:text-left" dir="ltr">
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-4">
+                <p className="mb-1 flex items-center gap-1 text-sm font-medium text-blue-600"><TestTube2 size={16} aria-hidden="true" /> بيانات البطاقة التجريبية:</p>
+
+                <p className="font-mono text-sm text-blue-500 ltr:text-left" dir="ltr">
                   4242 4242 4242 4242 | MM/YY: 12/26 | CVV: 123
                 </p>
               </div>
@@ -739,9 +763,10 @@ export default function SendPage() {
 
             <button
               onClick={() => setStep(3)}
-              className="w-full rounded-full bg-[#13B601] py-4 text-lg font-bold text-white shadow-lg shadow-[#13B601]/25 transition hover:bg-[#0fa301] active:scale-95"
+              className="w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95"
             >
-              تأكيد طريقة الدفع →
+              تأكيد طريقة الدفع <ArrowLeft size={18} style={{ display: 'inline', marginRight: 6 }} aria-hidden="true" />
+
             </button>
           </div>
         )}
@@ -752,85 +777,78 @@ export default function SendPage() {
             <div>
               <button
                 onClick={() => setStep(2)}
-                className="mb-3 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900"
+                className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
-                ← رجوع
+                <ArrowRight size={16} style={{ display: 'inline', marginLeft: 6 }} aria-hidden="true" /> رجوع
+
               </button>
-              <h1 className="text-2xl font-black text-gray-900">تأكيد التحويل</h1>
-              <p className="mt-1 text-gray-500 text-sm">راجع التفاصيل قبل الإرسال</p>
+              <h1 className="text-2xl font-black text-foreground">تأكيد التحويل</h1>
+              <p className="mt-1 text-muted-foreground text-sm">راجع التفاصيل قبل الإرسال</p>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-3 text-sm">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 text-sm">
               {[
                 { label: "تُرسل", value: `${amount} ${fromCurrency}` },
                 { label: "القيمة بالدولار", value: `$${usdAmount}` },
                 {
                   label: "يستلم",
                   value: `${converted.toLocaleString("ar", { maximumFractionDigits: 2 })} ${country.currency}`,
-                  valueClass: "text-[#13B601] font-bold",
+                  valueClass: "text-primary font-bold",
                 },
                 { label: "إلى", value: `${country.flag} ${phone}` },
                 {
                   label: "طريقة الاستلام",
                   value:
                     receiveMethod === "bank"
-                      ? "🏦 إيداع بنكي"
+                      ? "إيداع بنكي"
                       : receiveMethod === "zaincash"
-                      ? "📱 Zain Cash / CliQ"
+                      ? "Zain Cash / CliQ"
                       : receiveMethod === "wallet"
-                      ? "👛 محفظة رقمية"
+                      ? "محفظة رقمية"
+
                       : "غير محدد",
                 },
-                { label: "رسوم المعاملة", value: "$0.01", valueClass: "text-[#13B601] font-bold" },
+                { label: "رسوم المعاملة", value: "$0.01", valueClass: "text-primary font-bold" },
                 {
                   label: "طريقة الدفع",
-                  value: paymentMethod === "card" ? "💳 بطاقة ائتمانية" : "🪙 USDC",
+                  value: paymentMethod === "card" ? "بطاقة ائتمانية" : "USDC",
+
                 },
-                { label: "الشبكة", value: "⚡ Solana Devnet" },
+                { label: "الشبكة", value: "Solana Devnet" },
+
               ].map(({ label, value, valueClass }) => (
                 <div key={label} className="flex justify-between">
-                  <span className="text-gray-500">{label}</span>
-                  <span className={`font-medium text-gray-900 text-right ${valueClass ?? ""}`}>
+                  <span className="text-muted-foreground">{label}</span>
+                  <span className={`font-medium text-foreground text-right ${valueClass ?? ""}`}>
                     {value}
                   </span>
                 </div>
               ))}
 
               {recurringConfirmed && recurringDay && (
-                <div className="rounded-xl bg-[#13B601]/10 px-3 py-2 text-xs text-[#13B601]">
-                  🔄 إرسال دوري: يوم {recurringDay} من كل شهر
+                <div className="rounded-xl bg-primary/10 px-3 py-2 text-xs text-primary">
+                  <RefreshCcw size={12} style={{ display: 'inline', marginLeft: 4 }} aria-hidden="true" /> تم تفعيل الإرسال الدوري يوم {recurringDay} من كل شهر
+
                 </div>
               )}
-            </div>
-
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-              ⚠️ هذا Hackathon MVP — التحويلات تجريبية على Solana Devnet
             </div>
 
             <button
               onClick={handleSend}
               disabled={isLoading}
-              className="w-full rounded-full bg-[#13B601] py-5 text-xl font-black text-white shadow-xl shadow-[#13B601]/30 transition hover:bg-[#0fa301] disabled:cursor-not-allowed disabled:bg-gray-300 active:scale-95"
+              className="w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95 disabled:opacity-50"
             >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-3">
-                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  جاري معالجة التحويل...
-                </span>
-              ) : (
-                `✓ أرسل ${amount} ${fromCurrency} الآن`
-              )}
+              {isLoading ? "جاري الإرسال..." : "إرسال الآن"}
             </button>
           </div>
         )}
       </div>
 
-      {/* Recurring confirm dialog */}
       <RecurringDialog
         open={showRecurringDialog}
         amount={amount}
         currency={fromCurrency}
-        day={typeof recurringDay === "number" ? recurringDay : 1}
+        day={recurringDay as number}
         onConfirm={handleRecurringConfirm}
         onCancel={handleRecurringCancel}
       />
