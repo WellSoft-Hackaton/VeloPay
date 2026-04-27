@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LiveRateTicker } from "@/components/LiveRateTicker";
+import HowItWorksFlow from "@/components/HowItWorksFlow";
+
 
 const RATES: Record<string, Record<string, number>> = {
   SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462, EGP: 12.8, LBP: 24000 },
