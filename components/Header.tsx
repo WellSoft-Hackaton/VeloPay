@@ -2,30 +2,40 @@
 
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useCrossmintAuth } from "@crossmint/client-sdk-react-ui";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Bell, Star } from "lucide-react";
+import { Bell, Star, LogOut, User, Send, LayoutDashboard, Code, Home } from "lucide-react";
 import { PaymentMethodModal } from "@/components/PaymentMethodModal";
 
-// ─── Notification Bell (extracted for reuse) ───────────────────────────────────
+// ─── Notification Bell ──────────────────────────────────────────────────────────
 function NotificationBell() {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-secondary/40 text-secondary-foreground transition-all hover:bg-secondary/80 hover:text-primary active:scale-95"
+        aria-label="الإشعارات"
       >
-        <Bell size={18} aria-hidden="true" />
+        <Bell size={20} aria-hidden="true" />
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-11 z-40 w-72 rounded-2xl border border-border bg-card p-1 shadow-2xl">
-            <div className="px-3 py-2 text-xs font-bold text-muted-foreground">الإشعارات</div>
-            <div className="px-3 py-4 text-center text-sm text-muted-foreground">لا توجد إشعارات حالياً</div>
+          <div className="absolute left-0 sm:left-auto sm:right-0 top-14 z-40 w-80 rounded-3xl border border-border/50 bg-background/95 backdrop-blur-xl p-3 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 origin-top-left sm:origin-top-right animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between px-3 py-2 border-b border-border/50 pb-3 mb-2">
+              <span className="text-sm font-bold text-foreground">الإشعارات</span>
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">0 جديد</span>
+            </div>
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <div className="rounded-full bg-secondary/50 p-4 mb-4">
+                <Bell size={28} className="text-muted-foreground/50" />
+              </div>
+              <div className="text-base font-bold text-foreground">لا توجد إشعارات حالياً</div>
+              <div className="text-xs font-medium text-muted-foreground mt-2">سنخبرك عندما يكون هناك شيء جديد</div>
+            </div>
           </div>
         </>
       )}
@@ -36,98 +46,162 @@ function NotificationBell() {
 export function Header() {
   const pathname = usePathname();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const { user, login, logout, status } = useCrossmintAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md shadow-sm transition-all duration-300">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <img src="/VeloPay.png" alt="VeloPay Logo" className="h-14 object-contain" />
-        </Link>
+    <header
+      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-2xl shadow-sm transition-all duration-300"
+      dir="rtl"
+    >
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-8 lg:gap-16 px-4 sm:px-6 lg:px-8">
 
-        {/* Desktop Navigation / Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Theme Toggle */}
-          <ThemeToggle />
-
-          {/* Notification bell */}
-          <NotificationBell />
-
-          {/* Developer link */}
-          <Link
-            href="/developer"
-            className="hidden items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:flex"
-          >
-            <span className="text-[10px]">{"</>"}</span>
-            Developer
+        {/* Right side - Logo & Main Nav */}
+        <div className="flex items-center gap-8 md:gap-12">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img src="/VeloPay.png" alt="شعار فيلوباي" className="h-10 sm:h-12 object-contain" />
           </Link>
 
-          {/* Premium */}
-          <button
-            className="hidden items-center gap-1.5 rounded-full border border-primary/40 px-4 py-2 text-xs font-semibold text-primary transition hover:bg-primary/10 sm:flex"
-          >
-            <Star size={18} style={{ marginRight: 6 }} aria-hidden="true" />
-            Premium
+          {/* Primary Navigation Tabs with generous spacing */}
+          <nav className="hidden md:flex items-center gap-12 lg:gap-20">
+            <Link
+              href="/"
+              className={`relative flex items-center whitespace-nowrap gap-2 py-2 text-[15px] font-bold transition-all duration-200 ${pathname === "/"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <Home size={18} />
+              الرئيسية
+              {pathname === "/" && (
+                <span className="absolute -bottom-[26px] left-0 right-0 h-[3px] bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(var(--primary),0.5)]" />
+              )}
+            </Link>
+            <Link
+              href="/dashboard"
+              className={`relative flex items-center whitespace-nowrap gap-2 py-2 text-[15px] font-bold transition-all duration-200 ${pathname === "/dashboard"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <LayoutDashboard size={18} />
+              لوحة التحكم
+              {pathname === "/dashboard" && (
+                <span className="absolute -bottom-[26px] left-0 right-0 h-[3px] bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(var(--primary),0.5)]" />
+              )}
+            </Link>
+            <Link
+              href="/developer"
+              className={`relative flex items-center whitespace-nowrap gap-2 py-2 text-[15px] font-bold transition-all duration-200 ${pathname === "/developer"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <Code size={18} />
+              للمطورين
+              {pathname === "/developer" && (
+                <span className="absolute -bottom-[26px] left-0 right-0 h-[3px] bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(var(--primary),0.5)]" />
+              )}
+            </Link>
+          </nav>
+        </div>
+
+        {/* Left side - Actions */}
+        <div className="flex items-center gap-4 sm:gap-6">
+
+          {/* Premium Button */}
+          <button className="hidden sm:flex items-center whitespace-nowrap gap-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-700 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-amber-600/20 transition-all hover:scale-105 hover:shadow-amber-600/40 active:scale-95">
+            <Star size={18} aria-hidden="true" className="fill-white" />
+            <span>النسخة المميزة</span>
           </button>
 
-          {/* Dashboard Link */}
-          <Link
-            href="/dashboard"
-            className={`hidden text-sm font-medium transition hover:text-foreground sm:block ${
-              pathname === "/dashboard" ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            الحساب
-          </Link>
-
-          {/* CTA */}
+          {/* CTA: Send Now */}
           <button
             onClick={() => setShowPaymentModal(true)}
-            className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95"
+            className="hidden sm:flex items-center whitespace-nowrap gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-primary/40 active:scale-95"
           >
-            أرسل الآن
+            <Send size={16} className="rtl:-scale-x-100" />
+            <span>أرسل الآن</span>
           </button>
 
-          {/* Auth / Login (Arabic, RTL-aware) */}
+          {/* Dividers */}
+          <div className="hidden sm:block h-10 w-[2px] rounded-full bg-border/50 mx-1" />
+
+          {/* Icons */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <NotificationBell />
+          </div>
+
+          {/* User profile / Login */}
+          <div className="flex items-center border-r-2 border-border/50 pr-4 sm:pr-6 mr-1 sm:mr-2">
             {user ? (
-              <div className="flex items-center gap-2 flex-row-reverse" dir="rtl">
-                <div className="text-sm font-medium text-foreground">{user.name || user.email}</div>
-                {user.image ? (
-                  <Image
-                    src={user.image}
-                    alt={user.name || user.email}
-                    width={36}
-                    height={36}
-                    className="rounded-full object-cover"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="h-9 w-9 rounded-full border border-border bg-card flex items-center justify-center text-sm text-muted-foreground">
-                    {user.name ? user.name.charAt(0) : (user.email || "?").charAt(0)}
-                  </div>
-                )}
-                <button
-                  onClick={logout}
-                  className="hidden text-xs text-muted-foreground hover:text-foreground sm:inline"
-                >
-                  تسجيل الخروج
-                </button>
+              <div className="group relative flex items-center gap-4 sm:gap-5">
+                {/* User Profile - clickable to toggle menu */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setMenuOpen((s) => !s)}
+                    className="flex items-center gap-3 cursor-pointer rounded-full focus:outline-none"
+                    aria-expanded={menuOpen}
+                    aria-haspopup="true"
+                  >
+                    <div className="hidden md:flex flex-col items-end">
+                      <span className="text-sm font-bold text-foreground">
+                        {user.name || user.email?.split('@')[0]}
+                      </span>
+                    </div>
+                    {user.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.name || user.email || "المستخدم"}
+                        width={46}
+                        height={46}
+                        className="rounded-full object-cover border-2 border-primary/30 p-0.5 transition-all duration-300 group-hover:border-primary/80 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]"
+                        unoptimized
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="h-10 w-10 sm:h-[46px] sm:w-[46px] rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-lg font-bold text-primary transition-all duration-300 group-hover:border-primary/80 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+                        {user.name ? user.name.charAt(0).toUpperCase() : (user.email || "?").charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </button>
+
+                  {/* Dropdown menu */}
+                  {menuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-30" onClick={() => setMenuOpen(false)} />
+                      <div className="absolute left-0 sm:left-auto sm:right-0 top-14 z-40 w-40 rounded-2xl border border-border/50 bg-background/95 backdrop-blur-xl p-2 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 origin-top-right animate-in fade-in zoom-in-95 duration-200">
+                        <button
+                          onClick={() => {
+                            setMenuOpen(false);
+                            signOut();
+                          }}
+                          className="group flex w-full items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-foreground transition-colors duration-200 ease-in-out hover:text-red-600 hover:bg-red-600/10"
+                        >
+                          <LogOut size={16} className="text-foreground group-hover:text-red-600 transition-colors duration-200" />
+                          <span className="transition-colors duration-200">تسجيل الخروج</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             ) : (
-              <button
-                onClick={() => login?.()}
-                className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-accent"
-                dir="rtl"
+              <Link
+                href="/login"
+                className="flex items-center whitespace-nowrap gap-2 rounded-full border-2 border-primary/20 bg-primary/5 px-6 py-2.5 text-sm font-bold text-primary transition-all hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25 active:scale-95"
               >
-                تسجيل الدخول
-              </button>
+                <User size={18} />
+                <span className="hidden sm:inline">تسجيل الدخول</span>
+                <span className="sm:hidden">دخول</span>
+              </Link>
             )}
           </div>
         </div>
       </div>
-      
+
       <PaymentMethodModal open={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
     </header>
   );

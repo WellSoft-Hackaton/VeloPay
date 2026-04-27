@@ -9,3 +9,23 @@ export async function proxy(request: NextRequest) {
     }
     return NextResponse.next();
 }
+
+// Only run this proxy for transaction-related pages and APIs
+export const config = {
+    matcher: [
+        '/send',
+        '/send/:path*',
+        '/receive',
+        '/receive/:path*',
+        '/transfer',
+        '/transfer/:path*',
+        '/transfers',
+        '/transfers/:path*',
+        '/track',
+        '/track/:path*',
+        '/dashboard',
+        '/dashboard/:path*',
+        '/api/transfer/:path*',
+        '/api/transfers/:path*'
+    ]
+}

@@ -3,7 +3,10 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Sidebar } from "@/components/Sidebar";
-import { ArrowUp, ArrowDown, ArrowRightLeft, Sparkles, Plus } from "lucide-react";
+import { ArrowUp, ArrowDown, ArrowRightLeft, Sparkles, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/common/Dialog";
 
 // Mock Data
 const transactions = [
@@ -14,7 +17,7 @@ const transactions = [
   { id: "TX-1096", status: "مكتمل", amount: "$850", date: "22 أبريل" },
 ];
 
-const myCards = [
+const initialCards = [
   { id: "mastercard", type: "Mastercard", label: "مدخرات", balance: "$3,240.00", last4: "8734", bg: "bg-blue-950", border: "border-blue-900", textColor: "text-white" },
   { id: "visa", type: "Visa", label: "رئيسية", balance: "$12,480.50", last4: "4291", bg: "bg-slate-900", border: "border-yellow-600/50", textColor: "text-white" },
 ];
@@ -26,13 +29,44 @@ const upcomingBills = [
 ];
 
 const quickActions = [
-  { name: "إرسال", icon: ArrowUp },
+  { name: "إرسال", icon: ArrowUp, href: "/send" },
   { name: "استقبال", icon: ArrowDown },
   { name: "تحويل", icon: ArrowRightLeft },
   { name: "استثمار", icon: Sparkles },
 ];
 
 export default function DashboardPage() {
+  const [isAddCardOpen, setIsAddCardOpen] = useState(false);
+  const [cards, setCards] = useState(initialCards);
+
+  const handleDeleteCard = (id: string) => {
+    setCards(cards.filter(card => card.id !== id));
+  };
+
+  const handleAddCard = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const cardNumber = formData.get("cardNumber") as string;
+    const last4 = cardNumber.slice(-4) || "0000";
+    
+    const isVisa = cardNumber.startsWith("4");
+    const type = isVisa ? "Visa" : "Mastercard";
+    
+    const newCard = {
+      id: Date.now().toString(),
+      type,
+      label: "جديدة",
+      balance: "$0.00",
+      last4,
+      bg: isVisa ? "bg-slate-900" : "bg-blue-950",
+      border: isVisa ? "border-yellow-600/50" : "border-blue-900",
+      textColor: "text-white"
+    };
+
+    setCards([...cards, newCard]);
+    setIsAddCardOpen(false);
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background" dir="rtl">
       <Header />
@@ -75,15 +109,19 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-bold text-foreground">الإجراءات السريعة</h3>
               </div>
               <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-                {quickActions.map((action) => (
-                  <button
-                    key={action.name}
-                    className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-border bg-card py-10 shadow-sm transition-all hover:bg-accent hover:shadow-md"
-                  >
-                    <action.icon size={28} className="text-yellow-600 dark:text-yellow-500" />
-                    <span className="text-base font-bold text-foreground">{action.name}</span>
-                  </button>
-                ))}
+                {quickActions.map((action) => {
+                  const Comp = action.href ? Link : "button";
+                  return (
+                    <Comp
+                      key={action.name}
+                      href={action.href || "#"}
+                      className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-border bg-card py-10 shadow-sm transition-all hover:bg-accent hover:shadow-md"
+                    >
+                      <action.icon size={28} className="text-yellow-600 dark:text-yellow-500" />
+                      <span className="text-base font-bold text-foreground">{action.name}</span>
+                    </Comp>
+                  );
+                })}
               </div>
             </div>
 
@@ -94,21 +132,33 @@ export default function DashboardPage() {
               </div>
               <div className="flex gap-6 overflow-x-auto pb-6 snap-x">
                 {/* Add Card Button */}
-                <button className="flex min-w-[140px] flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border bg-card/50 transition-colors hover:bg-accent hover:border-primary snap-start">
+                <button 
+                  onClick={() => setIsAddCardOpen(true)}
+                  className="flex min-w-[140px] flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border bg-card/50 transition-colors hover:bg-accent hover:border-primary snap-start"
+                >
                   <Plus size={28} className="text-muted-foreground" />
                   <span className="text-sm font-medium text-muted-foreground">إضافة بطاقة</span>
                 </button>
 
-                {myCards.map((card) => (
+                {cards.map((card) => (
                   <div
                     key={card.id}
                     className={`flex h-56 min-w-[320px] flex-col justify-between rounded-3xl border p-8 shadow-md snap-start ${card.bg} ${card.border}`}
                   >
                     <div className="flex items-start justify-between">
                       <span className="text-sm font-medium text-blue-300">{card.label}</span>
-                      <span className={`text-lg font-bold ${card.id === 'visa' ? 'text-yellow-400' : 'text-blue-200'}`}>
-                        {card.type}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <button 
+                          onClick={() => handleDeleteCard(card.id)}
+                          className="text-white/40 transition-colors hover:text-red-400" 
+                          title="حذف البطاقة"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                        <span className={`text-lg font-bold ${card.id === 'visa' ? 'text-yellow-400' : 'text-blue-200'}`}>
+                          {card.type}
+                        </span>
+                      </div>
                     </div>
                     
                     <div className={`flex items-center justify-center gap-4 tracking-widest text-xl opacity-80 ${card.textColor}`}>
@@ -200,6 +250,71 @@ export default function DashboardPage() {
           <div className="mt-16">
             <Footer />
           </div>
+
+          {/* Add Card Modal */}
+          <Dialog open={isAddCardOpen} onOpenChange={setIsAddCardOpen}>
+            <DialogContent className="sm:max-w-md bg-card border-border" dir="rtl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold text-foreground">إضافة بطاقة جديدة</DialogTitle>
+                <DialogDescription className="text-muted-foreground mt-2">
+                  أدخل تفاصيل بطاقتك البنكية بأمان. نحن نستخدم التشفير لحماية بياناتك.
+                </DialogDescription>
+              </DialogHeader>
+              <form className="mt-4 flex flex-col gap-4" onSubmit={handleAddCard}>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-foreground">رقم البطاقة</label>
+                  <input
+                    type="text"
+                    name="cardNumber"
+                    placeholder="0000 0000 0000 0000"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-left"
+                    dir="ltr"
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-foreground">تاريخ الانتهاء</label>
+                    <input
+                      type="text"
+                      name="expiry"
+                      placeholder="MM/YY"
+                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-left"
+                      dir="ltr"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-foreground">رمز الأمان (CVC)</label>
+                    <input
+                      type="text"
+                      name="cvc"
+                      placeholder="123"
+                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-left"
+                      dir="ltr"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-foreground">اسم حامل البطاقة</label>
+                  <input
+                    type="text"
+                    name="cardholder"
+                    placeholder="الاسم كما هو مطبوع على البطاقة"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="mt-4 w-full rounded-xl bg-primary px-4 py-3 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  إضافة البطاقة
+                </button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </main>
       </div>
     </div>

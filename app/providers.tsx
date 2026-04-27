@@ -6,6 +6,7 @@ import {
   CrossmintWalletProvider,
 } from "@crossmint/client-sdk-react-ui";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
 
 // Support both NEXT_PUBLIC_CROSSMINT_API_KEY and NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY
 const apiKey =
@@ -28,42 +29,46 @@ export function Providers({ children }: { children: React.ReactNode }) {
   if (!apiKey) {
     // Render without Crossmint if no API key (for landing page preview)
     return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
-      </QueryClientProvider>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SessionProvider>
     );
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <CrossmintProvider apiKey={apiKey}>
-          <CrossmintAuthProvider
-            authModalTitle="VeloPay — تسجيل الدخول"
-            loginMethods={["email", "google"]}
-            termsOfServiceText={
-              <p>
-                بالمتابعة، أنت توافق على{" "}
-                <a href="https://www.crossmint.com/legal/terms-of-service" target="_blank">
-                  شروط الاستخدام
-                </a>
-              </p>
-            }
-          >
-            <CrossmintWalletProvider
-              createOnLogin={{
-                chain,
-                recovery: { type: "email" },
-              }}
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <CrossmintProvider apiKey={apiKey}>
+            <CrossmintAuthProvider
+              authModalTitle="VeloPay — تسجيل الدخول"
+              loginMethods={["email", "google"]}
+              termsOfServiceText={
+                <p>
+                  بالمتابعة، أنت توافق على{" "}
+                  <a href="https://www.crossmint.com/legal/terms-of-service" target="_blank">
+                    شروط الاستخدام
+                  </a>
+                </p>
+              }
             >
-              {children}
-            </CrossmintWalletProvider>
-          </CrossmintAuthProvider>
-        </CrossmintProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+              <CrossmintWalletProvider
+                createOnLogin={{
+                  chain,
+                  recovery: { type: "email" },
+                }}
+              >
+                {children}
+              </CrossmintWalletProvider>
+            </CrossmintAuthProvider>
+          </CrossmintProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
 

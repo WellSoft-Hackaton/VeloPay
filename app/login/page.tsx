@@ -20,7 +20,7 @@ export default function LoginPage() {
                     <div className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-white/10 blur-3xl transition-transform duration-1000 hover:scale-105" />
                     <div className="absolute bottom-[10%] -left-[20%] w-[60%] h-[60%] rounded-full bg-black/20 blur-3xl transition-transform duration-1000 hover:scale-105" />
                 </div>
-                
+
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
                         <div className="bg-white p-2 rounded-2xl shadow-sm flex items-center justify-center">
@@ -36,7 +36,7 @@ export default function LoginPage() {
                     <p className="text-lg md:text-xl text-white/90 max-w-lg mb-10 leading-relaxed font-medium">
                         حوّل الأموال فوراً عبر الحدود باستخدام Solana. بدون رسوم خفية، بسرعة البرق، وبأمان تام.
                     </p>
-                    
+
                     <div className="space-y-6">
                         <div className="flex items-center gap-4 group">
                             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center transition-colors group-hover:bg-white/20 backdrop-blur-sm border border-white/10">
@@ -58,7 +58,7 @@ export default function LoginPage() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="relative z-10 mt-16 md:mt-0 text-sm font-medium text-white/80">
                     © {new Date().getFullYear()} VeloPay Inc. جميع الحقوق محفوظة.
                 </div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
 
                     <div className="mt-10 bg-card p-8 rounded-3xl shadow-sm border border-border/60 hover:shadow-md transition-shadow duration-300">
                         <button
-                            onClick={() => signIn("google", { callbackUrl: "/" })}
+                            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                             className="w-full flex items-center justify-center gap-3 bg-background hover:bg-accent text-foreground border border-border py-4 px-4 rounded-2xl font-semibold text-lg transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary group"
                         >
 
@@ -99,7 +99,7 @@ export default function LoginPage() {
                             المتابعة باستخدام Google
                             <ArrowLeft className="w-5 h-5 mr-auto opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-gray-400" />
                         </button>
-                        
+
                         <div className="mt-8 text-center text-sm text-muted-foreground/80 leading-relaxed">
                             بتسجيلك الدخول، فإنك توافق على{' '}
                             <a href="#" className="underline underline-offset-4 hover:text-primary transition-colors">شروط الخدمة</a>
