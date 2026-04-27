@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "VeloPay — حوّل أموالك في ثوانٍ",
   description: "منصة تحويل الأموال من الخليج للشام عبر Solana. رسوم $0.01 فقط.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/VeloPay.png",
   },
 };
 
