@@ -353,10 +353,10 @@ export default function TrackPage() {
             تحويل جديد
           </Link>
           <Link
-            href="/receive"
+            href="/dashboard"
             className="flex-1 rounded-full bg-primary py-5 text-center text-xl font-bold text-black shadow-[0_0_30px_rgba(19,182,1,0.25)] transition-all hover:brightness-110 active:scale-95"
           >
-            طرق الاستلام
+            لوحة التحكم
           </Link>
         </div>
       </div>

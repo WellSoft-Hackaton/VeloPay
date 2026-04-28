@@ -46,6 +46,12 @@ const COUNTRIES = [
   { code: "PS", flag: "🇵🇸", name: "فلسطين", currency: "USD", phone: "+970" },
   { code: "IQ", flag: "🇮🇶", name: "العراق", currency: "IQD", phone: "+964" },
   { code: "SY", flag: "🇸🇾", name: "سوريا", currency: "SYP", phone: "+963" },
+  { code: "SA", flag: "🇸🇦", name: "السعودية", currency: "SAR", phone: "+966" },
+  { code: "AE", flag: "🇦🇪", name: "الإمارات", currency: "AED", phone: "+971" },
+  { code: "KW", flag: "🇰🇼", name: "الكويت", currency: "KWD", phone: "+965" },
+  { code: "QA", flag: "🇶🇦", name: "قطر", currency: "QAR", phone: "+974" },
+  { code: "BH", flag: "🇧🇭", name: "البحرين", currency: "BHD", phone: "+973" },
+  { code: "OM", flag: "🇴🇲", name: "عُمان", currency: "OMR", phone: "+968" },
 ];
 
 function generateTxHash() {
@@ -537,6 +543,14 @@ export default function SendPage() {
 
                     </div>
                     <div>
+                      <label className="mb-1.5 block text-xs font-semibold text-muted-foreground">الاسم الكامل</label>
+                      <input
+                        type="text"
+                        placeholder="الاسم الكامل"
+                        className="w-full mb-3 rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        autoComplete="off"
+                        onClick={(e) => e.stopPropagation()}
+                      />
                       <label className="mb-1.5 block text-xs font-semibold text-muted-foreground">
                         رقم IBAN
                       </label>
@@ -545,7 +559,7 @@ export default function SendPage() {
                         value={iban}
                         onChange={(e) => setIban(e.target.value)}
                         placeholder="JO94 CBJO 0010 0000 0000 0131 0003 02"
-                        className="w-full rounded-xl border border-border bg-background px-4 py-3 font-mono text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        className="w-full rounded-xl border border-border bg-background px-4 py-3 font-mono text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         dir="ltr"
                         autoComplete="off"
                         onClick={(e) => e.stopPropagation()}
@@ -553,15 +567,6 @@ export default function SendPage() {
                     </div>
                   </div>
                 </MethodCard>
-              </div>
-
-              <div className="mt-6">
-                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">الاسم الكامل</label>
-                <input
-                  type="text"
-                  placeholder="الاسم الكامل"
-                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                />
               </div>
             </div>
 
@@ -706,8 +711,7 @@ export default function SendPage() {
                   id: "apple",
                   icon: <FaApple size={24} aria-hidden="true" />,
                   title: "Apple Pay",
-                  desc: "قريباً",
-                  disabled: true,
+                  desc: "الدفع السريع والآمن",
                 },
                 {
                   id: "usdc",
@@ -761,13 +765,55 @@ export default function SendPage() {
               </div>
             )}
 
-            <button
-              onClick={() => setStep(3)}
-              className="w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95"
-            >
-              تأكيد طريقة الدفع <ArrowLeft size={18} style={{ display: 'inline', marginRight: 6 }} aria-hidden="true" />
+            {paymentMethod === "apple" && (
+              <div className="rounded-[2rem] border border-gray-800 bg-black p-6 text-white shadow-2xl relative overflow-hidden transform transition-all duration-500 animate-in slide-in-from-bottom-4 fade-in">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.1),transparent_50%)] pointer-events-none" />
+                <div className="relative flex flex-col items-center text-center">
+                  <div className="mb-5 mt-2 flex items-center justify-center gap-1.5 text-3xl font-medium tracking-tight">
+                    <FaApple size={34} className="text-white -mt-1" />
+                    <span>Pay</span>
+                  </div>
+                  
+                  <div className="w-full rounded-2xl bg-gray-900/80 p-5 border border-gray-800 backdrop-blur-md text-right">
+                    <div className="flex justify-between items-center mb-4 text-sm">
+                      <span className="font-mono flex items-center gap-2 text-white">
+                        <CreditCard size={16} className="text-gray-400"/> •••• 4242
+                      </span>
+                      <span className="text-gray-400 font-medium">البطاقة</span>
+                    </div>
+                    <div className="border-t border-gray-800 my-4" />
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-black text-2xl">{amount} <span className="text-lg text-gray-400 font-bold">{fromCurrency}</span></span>
+                      <span className="text-gray-400 font-medium">المبلغ الإجمالي</span>
+                    </div>
+                  </div>
 
-            </button>
+                  <div className="mt-6 w-full flex flex-col items-center">
+                    <div className="mb-4 p-3 rounded-full bg-gray-800/50 border border-gray-700 animate-pulse">
+                      <Zap size={24} className="text-primary" />
+                    </div>
+                    <p className="text-gray-400 text-xs mb-4 font-medium tracking-wide">
+                      التأكيد عبر Face ID
+                    </p>
+                    <button 
+                      onClick={() => setStep(3)}
+                      className="w-full flex items-center justify-center gap-2 rounded-2xl bg-white text-black py-4 text-lg font-bold transition hover:bg-gray-200 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                    >
+                      <FaApple size={22} className="-mt-0.5" /> Pay
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {paymentMethod !== "apple" && (
+              <button
+                onClick={() => setStep(3)}
+                className="w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95"
+              >
+                تأكيد طريقة الدفع <ArrowLeft size={18} style={{ display: 'inline', marginRight: 6 }} aria-hidden="true" />
+              </button>
+            )}
           </div>
         )}
 
