@@ -17,5 +17,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         sessionsTable: sessions,
         verificationTokensTable: verificationTokens,
     }),
+    callbacks: {
+        session({ session, user }) {
+            if (session.user && user) {
+                session.user.id = user.id;
+            }
+            return session;
+        },
+    },
     secret: process.env.AUTH_SECRET,
 });
