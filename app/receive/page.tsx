@@ -177,8 +177,9 @@ export default function ReceivePage() {
                       جاري المعالجة...
                     </span>
                   ) : (
-                    حوّل إلى حسابي البنكي <Check size={16} style={{ display: 'inline', marginRight: 4 }} aria-hidden="true" />
-
+                    <>
+                      حوّل إلى حسابي البنكي <Check size={16} style={{ display: 'inline', marginRight: 4 }} aria-hidden="true" />
+                    </>
                   )}
                 </button>
               </div>
