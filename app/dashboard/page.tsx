@@ -3,41 +3,63 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Sidebar } from "@/components/Sidebar";
-import { ArrowUp, ArrowDown, ArrowRightLeft, Sparkles, Plus, Trash2 } from "lucide-react";
+import { ArrowUp, Plus, Trash2, User, Mail, Phone, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/common/Dialog";
+import { EscrowSection } from "@/components/dashboard-summary/EscrowSection";
 
 // Mock Data
 const transactions = [
-  { id: "TX-1092", status: "مكتمل", amount: "$500", date: "اليوم" },
-  { id: "TX-1093", status: "قيد المعالجة", amount: "$1,200", date: "أمس" },
+  { id: "TX-1092", status: "مكتمل", amount: "$50", date: "اليوم" },
+  { id: "TX-1093", status: "قيد المعالجة", amount: "$120", date: "أمس" },
   { id: "TX-1094", status: "مكتمل", amount: "$300", date: "25 أبريل" },
   { id: "TX-1095", status: "فشل", amount: "$50", date: "24 أبريل" },
-  { id: "TX-1096", status: "مكتمل", amount: "$850", date: "22 أبريل" },
+  { id: "TX-1096", status: "مكتمل", amount: "$85", date: "22 أبريل" },
+];
+
+const allTransactions = [
+  ...transactions,
+  { id: "TX-1097", status: "قيد المعالجة", amount: "$150", date: "21 أبريل" },
+  { id: "TX-1098", status: "مكتمل", amount: "$20", date: "20 أبريل" },
+  { id: "TX-1099", status: "مكتمل", amount: "$340", date: "18 أبريل" },
+  { id: "TX-1100", status: "فشل", amount: "$50", date: "15 أبريل" },
+  { id: "TX-1101", status: "مكتمل", amount: "$120", date: "14 أبريل" },
+  { id: "TX-1102", status: "مكتمل", amount: "$45", date: "12 أبريل" },
+  { id: "TX-1103", status: "مكتمل", amount: "$99", date: "10 أبريل" },
 ];
 
 const initialCards = [
-  { id: "mastercard", type: "Mastercard", label: "مدخرات", balance: "$3,240.00", last4: "8734", bg: "bg-blue-950", border: "border-blue-900", textColor: "text-white" },
-  { id: "visa", type: "Visa", label: "رئيسية", balance: "$12,480.50", last4: "4291", bg: "bg-slate-900", border: "border-yellow-600/50", textColor: "text-white" },
+  { id: "mastercard", type: "Mastercard", label: "مدخرات", balance: "$324.00", last4: "8734", bg: "bg-blue-950", border: "border-blue-900", textColor: "text-white" },
+  { id: "visa", type: "Visa", label: "رئيسية", balance: "$480.50", last4: "4291", bg: "bg-slate-900", border: "border-yellow-600/50", textColor: "text-white" },
 ];
 
 const upcomingBills = [
-  { id: 1, name: "الإيجار", due: "يستحق 1 مايو", amount: "$1,800.00" },
+  { id: 1, name: "الإيجار", due: "يستحق 1 مايو", amount: "$180.00" },
   { id: 2, name: "Apple One", due: "يستحق 3 مايو", amount: "$21.95" },
   { id: 3, name: "الصالة الرياضية", due: "يستحق 5 مايو", amount: "$45.00" },
 ];
 
 const quickActions = [
   { name: "إرسال", icon: ArrowUp, href: "/send" },
-  { name: "استقبال", icon: ArrowDown },
-  { name: "تحويل", icon: ArrowRightLeft },
-  { name: "استثمار", icon: Sparkles },
 ];
 
 export default function DashboardPage() {
   const [isAddCardOpen, setIsAddCardOpen] = useState(false);
+  const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [cards, setCards] = useState(initialCards);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("showTransactions") === "true") {
+        setIsTransactionsModalOpen(true);
+        // Clean up URL without reloading
+        window.history.replaceState(null, "", "/dashboard");
+      }
+    }
+  }, []);
 
   const handleDeleteCard = (id: string) => {
     setCards(cards.filter(card => card.id !== id));
@@ -72,7 +94,7 @@ export default function DashboardPage() {
       <Header />
       
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar onTransactionsClick={() => setIsTransactionsModalOpen(true)} onSettingsClick={() => setIsSettingsModalOpen(true)} />
         
         <main className="flex-1 overflow-y-auto p-6 lg:p-10">
           <div className="mx-auto max-w-6xl space-y-12">
@@ -82,7 +104,7 @@ export default function DashboardPage() {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="flex flex-col items-center justify-center rounded-3xl border border-border bg-card p-10 shadow-sm transition-shadow hover:shadow-md">
                 <p className="text-sm font-medium text-muted-foreground mb-4">إجمالي الرصيد</p>
-                <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">$15,720.50</h2>
+                <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">$804.50</h2>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-600 dark:text-green-400">
                     8.3% <span className="text-[10px]">▲</span>
@@ -93,7 +115,7 @@ export default function DashboardPage() {
 
               <div className="flex flex-col items-center justify-center rounded-3xl border border-border bg-card p-10 shadow-sm transition-shadow hover:shadow-md">
                 <p className="text-sm font-medium text-muted-foreground mb-4">الإنفاق الشهري</p>
-                <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">$3,248.91</h2>
+                <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">$248.91</h2>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-600 dark:text-red-400">
                     <span className="text-[10px]">▼</span> 12%
@@ -182,7 +204,10 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* 4. Upcoming Bills */}
+            {/* 4. Escrow Section */}
+            <EscrowSection />
+
+            {/* 5. Upcoming Bills */}
             <div>
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-foreground">الفواتير القادمة</h3>
@@ -205,8 +230,18 @@ export default function DashboardPage() {
             {/* 5. Transactions Table */}
             <div>
               <div className="mb-6 flex justify-between items-center">
-                <h3 className="text-lg font-bold text-foreground">أحدث المعاملات</h3>
-                <button className="text-sm font-bold text-primary hover:underline">عرض الكل</button>
+                <h3 
+                  className="text-lg font-bold text-foreground cursor-pointer hover:text-primary transition-colors"
+                  onClick={() => setIsTransactionsModalOpen(true)}
+                >
+                  أحدث المعاملات
+                </h3>
+                <button 
+                  onClick={() => setIsTransactionsModalOpen(true)}
+                  className="text-sm font-bold text-primary hover:underline"
+                >
+                  عرض الكل
+                </button>
               </div>
               <div className="rounded-3xl border border-border bg-card shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
@@ -311,6 +346,126 @@ export default function DashboardPage() {
                   className="mt-4 w-full rounded-xl bg-primary px-4 py-3 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   إضافة البطاقة
+                </button>
+              </form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Transactions Modal */}
+          <Dialog open={isTransactionsModalOpen} onOpenChange={setIsTransactionsModalOpen}>
+            <DialogContent className="sm:max-w-2xl bg-card border-border max-h-[80vh] flex flex-col" dir="rtl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold text-foreground">سجل المعاملات</DialogTitle>
+                <DialogDescription className="text-muted-foreground mt-2">
+                  عرض جميع معاملاتك السابقة وحالتها.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4 overflow-y-auto rounded-3xl border border-border bg-card shadow-sm flex-1">
+                <table className="w-full text-right text-sm">
+                  <thead className="bg-muted/50 text-muted-foreground sticky top-0 backdrop-blur-sm">
+                    <tr>
+                      <th className="px-8 py-5 font-medium">رقم المعاملة</th>
+                      <th className="px-8 py-5 font-medium">التاريخ</th>
+                      <th className="px-8 py-5 font-medium">المبلغ</th>
+                      <th className="px-8 py-5 font-medium">الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {allTransactions.map((tx) => (
+                      <tr key={tx.id} className="transition-colors hover:bg-muted/20">
+                        <td className="px-8 py-5 font-medium text-foreground">{tx.id}</td>
+                        <td className="px-8 py-5 text-muted-foreground">{tx.date}</td>
+                        <td className="px-8 py-5 font-bold text-foreground">{tx.amount}</td>
+                        <td className="px-8 py-5">
+                          <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
+                              tx.status === "مكتمل"
+                                ? "bg-green-500/10 text-green-600 dark:text-green-400"
+                                : tx.status === "قيد المعالجة"
+                                ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+                                : "bg-red-500/10 text-red-600 dark:text-red-400"
+                            }`}
+                          >
+                            {tx.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Settings Modal */}
+          <Dialog open={isSettingsModalOpen} onOpenChange={setIsSettingsModalOpen}>
+            <DialogContent className="sm:max-w-xl bg-card border-border" dir="rtl">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
+                  <User className="w-6 h-6 text-primary" /> إعدادات الحساب
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground mt-2">
+                  تحديث معلوماتك الشخصية وإعدادات حسابك.
+                </DialogDescription>
+              </DialogHeader>
+              <form className="mt-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500" onSubmit={(e) => { e.preventDefault(); setIsSettingsModalOpen(false); }}>
+                <div className="space-y-5 bg-muted/30 p-6 rounded-3xl border border-border/50">
+                  <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    المعلومات الأساسية
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-2 relative">
+                      <label className="text-sm font-semibold text-muted-foreground ml-1 block">الاسم الكامل</label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="name"
+                          defaultValue="المستخدم"
+                          className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                          required
+                        />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                      </div>
+                    </div>
+                    <div className="space-y-2 relative">
+                      <label className="text-sm font-semibold text-muted-foreground ml-1 block">البريد الإلكتروني</label>
+                      <div className="relative">
+                        <input
+                          type="email"
+                          defaultValue="user@example.com"
+                          disabled
+                          className="w-full rounded-2xl border border-border bg-muted px-4 py-3.5 pl-10 text-muted-foreground cursor-not-allowed opacity-70 font-medium"
+                        />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 relative">
+                    <label className="text-sm font-semibold text-muted-foreground ml-1 block">رقم الهاتف</label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        name="phoneNumber"
+                        defaultValue="+964 770 000 0000"
+                        className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-left"
+                        dir="ltr"
+                        required
+                      />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground font-medium flex items-center gap-1 mt-2">
+                      <ShieldCheck className="w-4 h-4 text-green-500" /> يتم استخدامه لتأمين حسابك.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary/90 text-primary-foreground border-none py-4 px-4 rounded-2xl font-bold text-lg transition-all shadow-lg hover:shadow-xl active:scale-[0.98] mt-4"
+                >
+                  حفظ التغييرات
                 </button>
               </form>
             </DialogContent>

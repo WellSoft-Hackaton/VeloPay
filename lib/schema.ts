@@ -18,6 +18,7 @@ export const users = pgTable("user", {
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
+    phone_number: text("phone_number")
 });
 
 export const accounts = pgTable(
@@ -133,5 +134,116 @@ export const exchangeRateAlerts = pgTable("exchange_rate_alert", {
     targetRate: text("targetRate").notNull(), // stored as string for simplicity
     direction: text("direction").notNull().default("below"),
     active: boolean("active").notNull().default(false),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Escrow — hold money with a release condition
+export const escrows = pgTable("escrow", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    txHash: text("txHash"),
+    amount: text("amount").notNull(),
+    fromCurrency: text("fromCurrency").notNull(),
+    toCurrency: text("toCurrency").notNull(),
+    recipientPhone: text("recipientPhone"),
+    escrowCondition: text("escrowCondition").notNull(),
+    status: text("status").notNull().default("locked"), // locked | released | cancelled
+    releasedAt: timestamp("releasedAt", { mode: "date" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Recurring Transfers — scheduled monthly payments
+export const recurringTransfers = pgTable("recurring_transfer", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    amount: text("amount").notNull(),
+    fromCurrency: text("fromCurrency").notNull(),
+    toCurrency: text("toCurrency").notNull(),
+    recipientPhone: text("recipientPhone"),
+    dayOfMonth: integer("dayOfMonth").notNull(),
+    active: boolean("active").notNull().default(true),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Transactions — full transaction history
+export const transactions = pgTable("transaction", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+    txHash: text("txHash"),
+    amount: text("amount").notNull(),
+    fromCurrency: text("fromCurrency").notNull(),
+    toCurrency: text("toCurrency").notNull(),
+    convertedAmount: text("convertedAmount"),
+    recipientPhone: text("recipientPhone"),
+    countryCode: text("countryCode"),
+    receiveMethod: text("receiveMethod"), // bank | zaincash | wallet
+    paymentMethod: text("paymentMethod"), // card | usdc | apple
+    status: text("status").notNull().default("pending"), // pending | processing | confirmed | delivered | failed
+    isEscrow: boolean("isEscrow").notNull().default(false),
+    escrowId: text("escrowId"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Subscriptions — premium plan tracking
+export const subscriptions = pgTable("subscription", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    plan: text("plan").notNull().default("free"), // free | monthly | yearly
+    status: text("status").notNull().default("active"), // active | cancelled | expired
+    startedAt: timestamp("startedAt", { mode: "date" }).notNull().defaultNow(),
+    expiresAt: timestamp("expiresAt", { mode: "date" }),
+});
+
+// ✅ Chat Messages — AI assistant history
+export const chatMessages = pgTable("chat_message", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    role: text("role").notNull(), // user | assistant
+    content: text("content").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ User Cards — saved payment cards for dashboard
+export const userCards = pgTable("user_card", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    cardType: text("cardType").notNull(), // Visa | Mastercard
+    last4: text("last4").notNull(),
+    label: text("label"),
+    cardholderName: text("cardholderName"),
+    expiryDate: text("expiryDate"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Bills — upcoming bills / scheduled payments
+export const bills = pgTable("bill", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    amount: text("amount").notNull(),
+    dueDate: text("dueDate").notNull(),
+    paid: boolean("paid").notNull().default(false),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Receive Preferences — user's preferred receive method
+export const receivePreferences = pgTable("receive_preference", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    method: text("method").notNull(), // bank | zaincash | cliq | wallet
+    iban: text("iban"),
+    phone: text("phone"),
+    accountName: text("accountName"),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ✅ Notifications — alerts and notifications
+export const notifications = pgTable("notification", {
+    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(), // rate_alert | transfer_complete | escrow_released | bill_due
+    title: text("title").notNull(),
+    message: text("message"),
+    read: boolean("read").notNull().default(false),
     createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });

@@ -8,20 +8,23 @@ import {
   LayoutDashboard, 
   Settings, 
   History, 
-  Wallet,
   LogOut,
   HelpCircle
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
-export function Sidebar() {
+interface SidebarProps {
+  onTransactionsClick?: () => void;
+  onSettingsClick?: () => void;
+}
+
+export function Sidebar({ onTransactionsClick, onSettingsClick }: SidebarProps = {}) {
   const pathname = usePathname();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const navigation = [
     { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
     { name: "المعاملات السابقة", href: "/transactions", icon: History },
-    { name: "المحفظة", href: "/wallet", icon: Wallet },
     { name: "الإعدادات", href: "/settings", icon: Settings },
     { name: "المساعدة", href: "/help", icon: HelpCircle },
   ];
@@ -36,6 +39,40 @@ export function Sidebar() {
               <button
                 key={item.name}
                 onClick={() => setIsHelpOpen(true)}
+                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                }`}
+              >
+                <item.icon size={20} />
+                {item.name}
+              </button>
+            );
+          }
+
+          if (item.name === "المعاملات السابقة" && onTransactionsClick) {
+            return (
+              <button
+                key={item.name}
+                onClick={onTransactionsClick}
+                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                }`}
+              >
+                <item.icon size={20} />
+                {item.name}
+              </button>
+            );
+          }
+
+          if (item.name === "الإعدادات" && onSettingsClick) {
+            return (
+              <button
+                key={item.name}
+                onClick={onSettingsClick}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-primary/10 text-primary"
