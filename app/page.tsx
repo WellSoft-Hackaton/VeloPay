@@ -9,6 +9,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ExchangeRateAlert } from "@/components/ExchangeRateAlert";
 import { LiveRateTicker } from "@/components/LiveRateTicker";
+import { GlobeBackground } from "@/components/GlobeBackground";
 import { 
   ArrowLeft, 
   ArrowDown, 
@@ -115,160 +116,186 @@ export default function LandingPage() {
       <Header />
 
       {/* ══ Hero ══ */}
-      <section className="relative overflow-hidden px-6 pb-24 pt-16">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
-          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-primary/5 blur-[80px]" />
+<section className="relative isolate overflow-hidden bg-black px-6 pb-20 pt-10 sm:pt-14" style={{ minHeight: "680px" }}>
+  {/* Background gradient overlay */}
+  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_38%,rgba(19,182,1,0.10),transparent_22%),radial-gradient(circle_at_58%_52%,rgba(19,182,1,0.06),transparent_30%),linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.3))]" />
+  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent" />
+
+  {/* Animated canvas globe */}
+  <GlobeBackground />
+
+  <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.02fr_0.98fr]">
+    {/* Text */}
+    <div className="order-2 lg:order-1">
+      <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary shadow-[0_0_30px_rgba(19,182,1,0.12)]">
+        <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(19,182,1,0.95)]" />
+        حوالات ذكية في جميع أنحاء الشرق الأوسط
+      </div>
+
+      <h1 className="mt-6 max-w-2xl text-5xl font-black leading-[1.02] tracking-tight text-white sm:text-6xl xl:text-7xl">
+        حوّل أموالك
+        <span className="block text-primary">بذكاء وراحة</span>
+      </h1>
+
+      <p className="mt-6 max-w-xl text-lg leading-8 text-white/68 sm:text-xl">
+        حوالات مالية سريعة، آمنة، وتكلفة منخفضة إلى العائلة والأصدقاء في مختلف دول الشرق الأوسط.
+      </p>
+
+      <div className="mt-8 flex flex-wrap items-center gap-4">
+        <Link
+          href="/send"
+          className="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-bold text-black shadow-[0_18px_45px_rgba(19,182,1,0.25)] transition hover:brightness-110 active:scale-[0.98]"
+        >
+          ابدأ التحويل الآن
+          <ArrowLeft
+            size={18}
+            className="transition-transform group-hover:-translate-x-1"
+            aria-hidden="true"
+          />
+        </Link>
+
+        <a
+          href="#how"
+          className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/3 px-8 py-4 text-lg font-medium text-white/70 transition hover:border-primary/40 hover:bg-white/5 hover:text-white"
+        >
+          كيف يعمل؟
+        </a>
+      </div>
+
+      <div className="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-white/8 bg-white/3 px-5 py-4 backdrop-blur-md">
+          <div className="text-sm text-white/45">رسوم التحويل</div>
+          <div className="mt-2 text-2xl font-black text-primary">$0.01</div>
         </div>
 
-        <div className="relative mx-auto max-w-6xl">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            {/* Text */}
-            <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-                Solana • رسوم أقل من $0.01
+        <div className="rounded-2xl border border-white/8 bg-white/3 px-5 py-4 backdrop-blur-md">
+          <div className="text-sm text-white/45">وقت الوصول</div>
+          <div className="mt-2 text-2xl font-black text-primary">~5 ثوانٍ</div>
+        </div>
+
+        <div className="rounded-2xl border border-white/8 bg-white/3 px-5 py-4 backdrop-blur-md">
+          <div className="text-sm text-white/45">بدون رسوم خفية</div>
+          <div className="mt-2 text-2xl font-black text-primary">واضح دائمًا</div>
+        </div>
+      </div>
+    </div>
+
+    {/* Calculator */}
+    <div className="order-1 lg:order-2">
+      <div className="relative mx-auto w-full max-w-[560px] overflow-hidden rounded-[30px] border border-white/10 bg-[#101010]/90 p-5 shadow-[0_40px_140px_rgba(0,0,0,0.65)] backdrop-blur-xl sm:p-6">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(19,182,1,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(19,182,1,0.08),transparent_22%)]" />
+
+        <div className="relative">
+          <div className="mb-5 text-center">
+            <h2 className="text-xl font-semibold text-white">احسب تحويلك الآن</h2>
+            <p className="mt-1 text-sm text-white/55">أفضل سعر، تحويل فوري، ورسوم منخفضة</p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-white/8 bg-black/30 p-4">
+              <div className="mb-2 flex items-center justify-between text-sm text-white/50">
+                <span>أرسل</span>
+                <span>مبلغ التحويل</span>
               </div>
 
-              <h1 className="mb-6 text-5xl font-black leading-tight lg:text-6xl">
-                حوّل أموالك{" "}
-                <span className="text-primary">فوراً</span>
-                <br />
-                من الخليج لأهلك
-              </h1>
-
-              <p className="mb-8 text-xl leading-relaxed text-muted-foreground">
-                بدون رسوم مصرفية مرتفعة. بدون انتظار.
-                <br />
-                فقط رقم الهاتف — وخلال ثوانٍ يصل المال.
-              </p>
-
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/send"
-                  className="group flex items-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-xl shadow-primary/30 transition hover:bg-primary/90 active:scale-95"
+              <div className="flex gap-3">
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="flex-1 rounded-2xl border border-white/8 bg-[#0b0b0b] px-4 py-4 text-2xl font-black text-white outline-none transition placeholder:text-white/20 focus:border-primary/50"
+                />
+                <select
+                  value={fromCurrency}
+                  onChange={(e) => setFromCurrency(e.target.value)}
+                  className="min-w-[110px] rounded-2xl border border-white/8 bg-[#111111] px-3 py-4 text-sm font-medium text-white outline-none"
                 >
-                  ابدأ التحويل الآن
-                  <ArrowLeft size={18} style={{ marginLeft: 6 }} className="transition-transform group-hover:-translate-x-1" aria-hidden="true" />
-                </Link>
-                <a
-                  href="#how"
-                  className="flex items-center gap-2 rounded-full border border-border px-8 py-4 text-lg font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
-                >
-                  كيف يعمل؟
-                </a>
+                  {FROM_CURRENCIES.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.flag} {c.code}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="mt-12 flex gap-8">
-                {[
-                  { value: "$0.01", label: "رسوم التحويل" },
-                  { value: "~5 ثوانٍ", label: "وقت الوصول" },
-                  { value: "100%", label: "شفافية Blockchain" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <div className="text-2xl font-black text-primary">{s.value}</div>
-                    <div className="text-sm text-muted-foreground">{s.label}</div>
-                  </div>
-                ))}
+              <div className="mt-3 text-sm text-white/45">الرصيد المتاح: 2,450.00 SAR</div>
+            </div>
+
+            <div className="flex items-center justify-center">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary shadow-[0_0_30px_rgba(19,182,1,0.18)]">
+                <ArrowDown size={18} aria-hidden="true" />
               </div>
             </div>
 
-            {/* Calculator */}
-            <div className="rounded-3xl border border-border bg-card p-8 backdrop-blur-sm shadow-2xl">
-              <div className="mb-6 text-center text-sm font-medium text-muted-foreground">
-                احسب تحويلك الآن
+            <div className="rounded-2xl border border-white/8 bg-black/30 p-4">
+              <div className="mb-2 flex items-center justify-between text-sm text-white/50">
+                <span>يستلم</span>
+                <span>المبلغ النهائي</span>
               </div>
 
-              <div className="mb-4">
-                <label className="mb-2 block text-xs text-muted-foreground">أرسل</label>
-                <div className="flex gap-3">
-                  <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="flex-1 rounded-xl border border-border bg-background px-4 py-3 text-2xl font-bold text-foreground outline-none transition focus:border-primary/50"
-                  />
-                  <select
-                    value={fromCurrency}
-                    onChange={(e) => setFromCurrency(e.target.value)}
-                    className="rounded-xl border border-border bg-card px-3 py-3 text-sm font-medium text-foreground outline-none"
-                  >
-                    {FROM_CURRENCIES.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.flag} {c.code}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="my-4 flex items-center justify-center gap-4">
-                <div className="flex-1 border-t border-border" />
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary">
-                  <ArrowDown size={18} aria-hidden="true" />
-                </div>
-                <div className="flex-1 border-t border-border" />
-              </div>
-
-              <div className="mb-6">
-                <label className="mb-2 block text-xs text-muted-foreground">يستلم</label>
-                <div className="flex gap-3">
-                  <div className="flex-1 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3">
-                    <span className="text-2xl font-black text-primary">
-                      {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                  <select
-                    value={toCurrency}
-                    onChange={(e) => setToCurrency(e.target.value)}
-                    className="rounded-xl border border-border bg-card px-3 py-3 text-sm font-medium text-foreground outline-none"
-                  >
-                    {TO_CURRENCIES.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.flag} {c.code}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Fee comparison */}
-              <div className="mb-6 space-y-2 rounded-xl border border-border bg-background/50 p-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">رسوم VeloPay</span>
-                  <span className="flex items-center gap-1 font-bold text-primary">
-                    $0.01 فقط <Zap size={14} aria-hidden="true" />
+              <div className="flex gap-3">
+                <div className="flex flex-1 items-center rounded-2xl border border-primary/30 bg-primary/10 px-4 py-4">
+                  <span className="text-2xl font-black text-primary">
+                    {converted.toLocaleString("ar", { maximumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Western Union</span>
-                  <span className="text-red-500 line-through">${wuFee}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">تحويل بنكي</span>
-                  <span className="text-red-500 line-through">${bankFee}</span>
-                </div>
-                <div className="mt-2 flex items-center justify-center gap-1 border-t border-border pt-2 text-center text-xs text-primary">
-                  <Banknote size={14} aria-hidden="true" /> توفر{" "}
-                  <strong>${(parseFloat(bankFee) - 0.01).toFixed(2)}</strong> مقارنة
-                  بالبنك
-                </div>
+
+                <select
+                  value={toCurrency}
+                  onChange={(e) => setToCurrency(e.target.value)}
+                  className="min-w-[110px] rounded-2xl border border-white/8 bg-[#111111] px-3 py-4 text-sm font-medium text-white outline-none"
+                >
+                  {TO_CURRENCIES.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.flag} {c.code}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <button
-                onClick={() => setShowPaymentMethod(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-center text-lg font-bold text-primary-foreground shadow-lg shadow-primary/30 transition hover:bg-primary/90 active:scale-95"
-              >
-                أرسل {amount || "..."} {fromCurrency} الآن 
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
-              <p className="mt-3 flex items-center justify-center gap-1 text-center text-xs text-muted-foreground">
-                <Zap size={12} aria-hidden="true" /> يصل خلال ~5 ثوانٍ عبر Solana Devnet
-              </p>
+              <div className="mt-3 text-sm text-primary/85">
+                1 {fromCurrency} = {RATES[fromCurrency]?.[toCurrency]?.toFixed(4) ?? "0.0000"} {toCurrency}
+              </div>
             </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-4">
+                <div className="text-sm text-white/45">طريقة الاستلام</div>
+                <div className="mt-2 text-base font-semibold text-white">VeloPay</div>
+                <div className="mt-1 text-sm text-white/45">فوري</div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-4">
+                <div className="text-sm text-white/45">طريقة الدفع</div>
+                <div className="mt-2 text-base font-semibold text-white">تحويل بنكي</div>
+                <div className="mt-1 text-sm text-white/45">موثوق</div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-4">
+                <div className="text-sm text-white/45">الرسوم</div>
+                <div className="mt-2 text-base font-semibold text-primary">$0.01</div>
+                <div className="mt-1 text-sm text-white/45">منخفضة جدًا</div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowPaymentMethod(true)}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 text-center text-lg font-bold text-black shadow-[0_18px_45px_rgba(19,182,1,0.24)] transition hover:brightness-110 active:scale-[0.98]"
+            >
+              أرسل {amount || "..."} {fromCurrency} الآن
+              <ArrowRight size={18} aria-hidden="true" />
+            </button>
+
+            <p className="flex items-center justify-center gap-1 text-center text-xs text-white/50">
+              <Zap size={12} aria-hidden="true" />
+              يصل خلال ~5 ثوانٍ عبر Solana Devnet
+            </p>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* ══ How it works ══ */}
       <HowItWorksFlow />

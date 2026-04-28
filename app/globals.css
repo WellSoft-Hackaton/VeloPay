@@ -203,3 +203,16 @@
 .animate-solana-pulse {
   animation: solana-pulse 2s ease-in-out infinite;
 }
+
+@keyframes hero-float {
+  0%, 100% {
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    transform: translateY(-52%) scale(1.01);
+  }
+}
+
+.animate-hero-float {
+  animation: hero-float 14s ease-in-out infinite;
+}
