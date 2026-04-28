@@ -6,7 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Bell, Star, LogOut, User, Send, LayoutDashboard, Code, Home, Menu, X } from "lucide-react";
+import { Bell, LogOut, User, Send, LayoutDashboard, Code, Home, Menu, X } from "lucide-react";
 import { PaymentMethodModal } from "@/components/PaymentMethodModal";
 
 // ─── Notification Bell ──────────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ export function Header() {
             </button>
 
             <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src="/VeloPay.png" alt="شعار فيلوباي" className="h-10 sm:h-12 object-contain" />
+              <img src="/VeloPay.png" alt="شعار فيلوباي" className="h-27 object-contain -my-6" />
             </Link>
 
             {/* Primary Navigation Tabs with generous spacing */}
@@ -130,11 +130,7 @@ export function Header() {
           {/* Left side - Actions */}
           <div className="flex items-center gap-3 sm:gap-6">
 
-            {/* Premium Button */}
-            <button className="hidden lg:flex items-center whitespace-nowrap gap-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-700 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-amber-600/20 transition-all hover:scale-105 hover:shadow-amber-600/40 active:scale-95">
-              <Star size={18} aria-hidden="true" className="fill-white" />
-              <span>النسخة المميزة</span>
-            </button>
+
 
             {/* CTA: Send Now */}
             <button
@@ -234,7 +230,7 @@ export function Header() {
           {/* Header of mobile menu */}
           <div className="flex h-20 items-center justify-between px-4 sm:px-6 border-b border-white/10">
             <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src="/VeloPay.png" alt="شعار فيلوباي" className="h-10 sm:h-12 object-contain brightness-0 invert" />
+              <img src="/VeloPay.png" alt="شعار فيلوباي" className="h-27 object-contain brightness-0 invert -my-6" />
             </Link>
             <button
               className="p-2 -mr-2 text-white/80 hover:text-white transition-colors focus:outline-none"
@@ -286,10 +282,7 @@ export function Header() {
               أرسل الآن
             </button>
             
-            <button className="flex items-center w-full gap-4 text-xl font-bold text-white/80 hover:text-white transition-colors">
-              <Star size={24} className="fill-amber-500 text-amber-500" />
-              النسخة المميزة
-            </button>
+
           </nav>
         </div>
       )}

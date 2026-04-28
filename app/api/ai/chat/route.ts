@@ -116,8 +116,7 @@ export async function POST(request: Request) {
     console.log("[VeloPay AI] Calling Gemini with key:", geminiKey.slice(0, 8) + "...");
 
     // Try models in order
-    const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-pro"];
-
+const models = ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.0-flash"];
     for (const model of models) {
       const result = await callGemini(geminiKey, model, fullPrompt);
       if (result) {
