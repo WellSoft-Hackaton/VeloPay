@@ -773,72 +773,93 @@ export default function SendPage() {
 
         {/* ══════════ STEP 3 ══════════ */}
         {step === 3 && (
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
               <button
                 onClick={() => setStep(2)}
-                className="mb-3 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                className="mb-4 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 <ArrowRight size={16} style={{ display: 'inline', marginLeft: 6 }} aria-hidden="true" /> رجوع
-
               </button>
-              <h1 className="text-2xl font-black text-foreground">تأكيد التحويل</h1>
-              <p className="mt-1 text-muted-foreground text-sm">راجع التفاصيل قبل الإرسال</p>
+              <h1 className="text-3xl font-black text-foreground tracking-tight">تأكيد التحويل</h1>
+              <p className="mt-2 text-muted-foreground">راجع التفاصيل قبل الإرسال</p>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 text-sm">
-              {[
-                { label: "تُرسل", value: `${amount} ${fromCurrency}` },
-                { label: "القيمة بالدولار", value: `$${usdAmount}` },
-                {
-                  label: "يستلم",
-                  value: `${converted.toLocaleString("ar", { maximumFractionDigits: 2 })} ${country.currency}`,
-                  valueClass: "text-primary font-bold",
-                },
-                { label: "إلى", value: `${country.flag} ${phone}` },
-                {
-                  label: "طريقة الاستلام",
-                  value:
-                    receiveMethod === "bank"
-                      ? "إيداع بنكي"
-                      : receiveMethod === "zaincash"
-                      ? "Zain Cash / CliQ"
-                      : receiveMethod === "wallet"
-                      ? "محفظة رقمية"
-
-                      : "غير محدد",
-                },
-                { label: "رسوم المعاملة", value: "$0.01", valueClass: "text-primary font-bold" },
-                {
-                  label: "طريقة الدفع",
-                  value: paymentMethod === "card" ? "بطاقة ائتمانية" : "USDC",
-
-                },
-                { label: "الشبكة", value: "Solana Devnet" },
-
-              ].map(({ label, value, valueClass }) => (
-                <div key={label} className="flex justify-between">
-                  <span className="text-muted-foreground">{label}</span>
-                  <span className={`font-medium text-foreground text-right ${valueClass ?? ""}`}>
-                    {value}
-                  </span>
+            <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-1 shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+              <div className="relative rounded-[22px] bg-card p-6">
+                <div className="flex justify-between items-center mb-6 pb-6 border-b border-dashed border-border">
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">المبلغ الإجمالي للتسديد</div>
+                    <div className="text-3xl font-black text-foreground">{amount} <span className="text-xl text-muted-foreground">{fromCurrency}</span></div>
+                    <div className="text-sm text-muted-foreground mt-1">≈ ${usdAmount}</div>
+                  </div>
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <Sparkles size={24} className="text-primary" aria-hidden="true" />
+                  </div>
                 </div>
-              ))}
 
-              {recurringConfirmed && recurringDay && (
-                <div className="rounded-xl bg-primary/10 px-3 py-2 text-xs text-primary">
-                  <RefreshCcw size={12} style={{ display: 'inline', marginLeft: 4 }} aria-hidden="true" /> تم تفعيل الإرسال الدوري يوم {recurringDay} من كل شهر
-
+                <div className="space-y-4 text-sm">
+                  {[
+                    {
+                      label: "المستلم سيحصل على",
+                      value: `${converted.toLocaleString("ar", { maximumFractionDigits: 2 })} ${country.currency}`,
+                      valueClass: "text-2xl text-primary font-black",
+                    },
+                    { label: "إلى", value: `${country.flag} ${phone}` },
+                    {
+                      label: "طريقة الاستلام",
+                      value:
+                        receiveMethod === "bank"
+                          ? "إيداع بنكي"
+                          : receiveMethod === "zaincash"
+                          ? "Zain Cash / CliQ"
+                          : receiveMethod === "wallet"
+                          ? "محفظة رقمية"
+                          : "غير محدد",
+                    },
+                    { label: "طريقة الدفع", value: paymentMethod === "card" ? "بطاقة ائتمانية" : "USDC" },
+                  ].map(({ label, value, valueClass }) => (
+                    <div key={label} className="flex justify-between items-center py-2">
+                      <span className="text-muted-foreground font-medium">{label}</span>
+                      <span className={`font-medium text-foreground text-right ${valueClass ?? ""}`}>
+                        {value}
+                      </span>
+                    </div>
+                  ))}
+                  
+                  <div className="mt-4 rounded-2xl bg-muted/50 p-4 border border-border space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">رسوم VeloPay</span>
+                      <span className="text-primary font-bold bg-primary/10 px-2 py-1 rounded-lg">$0.01</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground font-medium">الشبكة</span>
+                      <span className="font-medium flex items-center gap-1.5"><Zap size={14} className="text-primary" aria-hidden="true"/> Solana Devnet</span>
+                    </div>
+                  </div>
                 </div>
-              )}
+
+                {recurringConfirmed && recurringDay && (
+                  <div className="mt-6 rounded-xl bg-primary/10 px-4 py-3 text-sm text-primary flex items-center gap-2 border border-primary/20">
+                    <RefreshCcw size={16} aria-hidden="true" /> تم تفعيل الإرسال الدوري يوم {recurringDay} من كل شهر
+                  </div>
+                )}
+              </div>
             </div>
 
             <button
               onClick={handleSend}
               disabled={isLoading}
-              className="w-full rounded-full bg-primary py-4 text-lg font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-95 disabled:opacity-50"
+              className="w-full relative overflow-hidden rounded-full bg-primary py-5 text-xl font-black text-black shadow-[0_0_30px_rgba(19,182,1,0.3)] transition-all hover:bg-[#15cf01] hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(19,182,1,0.5)] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-none"
             >
-              {isLoading ? "جاري الإرسال..." : "إرسال الآن"}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <RefreshCcw size={20} className="animate-spin" aria-hidden="true" /> جاري التحويل...
+                </span>
+              ) : (
+                "تأكيد وإرسال"
+              )}
             </button>
           </div>
         )}
