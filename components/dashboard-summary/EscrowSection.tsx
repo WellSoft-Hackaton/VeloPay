@@ -32,7 +32,7 @@ export function EscrowSection() {
           معاملات الضمان (Escrow)
         </h3>
         <Link 
-          href="/send?escrow=true" 
+          href="/escrow" 
           className="flex items-center gap-2 text-sm font-bold bg-primary/10 text-primary px-4 py-2 rounded-full hover:bg-primary/20 transition-colors"
         >
           <Plus size={16} />

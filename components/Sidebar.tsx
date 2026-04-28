@@ -100,9 +100,6 @@ export function Sidebar({ onTransactionsClick, onSettingsClick }: SidebarProps =
             </Link>
           );
         })}
-      </nav>
-
-      <div className="mt-auto border-t border-border pt-4">
         <button 
           onClick={() => signOut()}
           className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 transition-colors hover:bg-red-500/10"
@@ -110,7 +107,7 @@ export function Sidebar({ onTransactionsClick, onSettingsClick }: SidebarProps =
           <LogOut size={20} />
           تسجيل الخروج
         </button>
-      </div>
+      </nav>
 
       {/* Help Modal */}
       <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
