@@ -7,6 +7,8 @@ import HowItWorksFlow from "@/components/HowItWorksFlow";
 import { PaymentMethodModal } from "@/components/PaymentMethodModal";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ExchangeRateAlert } from "@/components/ExchangeRateAlert";
+import { LiveRateTicker } from "@/components/LiveRateTicker";
 import { 
   ArrowLeft, 
   ArrowDown, 
@@ -271,6 +273,13 @@ export default function LandingPage() {
       {/* ══ How it works ══ */}
       <HowItWorksFlow />
 
+      {/* ══ current exchange rate & alerts ══ */}
+      <section className="px-6 py-12">
+        <div className="mx-auto max-w-5xl grid gap-8 md:grid-cols-2 items-start">
+          <LiveRateTicker />
+          <ExchangeRateAlert />
+        </div>
+      </section>
       {/* ══ Comparison table ══ */}
       <section className="px-6 py-24">
         <div className="mx-auto max-w-4xl">
