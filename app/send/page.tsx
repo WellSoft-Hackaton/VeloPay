@@ -442,9 +442,17 @@ export default function SendPage() {
                   </span>
                   <span className="mr-2 text-sm text-primary">{country.currency}</span>
                 </div>
-                <div className="flex items-center rounded-xl border border-border bg-muted px-4 py-3 text-sm font-medium text-foreground">
-                  {country.flag} {country.currency}
-                </div>
+                <select
+                  value={country.code}
+                  onChange={(e) => handleCountryChange(e.target.value)}
+                  className="flex items-center rounded-xl border border-border bg-muted px-3 py-3 text-sm font-medium text-foreground outline-none transition focus:border-primary"
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.flag} {c.currency}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

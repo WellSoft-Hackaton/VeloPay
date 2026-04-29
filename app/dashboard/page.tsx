@@ -3,7 +3,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Sidebar } from "@/components/Sidebar";
-import { ArrowUp, Plus, Trash2, User, Mail, Phone, ShieldCheck } from "lucide-react";
+import { ArrowUp, Plus, Trash2, User, Mail, Phone, ShieldCheck, Settings, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/common/Dialog";
@@ -11,22 +11,22 @@ import { EscrowSection } from "@/components/dashboard-summary/EscrowSection";
 
 // Mock Data
 const transactions = [
-  { id: "TX-1092", status: "مكتمل", amount: "$50", date: "اليوم" },
-  { id: "TX-1093", status: "قيد المعالجة", amount: "$120", date: "أمس" },
-  { id: "TX-1094", status: "مكتمل", amount: "$300", date: "25 أبريل" },
-  { id: "TX-1095", status: "فشل", amount: "$50", date: "24 أبريل" },
-  { id: "TX-1096", status: "مكتمل", amount: "$85", date: "22 أبريل" },
+  { id: "TX-1092", status: "نجحت", amount: "$50", date: "اليوم", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1093", status: "قيد المعالجة", amount: "$120", date: "أمس", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1094", status: "نجحت", amount: "$300", date: "25 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1095", status: "فشل", amount: "$50", date: "24 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1096", status: "نجحت", amount: "$85", date: "22 أبريل", recipient: "+962 7xx xxx xxxx" },
 ];
 
 const allTransactions = [
   ...transactions,
-  { id: "TX-1097", status: "قيد المعالجة", amount: "$150", date: "21 أبريل" },
-  { id: "TX-1098", status: "مكتمل", amount: "$20", date: "20 أبريل" },
-  { id: "TX-1099", status: "مكتمل", amount: "$340", date: "18 أبريل" },
-  { id: "TX-1100", status: "فشل", amount: "$50", date: "15 أبريل" },
-  { id: "TX-1101", status: "مكتمل", amount: "$120", date: "14 أبريل" },
-  { id: "TX-1102", status: "مكتمل", amount: "$45", date: "12 أبريل" },
-  { id: "TX-1103", status: "مكتمل", amount: "$99", date: "10 أبريل" },
+  { id: "TX-1097", status: "قيد المعالجة", amount: "$150", date: "21 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1098", status: "نجحت", amount: "$20", date: "20 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1099", status: "نجحت", amount: "$340", date: "18 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1100", status: "فشل", amount: "$50", date: "15 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1101", status: "نجحت", amount: "$120", date: "14 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1102", status: "نجحت", amount: "$45", date: "12 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1103", status: "نجحت", amount: "$99", date: "10 أبريل", recipient: "+962 7xx xxx xxxx" },
 ];
 
 const initialCards = [
@@ -49,6 +49,26 @@ export default function DashboardPage() {
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [cards, setCards] = useState(initialCards);
+  const [isBillsMenuOpen, setIsBillsMenuOpen] = useState(false);
+  const [dbTxs, setDbTxs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await fetch("/api/transactions");
+        if (res.ok) {
+          const data = await res.json();
+          setDbTxs(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch transactions:", err);
+      }
+    };
+    fetchTransactions();
+  }, []);
+
+  const displayTransactions = dbTxs.length > 0 ? [...dbTxs, ...transactions].slice(0, 5) : transactions;
+  const displayAllTransactions = dbTxs.length > 0 ? [...dbTxs, ...allTransactions] : allTransactions;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -102,14 +122,23 @@ export default function DashboardPage() {
             
             {/* 1. Summary Cards */}
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="flex flex-col items-center justify-center rounded-3xl border border-border bg-card p-10 shadow-sm transition-shadow hover:shadow-md">
-                <p className="text-sm font-medium text-muted-foreground mb-4">إجمالي الرصيد</p>
+              <div className="flex flex-col items-center justify-center rounded-3xl border border-green-500/20 bg-gradient-to-br from-background to-muted/20 p-10 shadow-lg transition-all hover:shadow-green-500/5 hover:border-green-500/40 relative overflow-hidden group">
+                <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-green-500/10 blur-3xl group-hover:bg-green-500/20 transition-all duration-500"></div>
+                
+                <div className="flex items-center gap-1.5 mb-4">
+                  <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                  <span className="text-sm font-medium text-muted-foreground">محفظة</span>
+                  <span className="text-lg font-bold text-foreground">
+                    <span className="text-green-500">Velo</span>Pay
+                  </span>
+                  <span className="text-sm font-medium text-muted-foreground">الرقمية</span>
+                </div>
+                
                 <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">$804.50</h2>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-600 dark:text-green-400">
                     8.3% <span className="text-[10px]">▲</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">جميع الحسابات</span>
                 </div>
               </div>
 
@@ -209,8 +238,31 @@ export default function DashboardPage() {
 
             {/* 5. Upcoming Bills */}
             <div>
-              <div className="mb-6">
+              <div className="mb-6 flex items-center gap-4">
                 <h3 className="text-lg font-bold text-foreground">الفواتير القادمة</h3>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => setIsBillsMenuOpen(!isBillsMenuOpen)}
+                    className={`p-1.5 rounded-full hover:bg-accent transition-all duration-300 ${isBillsMenuOpen ? 'rotate-90 text-primary' : 'text-muted-foreground'}`}
+                  >
+                    <Settings size={20} />
+                  </button>
+                  
+                  <div className={`flex items-center gap-1.5 overflow-hidden transition-all duration-300 ease-in-out ${isBillsMenuOpen ? 'max-w-[300px] opacity-100' : 'max-w-0 opacity-0'}`}>
+                    <button className="flex items-center gap-1 text-xs font-bold bg-primary/10 text-primary px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors whitespace-nowrap">
+                      <Plus size={12} />
+                      إضافة
+                    </button>
+                    <button className="flex items-center gap-1 text-xs font-bold bg-muted text-foreground px-3 py-1.5 rounded-full hover:bg-muted/80 transition-colors whitespace-nowrap">
+                      <Pencil size={12} />
+                      تعديل
+                    </button>
+                    <button className="flex items-center gap-1 text-xs font-bold bg-red-500/10 text-red-600 px-3 py-1.5 rounded-full hover:bg-red-500/20 transition-colors whitespace-nowrap">
+                      <Trash2 size={12} />
+                      حذف
+                    </button>
+                  </div>
+                </div>
               </div>
               <div className="rounded-3xl border border-border bg-card p-8 shadow-sm">
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-around md:gap-0 divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-border">
@@ -249,29 +301,31 @@ export default function DashboardPage() {
                     <thead className="bg-muted/50 text-muted-foreground">
                       <tr>
                         <th className="px-8 py-5 font-medium">رقم المعاملة</th>
+                        <th className="px-8 py-5 font-medium">المستلم</th>
                         <th className="px-8 py-5 font-medium">التاريخ</th>
                         <th className="px-8 py-5 font-medium">المبلغ</th>
                         <th className="px-8 py-5 font-medium">الحالة</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
-                      {transactions.map((tx) => (
+                      {displayTransactions.map((tx) => (
                         <tr key={tx.id} className="transition-colors hover:bg-muted/20">
                           <td className="px-8 py-5 font-medium text-foreground">{tx.id}</td>
+                          <td className="px-8 py-5 text-muted-foreground">{tx.recipient || "-"}</td>
                           <td className="px-8 py-5 text-muted-foreground">{tx.date}</td>
                           <td className="px-8 py-5 font-bold text-foreground">{tx.amount}</td>
                           <td className="px-8 py-5">
                             <span
                               className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
-                                tx.status === "مكتمل"
-                                  ? "bg-green-500/10 text-green-600 dark:text-green-400"
-                                  : tx.status === "قيد المعالجة"
-                                  ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
-                                  : "bg-red-500/10 text-red-600 dark:text-red-400"
-                              }`}
-                            >
-                              {tx.status}
-                            </span>
+                              tx.status === "مكتمل" || tx.status === "نجحت"
+                                ? "bg-green-500/10 text-green-600 dark:text-green-400"
+                                : tx.status === "قيد المعالجة"
+                                ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+                                : "bg-red-500/10 text-red-600 dark:text-red-400"
+                            }`}
+                          >
+                            {tx.status}
+                          </span>
                           </td>
                         </tr>
                       ))}
@@ -365,21 +419,23 @@ export default function DashboardPage() {
                   <thead className="bg-muted/50 text-muted-foreground sticky top-0 backdrop-blur-sm">
                     <tr>
                       <th className="px-8 py-5 font-medium">رقم المعاملة</th>
+                      <th className="px-8 py-5 font-medium">المستلم</th>
                       <th className="px-8 py-5 font-medium">التاريخ</th>
                       <th className="px-8 py-5 font-medium">المبلغ</th>
                       <th className="px-8 py-5 font-medium">الحالة</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {allTransactions.map((tx) => (
+                    {displayAllTransactions.map((tx) => (
                       <tr key={tx.id} className="transition-colors hover:bg-muted/20">
                         <td className="px-8 py-5 font-medium text-foreground">{tx.id}</td>
+                        <td className="px-8 py-5 text-muted-foreground">{tx.recipient || "-"}</td>
                         <td className="px-8 py-5 text-muted-foreground">{tx.date}</td>
                         <td className="px-8 py-5 font-bold text-foreground">{tx.amount}</td>
                         <td className="px-8 py-5">
                           <span
                             className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${
-                              tx.status === "مكتمل"
+                              tx.status === "مكتمل" || tx.status === "نجحت"
                                 ? "bg-green-500/10 text-green-600 dark:text-green-400"
                                 : tx.status === "قيد المعالجة"
                                 ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
