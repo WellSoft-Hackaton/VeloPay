@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { db } from "@/lib/db";
+import { transfers, transactions, escrows } from "@/lib/schema";
 
 const RATES: Record<string, Record<string, number>> = {
   SAR: { JOD: 0.0995, USD: 0.2667, AED: 0.979, IQD: 349.5, SYP: 3462 },
@@ -31,6 +34,24 @@ export async function POST(request: Request) {
     const rate = RATES[fromCurrency]?.[toCurrency] ?? 0.1;
     const converted = parseFloat(amount) * rate;
     const txHash = generateSolanaTxHash();
+
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    if (userId) {
+      // Save to transfers table (for limit and history)
+      await db.insert(transfers).values({
+        id: crypto.randomUUID(),
+        userId,
+        amount: String(amount),
+        fromCurrency,
+        toCurrency,
+        recipientPhone: recipientPhone || null,
+        txHash,
+        status: isEscrow ? "locked" : "pending",
+        createdAt: new Date(),
+      });
+    }
 
     // Register phone → wallet mapping (simulated)
     const walletAddress = `sim_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;

@@ -11,22 +11,22 @@ import { EscrowSection } from "@/components/dashboard-summary/EscrowSection";
 
 // Mock Data
 const transactions = [
-  { id: "TX-1092", status: "نجحت", amount: "$50", date: "اليوم" },
-  { id: "TX-1093", status: "قيد المعالجة", amount: "$120", date: "أمس" },
-  { id: "TX-1094", status: "نجحت", amount: "$300", date: "25 أبريل" },
-  { id: "TX-1095", status: "فشل", amount: "$50", date: "24 أبريل" },
-  { id: "TX-1096", status: "نجحت", amount: "$85", date: "22 أبريل" },
+  { id: "TX-1092", status: "نجحت", amount: "$50", date: "اليوم", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1093", status: "قيد المعالجة", amount: "$120", date: "أمس", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1094", status: "نجحت", amount: "$300", date: "25 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1095", status: "فشل", amount: "$50", date: "24 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1096", status: "نجحت", amount: "$85", date: "22 أبريل", recipient: "+962 7xx xxx xxxx" },
 ];
 
 const allTransactions = [
   ...transactions,
-  { id: "TX-1097", status: "قيد المعالجة", amount: "$150", date: "21 أبريل" },
-  { id: "TX-1098", status: "نجحت", amount: "$20", date: "20 أبريل" },
-  { id: "TX-1099", status: "نجحت", amount: "$340", date: "18 أبريل" },
-  { id: "TX-1100", status: "فشل", amount: "$50", date: "15 أبريل" },
-  { id: "TX-1101", status: "نجحت", amount: "$120", date: "14 أبريل" },
-  { id: "TX-1102", status: "نجحت", amount: "$45", date: "12 أبريل" },
-  { id: "TX-1103", status: "نجحت", amount: "$99", date: "10 أبريل" },
+  { id: "TX-1097", status: "قيد المعالجة", amount: "$150", date: "21 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1098", status: "نجحت", amount: "$20", date: "20 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1099", status: "نجحت", amount: "$340", date: "18 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1100", status: "فشل", amount: "$50", date: "15 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1101", status: "نجحت", amount: "$120", date: "14 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1102", status: "نجحت", amount: "$45", date: "12 أبريل", recipient: "+962 7xx xxx xxxx" },
+  { id: "TX-1103", status: "نجحت", amount: "$99", date: "10 أبريل", recipient: "+962 7xx xxx xxxx" },
 ];
 
 const initialCards = [
@@ -50,6 +50,25 @@ export default function DashboardPage() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [cards, setCards] = useState(initialCards);
   const [isBillsMenuOpen, setIsBillsMenuOpen] = useState(false);
+  const [dbTxs, setDbTxs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await fetch("/api/transactions");
+        if (res.ok) {
+          const data = await res.json();
+          setDbTxs(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch transactions:", err);
+      }
+    };
+    fetchTransactions();
+  }, []);
+
+  const displayTransactions = dbTxs.length > 0 ? [...dbTxs, ...transactions].slice(0, 5) : transactions;
+  const displayAllTransactions = dbTxs.length > 0 ? [...dbTxs, ...allTransactions] : allTransactions;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -282,15 +301,17 @@ export default function DashboardPage() {
                     <thead className="bg-muted/50 text-muted-foreground">
                       <tr>
                         <th className="px-8 py-5 font-medium">رقم المعاملة</th>
+                        <th className="px-8 py-5 font-medium">المستلم</th>
                         <th className="px-8 py-5 font-medium">التاريخ</th>
                         <th className="px-8 py-5 font-medium">المبلغ</th>
                         <th className="px-8 py-5 font-medium">الحالة</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
-                      {transactions.map((tx) => (
+                      {displayTransactions.map((tx) => (
                         <tr key={tx.id} className="transition-colors hover:bg-muted/20">
                           <td className="px-8 py-5 font-medium text-foreground">{tx.id}</td>
+                          <td className="px-8 py-5 text-muted-foreground">{tx.recipient || "-"}</td>
                           <td className="px-8 py-5 text-muted-foreground">{tx.date}</td>
                           <td className="px-8 py-5 font-bold text-foreground">{tx.amount}</td>
                           <td className="px-8 py-5">
@@ -398,15 +419,17 @@ export default function DashboardPage() {
                   <thead className="bg-muted/50 text-muted-foreground sticky top-0 backdrop-blur-sm">
                     <tr>
                       <th className="px-8 py-5 font-medium">رقم المعاملة</th>
+                      <th className="px-8 py-5 font-medium">المستلم</th>
                       <th className="px-8 py-5 font-medium">التاريخ</th>
                       <th className="px-8 py-5 font-medium">المبلغ</th>
                       <th className="px-8 py-5 font-medium">الحالة</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {allTransactions.map((tx) => (
+                    {displayAllTransactions.map((tx) => (
                       <tr key={tx.id} className="transition-colors hover:bg-muted/20">
                         <td className="px-8 py-5 font-medium text-foreground">{tx.id}</td>
+                        <td className="px-8 py-5 text-muted-foreground">{tx.recipient || "-"}</td>
                         <td className="px-8 py-5 text-muted-foreground">{tx.date}</td>
                         <td className="px-8 py-5 font-bold text-foreground">{tx.amount}</td>
                         <td className="px-8 py-5">
