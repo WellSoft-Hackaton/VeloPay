@@ -1,5 +1,6 @@
 <div align="center">
-  <img src="مسار_الشعار_هنا" alt="VeloPay Logo" width="200"/>
+  <img src="<img width="1254" height="1254" alt="ChatGPT Image Apr 26, 2026, 05_46_00 PM" src="https://github.com/user-attachments/assets/8030f7a5-a95b-434f-b006-53270dbb2ef8" />
+" alt="VeloPay Logo" width="200"/>
 
   # 🚀 VeloPay
   **ثورة تحويل الأموال عبر الحدود بين الخليج وبلاد الشام**
@@ -80,3 +81,31 @@
 تأكد من تثبيت Node.js على جهازك، ثم قم بتشغيل الأمر التالي في جذر المشروع:
 ```bash
 npm i
+```
+
+### 2. إعداد متغيرات البيئة (.env)
+قم بإنشاء ملف `.env.local` في المجلد الرئيسي للمشروع، وأضف المفاتيح التالية (استبدل القيم بمفاتيحك الخاصة):
+```env
+NEXT_PUBLIC_CROSSMINT_API_KEY="your_crossmint_key"
+NEXT_PUBLIC_TRANSAK_API_KEY="your_transak_sandbox_key"
+NEXT_PUBLIC_SOLANA_NETWORK="devnet"
+GEMINI_API_KEY="your_gemini_api_key"
+NEXT_PUBLIC_COINGECKO_API="[https://api.coingecko.com/api/v3](https://api.coingecko.com/api/v3)"
+```
+
+### 3. تشغيل خادم التطوير
+بعد تثبيت الحزم وإعداد متغيرات البيئة، قم بتشغيل التطبيق:
+```bash
+npm run dev
+```
+افتح متصفحك وانتقل إلى `http://localhost:3000` لرؤية التطبيق يعمل.
+
+---
+
+## 🎯 ملاحظة (Hackathon MVP)
+تم بناء هذه النسخة (MVP) خصيصاً لأغراض الهاكاثون لتوضيح المعمارية وقابلية التطبيق. بعض العمليات (مثل التكامل المباشر مع شبكات الهاتف المحلية) تعمل حالياً ضمن بيئة محاكاة (Simulation) لإثبات المفهوم الهندسي، مع الجاهزية الكاملة للربط الحقيقي (Production) عند توفر شراكات مع مزودي السيولة المحليين.
+
+<div align="center">
+  <p>تم بناؤه بشغف 💡 لتسهيل حياة المغتربين وعائلاتهم.</p>
+</div>
+```
