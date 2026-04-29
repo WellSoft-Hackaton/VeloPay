@@ -731,12 +731,10 @@ export default function SendPage() {
               ].map((m) => (
                 <button
                   key={m.id}
-                  onClick={() => !m.disabled && setPaymentMethod(m.id)}
+                  onClick={() => setPaymentMethod(m.id)}
                   className={`w-full rounded-2xl border-2 p-5 text-right transition ${
                     paymentMethod === m.id
                       ? "border-primary bg-primary/5"
-                      : m.disabled
-                      ? "cursor-not-allowed border-border bg-muted/50 opacity-50"
                       : "border-border bg-card hover:border-primary/50"
                   }`}
                 >
@@ -746,11 +744,6 @@ export default function SendPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 font-semibold text-foreground">
                         {m.title}
-                        {m.disabled && (
-                          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                            قريباً
-                          </span>
-                        )}
                         {paymentMethod === m.id && (
                           <span className="mr-auto text-primary"><Check size={16} aria-hidden="true" /></span>
 
