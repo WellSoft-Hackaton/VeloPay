@@ -64,9 +64,9 @@ export function EscrowSection() {
                   <span className="text-xs font-bold text-muted-foreground bg-muted px-2 py-1 rounded-md">{escrow.id}</span>
                   <h4 className="text-2xl font-bold text-foreground mt-3">{escrow.amount}</h4>
                 </div>
-                <div className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 ${escrow.status === 'locked' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400' : 'bg-green-500/10 text-green-600 dark:text-green-400'}`}>
-                  {escrow.status === 'locked' ? <Clock size={14} /> : <CheckCircle size={14} />}
-                  {escrow.status === 'locked' ? 'قيد الانتظار' : 'مكتمل'}
+                <div className="px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 bg-green-500/10 text-green-600 dark:text-green-400">
+                  <CheckCircle size={14} />
+                  نجحت
                 </div>
               </div>
               <div className="space-y-3 mb-8 bg-card rounded-2xl p-4 border border-border/50">
@@ -105,9 +105,9 @@ export function EscrowSection() {
                   <span className="text-xs font-bold text-muted-foreground bg-muted px-2 py-1 rounded-md">{escrow.id}</span>
                   <h4 className="text-2xl font-bold text-foreground mt-3">{escrow.amount}</h4>
                 </div>
-                <div className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 ${escrow.status === 'locked' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400' : 'bg-green-500/10 text-green-600 dark:text-green-400'}`}>
-                  {escrow.status === 'locked' ? <Clock size={14} /> : <CheckCircle size={14} />}
-                  {escrow.status === 'locked' ? 'قيد الانتظار' : 'مكتمل'}
+                <div className="px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 bg-green-500/10 text-green-600 dark:text-green-400">
+                  <CheckCircle size={14} />
+                  نجحت
                 </div>
               </div>
               <div className="space-y-3 mb-8 bg-card rounded-2xl p-4 border border-border/50">
