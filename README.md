@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/8030f7a5-a95b-434f-b006-53270dbb2ef8" alt="VeloPay Logo" width="200"/>
+  <img src="https://github.com/user-attachments/assets/96d3ee47-bc73-4133-99a1-21ac8f01a188" alt="VeloPay Logo" width="200"/>
 
   # 🚀 VeloPay
   **ثورة تحويل الأموال عبر الحدود بين الخليج وبلاد الشام**
@@ -20,10 +20,10 @@
 ## 📸 نظرة على المنصة
 
 <div align="center">
-  <img src="مسار_الصورة_الأولى_هنا" alt="الصفحة الرئيسية والحاسبة التفاعلية" width="800" style="border-radius: 10px; margin-bottom: 10px; border: 1px solid #eaeaea;"/>
+  <img src="https://github.com/user-attachments/assets/3f69c3f3-42fb-43d1-8fef-756c0b6d7552" width="800" style="border-radius: 10px; margin-bottom: 10px; border: 1px solid #eaeaea;" alt="Main Dashboard"/>
   <p><em>الصفحة الرئيسية والمساعد الذكي VeloPay AI</em></p>
 
-  <img src="مسار_الصورة_الثانية_هنا" alt="واجهة تتبع التحويل" width="800" style="border-radius: 10px; border: 1px solid #eaeaea;"/>
+  <img src="https://github.com/user-attachments/assets/af113075-6fbb-4cd7-92be-d65952317844" width="800" style="border-radius: 10px; border: 1px solid #eaeaea;" alt="Transaction Tracking"/>
   <p><em>واجهة الإرسال وتتبع المعاملات اللحظي</em></p>
 </div>
 
