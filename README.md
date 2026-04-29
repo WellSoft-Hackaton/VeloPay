@@ -1,6 +1,6 @@
+
 <div align="center">
-  <img src="<img width="1254" height="1254" alt="ChatGPT Image Apr 26, 2026, 05_46_00 PM" src="https://github.com/user-attachments/assets/8030f7a5-a95b-434f-b006-53270dbb2ef8" />
-" alt="VeloPay Logo" width="200"/>
+  <img src="https://github.com/user-attachments/assets/8030f7a5-a95b-434f-b006-53270dbb2ef8" alt="VeloPay Logo" width="200"/>
 
   # 🚀 VeloPay
   **ثورة تحويل الأموال عبر الحدود بين الخليج وبلاد الشام**
@@ -34,8 +34,8 @@
 * ⚡ **سرعة فائقة:** وصول الأموال في غضون 3-5 ثوانٍ فقط.
 * 💸 **رسوم شبه معدومة:** تكلفة التحويل 0.01$ فقط مقارنة بـ 15-35$ في الطرق التقليدية.
 * 🤖 **مساعد ذكي مدمج (AI):** روبوت محادثة مدعوم بـ Gemini AI للإجابة على الاستفسارات، حساب الرسوم اللحظية، وتقديم نصائح مالية للمستخدمين.
-* 🔑 **محافظ مدمجة (Embedded Wallets):** تجربة مستخدم سلسة لا تتطلب معرفة مسبقة بالعملات الرقمية أو المحافظ المعقدة.
-* 📊 **شفافية تامة:** إمكانية تتبع مسار الأموال لحظة بلحظة.
+* 🔑 **محافظ مدمجة (Embedded Wallets):** تجربة مستخدم سلسة لا تتطلب معرفة مسبقة بالعملات الرقمية عبر Crossmint.
+* 📊 **شفافية تامة:** إمكانية تتبع مسار الأموال لحظة بلحظة عبر مستكشف Solana.
 
 ---
 
@@ -45,7 +45,7 @@
 
 1. **الإرسال:** يقوم المرسل بإدخال المبلغ ورقم هاتف المستلم، ويدفع باستخدام بطاقته البنكية.
 2. **التحويل الذكي:** يتم تحويل المبلغ برمجياً إلى USDC وإرساله عبر شبكة Solana فائقة السرعة.
-3. **الاستلام المرن:** بفضل بنيتنا التحتية، خيارات الاستلام سهلة ومباشرة، حيث تصل الأموال للمستلم عبر:
+3. **الاستلام المرن:** تصل الأموال للمستلم عبر خيارات متعددة:
    * **إشعار رسالة قصيرة (SMS)** لحسابه البنكي.
    * **إنشاء محفظة رقمية تلقائياً** مرتبطة برقم هاتفه.
    * **تحويل مباشر** إلى المحافظ المحلية الإلكترونية (مثل Zain Cash).
@@ -54,56 +54,67 @@
 
 ## 🛠️ التقنيات المستخدمة (Tech Stack)
 
-تم بناء المنصة باستخدام أحدث التقنيات لضمان الأمان، السرعة، وقابلية التوسع:
-
-### واجهة المستخدم (Frontend)
-* **Framework:** Next.js 15 (App Router)
-* **Styling:** Tailwind CSS + shadcn/ui
-
-### تقنيات البلوكشين (Web3)
-* **Network:** Solana Devnet
-* **SDK:** `@solana/web3.js`
-* **Wallets:** Crossmint Embedded Wallets & `@solana/wallet-adapter`
+* **Framework:** Next.js 15 (App Router) & Turbopack
+* **Blockchain:** Solana Devnet (USDC)
+* **Wallets:** Crossmint Embedded Wallets
 * **On/Off Ramp:** Transak (Sandbox)
-
-### الذكاء الاصطناعي والبيانات (AI & Data)
-* **AI Engine:** Google Gemini API
-* **Exchange Rates:** CoinGecko API
-* **State Management:** React Context
+* **AI Engine:** Google Gemini AI
+* **Database & Auth:** Supabase & NextAuth.js
+* **Styling:** Tailwind CSS + shadcn/ui
 
 ---
 
 ## 🚀 طريقة التشغيل (Getting Started)
 
-لتشغيل المشروع على جهازك المحلي، يرجى اتباع الخطوات التالية:
-
 ### 1. تثبيت الحزم والمتطلبات
-تأكد من تثبيت Node.js على جهازك، ثم قم بتشغيل الأمر التالي في جذر المشروع:
+قم بتشغيل الأمر التالي في جذر المشروع:
 ```bash
 npm i
 ```
 
-### 2. إعداد متغيرات البيئة (.env)
-قم بإنشاء ملف `.env.local` في المجلد الرئيسي للمشروع، وأضف المفاتيح التالية (استبدل القيم بمفاتيحك الخاصة):
+### 2. إعداد متغيرات البيئة (.env.local)
+قم بإنشاء ملف `.env.local` وأضف المتغيرات التالية:
 ```env
-NEXT_PUBLIC_CROSSMINT_API_KEY="your_crossmint_key"
-NEXT_PUBLIC_TRANSAK_API_KEY="your_transak_sandbox_key"
-NEXT_PUBLIC_SOLANA_NETWORK="devnet"
-GEMINI_API_KEY="your_gemini_api_key"
+# Crossmint Config
+NEXT_PUBLIC_CROSSMINT_PROJECT_ID=""
+NEXT_PUBLIC_CROSSMINT_API_KEY=""
+CROSSMINT_API_KEY=""
+
+# Network Config
+NEXT_PUBLIC_CHAIN_ID="solana"
+NEXT_PUBLIC_USDC_MINT=""
+
+# Transak Config (Sandbox)
+NEXT_PUBLIC_TRANSAK_API_KEY=""
+TRANSAK_API_SECRET=""
+
+# AI & Data
+GEMINI_API_KEY=""
 NEXT_PUBLIC_COINGECKO_API="[https://api.coingecko.com/api/v3](https://api.coingecko.com/api/v3)"
+
+# NextAuth Config
+AUTH_SECRET=""
+NEXTAUTH_SECRET="ضع_أي_نص_عشوائي_طويل_ومعقد_هنا"
+NEXTAUTH_URL="http://localhost:3000"
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+
+# Database & Supabase
+NEXT_PUBLIC_SUPABASE_URL=""
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=""
+DATABASE_URL=""
+DIRECT_URL=""
 ```
 
 ### 3. تشغيل خادم التطوير
-بعد تثبيت الحزم وإعداد متغيرات البيئة، قم بتشغيل التطبيق:
 ```bash
 npm run dev
 ```
-افتح متصفحك وانتقل إلى `http://localhost:3000` لرؤية التطبيق يعمل.
 
 ---
 
 ## 🎯 ملاحظة (Hackathon MVP)
-تم بناء هذه النسخة (MVP) خصيصاً لأغراض الهاكاثون لتوضيح المعمارية وقابلية التطبيق. بعض العمليات (مثل التكامل المباشر مع شبكات الهاتف المحلية) تعمل حالياً ضمن بيئة محاكاة (Simulation) لإثبات المفهوم الهندسي، مع الجاهزية الكاملة للربط الحقيقي (Production) عند توفر شراكات مع مزودي السيولة المحليين.
+تم بناء هذه النسخة خصيصاً لأغراض الهاكاثون لتوضيح المعمارية وقابلية التطبيق. بعض العمليات (مثل التكامل المباشر مع شبكات الهاتف المحلية) تعمل حالياً ضمن بيئة محاكاة (Simulation) لإثبات المفهوم الهندسي.
 
 <div align="center">
   <p>تم بناؤه بشغف 💡 لتسهيل حياة المغتربين وعائلاتهم.</p>
