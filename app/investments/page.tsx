@@ -16,7 +16,7 @@ const ASSETS = [
     icon: "🥇",
     price: 2347.50,
     change: 0.8,
-    holdings: 520.00,
+    holdings: 250.00,
     color: "from-amber-400 to-amber-600",
     bgLight: "bg-amber-500/10",
   },
@@ -27,7 +27,7 @@ const ASSETS = [
     icon: "🥈",
     price: 28.45,
     change: 1.2,
-    holdings: 185.30,
+    holdings: 85.50,
     color: "from-slate-300 to-slate-500",
     bgLight: "bg-slate-500/10",
   },
@@ -38,7 +38,7 @@ const ASSETS = [
     icon: "₿",
     price: 67432.00,
     change: -1.4,
-    holdings: 340.50,
+    holdings: 150.80,
     color: "from-orange-400 to-orange-600",
     bgLight: "bg-orange-500/10",
   },
@@ -49,7 +49,7 @@ const ASSETS = [
     icon: "⟠",
     price: 3521.80,
     change: 2.1,
-    holdings: 200.00,
+    holdings: 85.20,
     color: "from-blue-400 to-indigo-600",
     bgLight: "bg-blue-500/10",
   },
@@ -131,10 +131,10 @@ export default function InvestmentsPage() {
                 <span className="text-sm font-medium text-muted-foreground">إجمالي المحفظة الاستثمارية</span>
               </div>
               
-              <h2 className="text-5xl font-black tracking-tight text-foreground mb-4">$1,245.80</h2>
+              <h2 className="text-5xl font-black tracking-tight text-foreground mb-4">$571.50</h2>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1 rounded-full bg-green-500/20 px-4 py-1.5 text-sm font-bold text-green-600 dark:text-green-400">
-                  <ArrowUpRight size={16} /> +$42.50 (3.5%)
+                  <ArrowUpRight size={16} /> +$18.60 (3.4%)
                 </div>
                 <span className="text-sm text-muted-foreground">هذا الشهر</span>
               </div>
