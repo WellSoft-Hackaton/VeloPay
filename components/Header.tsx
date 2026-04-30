@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Bell, LogOut, User, Send, LayoutDashboard, Code, Home, Menu, X } from "lucide-react";
 import { PaymentMethodModal } from "@/components/PaymentMethodModal";
+import { PremiumModal } from "@/components/PremiumModal";
+import { Star } from "lucide-react";
 
 // ─── Notification Bell ──────────────────────────────────────────────────────────
 function NotificationBell() {
@@ -46,6 +48,7 @@ function NotificationBell() {
 export function Header() {
   const pathname = usePathname();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -70,6 +73,24 @@ export function Header() {
 
           {/* Right side - Logo & Main Nav */}
           <div className="flex items-center gap-4 md:gap-12">
+            
+            {/* Far Right - Subscribe Button (Small & Shiny) */}
+            <button
+              onClick={() => setShowPremiumModal(true)}
+              className="group relative overflow-hidden flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 px-4 py-1.5 text-xs font-black text-white shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(234,179,8,0.5)] active:scale-95"
+            >
+              <Star size={12} className="fill-current animate-pulse" />
+              <span>اشتراك</span>
+              
+              {/* Shining Effect Overlay */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1000 transition-transform bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]" />
+              
+              {/* Constant subtle shine animation */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_3s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]" />
+              </div>
+            </button>
+
             {/* Hamburger Button for Mobile */}
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -219,6 +240,7 @@ export function Header() {
         </div>
 
         <PaymentMethodModal open={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
+        <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
       </header>
 
       {/* Mobile Menu Overlay */}
