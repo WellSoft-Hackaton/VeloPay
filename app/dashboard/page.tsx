@@ -3,7 +3,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Sidebar } from "@/components/Sidebar";
-import { ArrowUp, Plus, Trash2, User, Mail, Phone, ShieldCheck, Settings, Pencil } from "lucide-react";
+import { ArrowUp, Plus, Trash2, User, Mail, Phone, ShieldCheck, Settings, Pencil, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/common/Dialog";
@@ -42,6 +42,7 @@ const upcomingBills = [
 
 const quickActions = [
   { name: "إرسال", icon: ArrowUp, href: "/send" },
+  { name: "استثماراتي", icon: TrendingUp, href: "/investments" },
 ];
 
 export default function DashboardPage() {

@@ -9,9 +9,14 @@ import {
   Settings, 
   History, 
   LogOut,
-  HelpCircle
+  HelpCircle,
+  Star,
+  CheckCircle2,
+  Crown,
+  TrendingUp
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { PremiumModal, usePremiumStatus } from "@/components/PremiumModal";
 
 interface SidebarProps {
   onTransactionsClick?: () => void;
@@ -21,9 +26,12 @@ interface SidebarProps {
 export function Sidebar({ onTransactionsClick, onSettingsClick }: SidebarProps = {}) {
   const pathname = usePathname();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const isPremium = usePremiumStatus();
 
   const navigation = [
     { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
+    { name: "الاستثمارات", href: "/investments", icon: TrendingUp },
     { name: "المعاملات السابقة", href: "/transactions", icon: History },
     { name: "الإعدادات", href: "/settings", icon: Settings },
     { name: "المساعدة", href: "/help", icon: HelpCircle },
@@ -100,6 +108,59 @@ export function Sidebar({ onTransactionsClick, onSettingsClick }: SidebarProps =
             </Link>
           );
         })}
+
+        {/* ─── Premium CTA Card ──────────────────────────────────────────────── */}
+        <div className="my-3">
+          {isPremium ? (
+            /* Already subscribed — elegant subtle badge */
+            <button
+              onClick={() => setIsPremiumModalOpen(true)}
+              className="flex w-full items-center gap-3 rounded-2xl border border-amber-600/20 bg-amber-50/50 dark:bg-amber-900/10 px-4 py-3.5 transition-all hover:bg-amber-50 dark:hover:bg-amber-900/20"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-800/30">
+                <CheckCircle2 size={16} className="text-amber-700 dark:text-amber-400" />
+              </div>
+              <div className="flex-1 text-right">
+                <span className="text-sm font-bold text-amber-800 dark:text-amber-300">Premium مفعّل</span>
+              </div>
+              <Crown size={14} className="text-amber-600/50 dark:text-amber-500/50" />
+            </button>
+          ) : (
+            /* Not subscribed — eye-catching upsell card */
+            <button
+              onClick={() => setIsPremiumModalOpen(true)}
+              className="group relative flex w-full flex-col items-center gap-3 overflow-hidden rounded-2xl p-4 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                background: "linear-gradient(135deg, #92711a 0%, #b8960b 40%, #d4af37 70%, #b8960b 100%)",
+              }}
+            >
+              {/* Shimmer overlay */}
+              <div 
+                className="absolute inset-0 animate-premium-shimmer opacity-30"
+                style={{
+                  background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+                  backgroundSize: "200% 100%",
+                }}
+              />
+              
+              {/* Content */}
+              <div className="relative z-10 flex w-full items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                  <Star size={18} className="text-white" fill="currentColor" />
+                </div>
+                <div className="flex-1 text-right">
+                  <div className="text-sm font-black text-white">VeloPay Premium</div>
+                  <div className="text-[11px] font-medium text-white/70">افتح الإمكانيات الكاملة</div>
+                </div>
+              </div>
+
+              <div className="relative z-10 w-full rounded-xl bg-white/20 backdrop-blur-sm py-2 text-center text-xs font-bold text-white transition-all group-hover:bg-white/30">
+                اشترك الآن
+              </div>
+            </button>
+          )}
+        </div>
+
         <button 
           onClick={() => signOut()}
           className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 transition-colors hover:bg-red-500/10"
@@ -108,6 +169,9 @@ export function Sidebar({ onTransactionsClick, onSettingsClick }: SidebarProps =
           تسجيل الخروج
         </button>
       </nav>
+
+      {/* Premium Modal */}
+      <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
 
       {/* Help Modal */}
       <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>

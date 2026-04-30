@@ -216,3 +216,64 @@
 .animate-hero-float {
   animation: hero-float 14s ease-in-out infinite;
 }
+
+/* Premium CTA shimmer effect */
+@keyframes premium-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-premium-shimmer {
+  background-size: 200% 100%;
+  animation: premium-shimmer 3s ease-in-out infinite;
+}
+
+/* Premium gold border glow for profile avatar */
+@keyframes premium-border-glow {
+  0%, 100% {
+    border-color: #b8860b;
+    box-shadow: 0 0 6px 1px rgba(184, 134, 11, 0.25);
+  }
+  50% {
+    border-color: #daa520;
+    box-shadow: 0 0 10px 2px rgba(218, 165, 32, 0.35);
+  }
+}
+
+.premium-avatar-border {
+  border: 2.5px solid #b8860b !important;
+  animation: premium-border-glow 3s ease-in-out infinite;
+}
+
+/* AI Tips & Investment Animations */
+@keyframes ai-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px 2px rgba(19, 182, 1, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px 6px rgba(19, 182, 1, 0.5);
+  }
+}
+
+.animate-ai-pulse {
+  animation: ai-pulse 3s ease-in-out infinite;
+}
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-appear {
+  animation: card-appear 0.5s ease-out forwards;
+}

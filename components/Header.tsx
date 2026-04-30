@@ -6,8 +6,9 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Bell, LogOut, User, Send, LayoutDashboard, Code, Home, Menu, X } from "lucide-react";
+import { Bell, LogOut, User, Send, LayoutDashboard, Code, Home, Menu, X, Star, Crown, CheckCircle2 } from "lucide-react";
 import { PaymentMethodModal } from "@/components/PaymentMethodModal";
+import { PremiumModal, usePremiumStatus } from "@/components/PremiumModal";
 
 // ─── Notification Bell ──────────────────────────────────────────────────────────
 function NotificationBell() {
@@ -46,10 +47,12 @@ function NotificationBell() {
 export function Header() {
   const pathname = usePathname();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isPremium = usePremiumStatus();
 
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
@@ -173,12 +176,20 @@ export function Header() {
                           alt={user.name || user.email || "المستخدم"}
                           width={46}
                           height={46}
-                          className="rounded-full object-cover border-2 border-primary/30 p-0.5 transition-all duration-300 group-hover:border-primary/80 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)] w-10 h-10 sm:w-[46px] sm:h-[46px]"
+                          className={`rounded-full object-cover p-0.5 transition-all duration-300 w-10 h-10 sm:w-[46px] sm:h-[46px] ${
+                            isPremium
+                              ? "premium-avatar-border"
+                              : "border-2 border-primary/30 group-hover:border-primary/80 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]"
+                          }`}
                           unoptimized
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="h-10 w-10 sm:h-[46px] sm:w-[46px] rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-lg font-bold text-primary transition-all duration-300 group-hover:border-primary/80 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+                        <div className={`h-10 w-10 sm:h-[46px] sm:w-[46px] rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${
+                          isPremium
+                            ? "premium-avatar-border bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400"
+                            : "bg-primary/10 border-2 border-primary/30 text-primary group-hover:border-primary/80 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]"
+                        }`}>
                           {user.name ? user.name.charAt(0).toUpperCase() : (user.email || "?").charAt(0).toUpperCase()}
                         </div>
                       )}
@@ -219,6 +230,7 @@ export function Header() {
         </div>
 
         <PaymentMethodModal open={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
+        <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
       </header>
 
       {/* Mobile Menu Overlay */}
@@ -281,7 +293,31 @@ export function Header() {
               <Send size={24} className="rtl:-scale-x-100 text-primary" />
               أرسل الآن
             </button>
-            
+
+            {/* Premium CTA in mobile menu */}
+            {isPremium ? (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setShowPremiumModal(true);
+                }}
+                className="flex items-center w-full gap-4 text-xl font-bold text-amber-400 transition-colors"
+              >
+                <CheckCircle2 size={24} className="text-amber-500" />
+                Premium مفعّل
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setShowPremiumModal(true);
+                }}
+                className="flex items-center w-full gap-4 text-xl font-bold text-amber-400 hover:text-amber-300 transition-colors"
+              >
+                <Star size={24} className="text-amber-500" fill="currentColor" />
+                VeloPay Premium
+              </button>
+            )}
 
           </nav>
         </div>
