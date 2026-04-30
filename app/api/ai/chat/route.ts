@@ -3,38 +3,42 @@ import { NextResponse } from "next/server";
 const SYSTEM_PROMPT = `أنت مساعد VeloPay الذكي المتخصص في تحويل الأموال. اسمك "VeloPay AI".
 
 مهامك الرئيسية:
-1. الإجابة على أسئلة تحويل الأموال بين الخليج والشام
-2. شرح الرسوم: VeloPay = $0.01 فقط | Western Union = $15-20 | البنوك = $25-35
-3. مقارنة VeloPay بالخدمات التقليدية
-4. شرح Solana وUSDC بلغة بسيطة
-5. حساب التوفيرات للمستخدم
-6. الترويج لميزات Premium عند المناسبة
+1. الإجابة على أسئلة تحويل الأموال بين الخليج والشام.
+2. شرح الرسوم: VeloPay = $0.01 فقط | Western Union = $15-20 | البنوك = $25-35.
+3. مقارنة VeloPay بالخدمات التقليدية وإبراز التوفير.
+4. شرح تقنية Solana وعملة USDC بلغة بسيطة جداً.
+5. الترويج لميزات Premium عند المناسبة.
 
 قواعد الرد:
-- الرد دائماً بالعربية الفصحى البسيطة
-- الردود قصيرة ومباشرة (2-4 جمل)
-- استخدم الأرقام عند ذكر الرسوم
-- كن إيجابياً ومتحمساً
-- أنت مساعد VeloPay فقط
-- التحويلات على Solana Devnet (بيئة تجريبية)`;
+- الرد دائماً بالعربية الفصحى البسيطة والواضحة.
+- قدم إجابات وافية ومفيدة للمستخدم (اشرح بالتفصيل إذا تطلب الأمر).
+- استخدم الأرقام والرموز التعبيرية (Emojis) لجعل المحادثة ودية.
+- أنت مساعد لخدمة VeloPay فقط، والتحويلات حالياً على Solana Devnet (بيئة تجريبية).`;
 
-// Try Gemini with a given model name
-async function callGemini(apiKey: string, model: string, prompt: string): Promise<string | null> {
+// دالة الاتصال مع التنسيق الصحيح للمحادثات
+async function callGemini(apiKey: string, model: string, messages: any[]): Promise<string | null> {
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+    // 1. تحويل الرسائل لتناسب صيغة Gemini بشكل احترافي
+    const formattedContents = messages.map((msg: any) => ({
+      // Gemini يستخدم "model" بدلاً من "assistant"
+      role: msg.role === "assistant" ? "model" : "user", 
+      parts: [{ text: msg.content }],
+    }));
 
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
+        // 2. فصل تعليمات النظام في المكان المخصص لها
+        systemInstruction: {
+          parts: [{ text: SYSTEM_PROMPT }],
+        },
+        contents: formattedContents, // تمرير المحادثة كمصفوفة منظمة
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 350,
+          maxOutputTokens: 1024, // 3. زيادة التوكنز لتناسب اللغة العربية
           topP: 0.9,
         },
       }),
@@ -53,7 +57,6 @@ async function callGemini(apiKey: string, model: string, prompt: string): Promis
       return text.trim();
     }
 
-    console.warn(`[Gemini ${model}] Empty response:`, JSON.stringify(data).slice(0, 200));
     return null;
   } catch (err) {
     console.error(`[Gemini ${model}] Fetch error:`, err);
@@ -70,65 +73,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ content: "عذراً، لم أستطع قراءة رسالتك. حاول مرة أخرى.", source: "error" });
     }
 
-    const lastMessage = messages[messages.length - 1]?.content?.trim() || "";
-
-    if (!lastMessage) {
-      return NextResponse.json({ content: "كيف يمكنني مساعدتك اليوم؟ 😊", source: "empty" });
-    }
-
-    // Build conversation context (all previous messages as text)
-    const conversationContext = messages
-      .slice(0, -1) // all except the last (current) message
-      .map((m: { role: string; content: string }) =>
-        m.role === "user" ? `[المستخدم]: ${m.content}` : `[VeloPay AI]: ${m.content}`
-      )
-      .join("\n");
-
-    // Single-turn prompt — avoids all multi-turn conversation order issues with Gemini
-    const fullPrompt = [
-      SYSTEM_PROMPT,
-      "",
-      conversationContext
-        ? `=== سياق المحادثة السابقة ===\n${conversationContext}\n`
-        : "",
-      `=== رسالة المستخدم الآن ===`,
-      lastMessage,
-      "",
-      "=== ردك كـ VeloPay AI (بالعربية مباشرة) ===",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    // Get API key (server-side only — no NEXT_PUBLIC_ needed)
     const geminiKey =
       process.env.GEMINI_API_KEY ||
       process.env.GEMINI_AI_API ||
       process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
     if (!geminiKey || geminiKey.trim() === "") {
-      console.warn("[VeloPay AI] No Gemini API key found in environment variables");
       return NextResponse.json({
-        content: generateSmartFallback(lastMessage),
+        content: generateSmartFallback(messages[messages.length - 1].content),
         source: "fallback_no_key",
       });
     }
 
-    console.log("[VeloPay AI] Calling Gemini with key:", geminiKey.slice(0, 8) + "...");
-
-    // Try models in order
-const models = ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.0-flash"];
+    // ملاحظة: تم إضافة gemini-1.5-flash كونه الموديل الأكثر استقراراً حالياً
+    const models = ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    
     for (const model of models) {
-      const result = await callGemini(geminiKey, model, fullPrompt);
+      // تمرير مصفوفة الرسائل كاملة بدلاً من دمجها في نص
+      const result = await callGemini(geminiKey, model, messages);
       if (result) {
-        console.log(`[VeloPay AI] Success with model: ${model}`);
         return NextResponse.json({ content: result, source: `gemini:${model}` });
       }
     }
 
-    // All models failed — use smart fallback
-    console.warn("[VeloPay AI] All Gemini models failed, using smart fallback");
     return NextResponse.json({
-      content: generateSmartFallback(lastMessage),
+      content: generateSmartFallback(messages[messages.length - 1].content),
       source: "fallback_api_error",
     });
   } catch (error) {
@@ -139,6 +108,8 @@ const models = ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-2.0-flash"
     });
   }
 }
+
+// ... احتفظ بدالة generateSmartFallback كما هي
 
 function generateSmartFallback(message: string): string {
   const msg = message.toLowerCase();
